@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Clock, CheckCircle2, Users } from 'lucide-react';
+import { Users, Briefcase, FileText, IndianRupee } from 'lucide-react';
 import Header from '../components/layout/Header';
-import StatCard from '../components/dashboard/StatCard';
 import ActivityChart from '../components/dashboard/ActivityChart';
 import RecentActivity from '../components/dashboard/RecentActivity';
 import QuotationsTable from '../components/dashboard/QuotationsTable';
@@ -54,35 +53,52 @@ export default function Dashboard() {
       <p className="text-gray-600 text-medium -mt-5">Welcome back! Here's an overview of your quotation metrics.</p>
       
       {/* Stat Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard 
-          icon={FileText} 
-          iconBgColor="bg-indigo-50" 
-          iconColor="text-indigo-600" 
-          value={metrics.total_quotations || 0} 
-          label="Total Quotations" 
-        />
-        <StatCard 
-          icon={Clock} 
-          iconBgColor="bg-amber-50" 
-          iconColor="text-amber-500" 
-          value={metrics.draft_quotations || 0} 
-          label="Draft Quotations" 
-        />
-        <StatCard 
-          icon={CheckCircle2} 
-          iconBgColor="bg-emerald-50" 
-          iconColor="text-emerald-500" 
-          value={metrics.approved_quotations || 0} 
-          label="Approved Quotations" 
-        />
-        <StatCard 
-          icon={Users} 
-          iconBgColor="bg-blue-50" 
-          iconColor="text-blue-500" 
-          value={metrics.total_clients || 0} 
-          label="Total Clients" 
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 shrink-0">
+        
+        {/* Total Clients */}
+        <div className="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+          <div className="bg-[#f3e8ff] text-[#9333ea] p-2 rounded-lg shrink-0">
+            <Users className="h-5 w-5" />
+          </div>
+          <div className="flex-1">
+            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Clients</p>
+            <h3 className="text-xl font-black text-gray-900 mt-0.5">{metrics.total_clients || 0}</h3>
+          </div>
+        </div>
+
+        {/* Total Employees */}
+        <div className="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+          <div className="bg-[#e0f2fe] text-[#0ea5e9] p-2 rounded-lg shrink-0">
+            <Briefcase className="h-5 w-5" />
+          </div>
+          <div className="flex-1">
+            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Employees</p>
+            <h3 className="text-xl font-black text-gray-900 mt-0.5">{metrics.total_employees || 0}</h3>
+          </div>
+        </div>
+
+        {/* Total Quotations */}
+        <div className="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+          <div className="bg-[#dcfce7] text-[#16a34a] p-2 rounded-lg shrink-0">
+            <FileText className="h-5 w-5" />
+          </div>
+          <div className="flex-1">
+            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Quotations</p>
+            <h3 className="text-xl font-black text-gray-900 mt-0.5">{metrics.total_quotations || 0}</h3>
+          </div>
+        </div>
+
+        {/* Total Revenue */}
+        <div className="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+          <div className="bg-[#dcfce7] text-[#16a34a] p-2 rounded-lg shrink-0">
+            <IndianRupee className="h-5 w-5" />
+          </div>
+          <div className="flex-1">
+            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Revenue</p>
+            <h3 className="text-lg font-black text-gray-900 mt-0.5 leading-tight">{metrics.total_revenue_formatted || '₹0.00'}</h3>
+          </div>
+        </div>
+
       </div>
 
       {/* Middle Section: Chart and Activity */}
