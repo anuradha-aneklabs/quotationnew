@@ -7,8 +7,10 @@ import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { fetchTaxes, createTax, updateTax, deleteTax } from '../services/taxMasterService';
+import { useToast } from '../contexts/ToastContext';
 
 export default function TaxMasters() {
+  const { showToast } = useToast();
   const [taxes, setTaxes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -74,8 +76,9 @@ export default function TaxMasters() {
       await loadTaxes();
       setIsDeleteModalOpen(false);
       setTaxToDelete(null);
+      showToast('Tax deleted successfully', 'success');
     } catch (err) {
-      alert(`Failed to delete tax: ${err.message}`);
+      showToast(`Failed to delete tax: ${err.message}`, 'error');
     } finally {
       setIsDeleting(false);
     }
@@ -91,8 +94,9 @@ export default function TaxMasters() {
       }
       await loadTaxes();
       setIsModalOpen(false);
+      showToast(editingTax ? 'Tax updated successfully' : 'Tax created successfully', 'success');
     } catch (err) {
-      alert(`Failed to save tax: ${err.message}`);
+      showToast(`Failed to save tax: ${err.message}`, 'error');
     } finally {
       setIsSubmitting(false);
     }

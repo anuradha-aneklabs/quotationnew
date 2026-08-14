@@ -9,11 +9,13 @@ import TaxMasters from './pages/TaxMasters';
 import DropdownMasters from './pages/DropdownMasters';
 import Login from './pages/Login';
 import Reports from './pages/Reports';
+import { ToastProvider } from './contexts/ToastContext';
 import './index.css';
 
 function App() {
   const [currentView, setCurrentView] = useState('Dashboard');
   const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const [editQuotationId, setEditQuotationId] = useState(null);
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -28,16 +30,18 @@ function App() {
   }
 
   return (
-    <DashboardLayout currentView={currentView} setCurrentView={setCurrentView} setToken={setToken}>
-      {currentView === 'Dashboard' && <Dashboard />}
-      {currentView === 'Employees' && <Employees />}
-      {currentView === 'Clients' && <Clients />}
-      {currentView === 'Quotations' && <Quotations setCurrentView={setCurrentView} />}
-      {currentView === 'CreateQuotation' && <CreateQuotation setCurrentView={setCurrentView} />}
-      {currentView === 'Tax Masters' && <TaxMasters />}
-      {currentView === 'Dropdown Masters' && <DropdownMasters />}
-      {currentView === 'Reports' && <Reports />}
-    </DashboardLayout>
+    <ToastProvider>
+      <DashboardLayout currentView={currentView} setCurrentView={setCurrentView} setToken={setToken}>
+        {currentView === 'Dashboard' && <Dashboard />}
+        {currentView === 'Employees' && <Employees />}
+        {currentView === 'Clients' && <Clients />}
+        {currentView === 'Quotations' && <Quotations setCurrentView={setCurrentView} onEditQuotation={(id) => { setEditQuotationId(id); setCurrentView('CreateQuotation'); }} onCreateNew={() => { setEditQuotationId(null); setCurrentView('CreateQuotation'); }} />}
+        {currentView === 'CreateQuotation' && <CreateQuotation setCurrentView={setCurrentView} editId={editQuotationId} />}
+        {currentView === 'Tax Masters' && <TaxMasters />}
+        {currentView === 'Dropdown Masters' && <DropdownMasters />}
+        {currentView === 'Reports' && <Reports />}
+      </DashboardLayout>
+    </ToastProvider>
   );
 }
 

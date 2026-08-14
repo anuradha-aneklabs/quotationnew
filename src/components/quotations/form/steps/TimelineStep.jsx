@@ -121,29 +121,11 @@ export default function TimelineStep({ formData }) {
           <p className="text-xs text-gray-500">Define the overall project timeline and key milestones.</p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex bg-white border border-indigo-200 p-0.5 rounded-lg shadow-sm">
-            <button
-              onClick={() => setViewMode('Gantt View')}
-              className={`px-4 py-1.5 text-[11px] font-bold rounded-md transition-colors ${viewMode === 'Gantt View' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'text-gray-500 hover:text-indigo-600 border border-transparent'}`}
-            >
-              Gantt View
-            </button>
-            <button
-              onClick={() => setViewMode('Table View')}
-              className={`px-4 py-1.5 text-[11px] font-bold rounded-md transition-colors ${viewMode === 'Table View' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'text-gray-500 hover:text-indigo-600 border border-transparent'}`}
-            >
-              Table View
-            </button>
-          </div>
-          <button className="flex items-center px-4 py-1.5 border border-gray-200 text-[11px] font-bold rounded-lg text-gray-700 hover:bg-gray-50 transition-colors bg-white shadow-sm ml-2">
-            <Download className="h-3.5 w-3.5 mr-1.5" />
-            Export
-          </button>
-        </div>
+       
       </div>
 
       {/* Top Dates Card */}
+      <div className="flex flex-wrap items-center gap-4 justify-between">
       <div className="flex flex-wrap items-center gap-4 border border-gray-200 rounded-xl py-2 px-1 w-max shadow-sm bg-white">
         <div className="flex items-center px-5 border-r border-gray-100">
           <Calendar className="h-4 w-4 text-indigo-400 mr-3" />
@@ -166,7 +148,29 @@ export default function TimelineStep({ formData }) {
             <p className="text-xs font-bold text-gray-900">{projectDurationDays} Days</p>
           </div>
         </div>
+        
       </div>
+      <div className="flex items-center gap-2">
+          <div className="flex bg-white border border-indigo-200 p-0.5 rounded-lg shadow-sm">
+            <button
+              onClick={() => setViewMode('Gantt View')}
+              className={`px-4 py-1.5 text-[11px] font-bold rounded-md transition-colors ${viewMode === 'Gantt View' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'text-gray-500 hover:text-indigo-600 border border-transparent'}`}
+            >
+              Gantt View
+            </button>
+            <button
+              onClick={() => setViewMode('Table View')}
+              className={`px-4 py-1.5 text-[11px] font-bold rounded-md transition-colors ${viewMode === 'Table View' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'text-gray-500 hover:text-indigo-600 border border-transparent'}`}
+            >
+              Table View
+            </button>
+          </div>
+          <button className="flex items-center px-4 py-1.5 border border-gray-200 text-[11px] font-bold rounded-lg text-gray-700 hover:bg-gray-50 transition-colors bg-white shadow-sm ml-2">
+            <Download className="h-3.5 w-3.5 mr-1.5" />
+            Export
+          </button>
+        </div>
+        </div>
 
       {renderGanttTimeline()}
     </div>

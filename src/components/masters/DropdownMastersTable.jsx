@@ -12,7 +12,7 @@ export default function DropdownMastersTable({ items, onEdit, onDelete }) {
     <div className="flex-1 overflow-auto">
       <table className="w-full text-left border-collapse">
         <thead>
-          <tr className="bg-gray-50 border-y border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          <tr className=" border-y border-gray-100 text-xs text-black-500 uppercase tracking-wider">
             <th className="px-6 py-4">DROPDOWN NAME</th>
             <th className="px-6 py-4">DESCRIPTION</th>
             <th className="px-6 py-4">TOTAL OPTIONS</th>

@@ -4,6 +4,7 @@ import * as employeeService from '../../../../services/employeeService';
 
 export default function ProposalDetailsStep({ formData, handleChange, errors }) {
   const [employees, setEmployees] = useState([]);
+  const today = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
     const loadEmployees = async () => {
@@ -103,6 +104,7 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
                 type="date"
                 name="proposalDate"
                 value={formData.proposalDate}
+                min={today}
                 onChange={handleChange}
                 className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-sm
                   ${errors.proposalDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
@@ -121,6 +123,7 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
                 type="date"
                 name="validTill"
                 value={formData.validTill}
+                min={formData.proposalDate || today}
                 onChange={handleChange}
                 className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-sm
                   ${errors.validTill ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}

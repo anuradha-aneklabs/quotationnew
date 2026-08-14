@@ -43,7 +43,7 @@ const navItems = [
   { name: 'Settings', icon: Settings },
 ];
 
-export default function Sidebar({ currentView, setCurrentView, setToken }) {
+export default function Sidebar({ currentView, setCurrentView, setToken, isOpen, onClose }) {
   const [expandedMenus, setExpandedMenus] = useState({
     'Masters': currentView === 'Tax Masters' || currentView === 'Dropdown Masters'
   });
@@ -56,8 +56,22 @@ export default function Sidebar({ currentView, setCurrentView, setToken }) {
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 flex flex-col h-screen shrink-0 hidden md:flex">
-      <div className="h-16 flex items-center px-6 mt-2 mb-4 ">
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden" 
+          onClick={onClose}
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <aside className={`
+        fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 flex flex-col h-screen shrink-0 transition-transform duration-300 ease-in-out
+        md:relative md:translate-x-0
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        <div className="h-16 flex items-center px-6 mt-2 mb-4">
         <img src={logo} alt="ANEKA QuotePro" className="h-20 w-50" />
       </div>
       
@@ -148,6 +162,7 @@ export default function Sidebar({ currentView, setCurrentView, setToken }) {
           Logout
         </button>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import EmployeesTable from '../components/employees/EmployeesTable';
 import EmployeeModal from '../components/employees/EmployeeModal';
+import EmployeeViewModal from '../components/employees/EmployeeViewModal';
 import Header from '../components/layout/Header';
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { fetchEmployees, createEmployee, updateEmployee, deleteEmployee } from '../services/employeeService';
+import { useToast } from '../contexts/ToastContext';
 
 export default function Employees() {
+  const { showToast } = useToast();
   const [employees, setEmployees] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,13 +20,16 @@ export default function Employees() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
   
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewingEmployee, setViewingEmployee] = useState(null);
+  
   // Delete modal state
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7;
+  const itemsPerPage = 10;
 
   const loadEmployees = async () => {
     try {
@@ -62,6 +68,11 @@ export default function Employees() {
     setIsModalOpen(true);
   };
 
+  const handleViewClick = (employee) => {
+    setViewingEmployee(employee);
+    setIsViewModalOpen(true);
+  };
+
   const handleDeleteClick = (id) => {
     setEmployeeToDelete(id);
     setIsDeleteModalOpen(true);
@@ -76,8 +87,9 @@ export default function Employees() {
       await loadEmployees();
       setIsDeleteModalOpen(false);
       setEmployeeToDelete(null);
+      showToast('Employee deleted successfully', 'success');
     } catch (err) {
-      alert(`Failed to delete employee: ${err.message}`);
+      showToast(`Failed to delete employee: ${err.message}`, 'error');
     } finally {
       setIsDeleting(false);
     }
@@ -93,10 +105,16 @@ export default function Employees() {
       // Refresh list on success
       await loadEmployees();
       setIsModalOpen(false);
+      showToast(editingEmployee ? 'Employee updated successfully' : 'Employee added successfully', 'success');
     } catch (err) {
-      alert(`Failed to save employee: ${err.message}`);
+      showToast(`Failed to save employee: ${err.message}`, 'error');
     }
   };
+
+  const paginatedEmployees = filteredEmployees.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="space-y-6 flex flex-col h-full pb-6">
@@ -133,7 +151,8 @@ export default function Employees() {
           </div>
         ) : (
           <EmployeesTable 
-            employees={filteredEmployees} 
+            employees={paginatedEmployees} 
+            onView={handleViewClick}
             onEdit={handleEditClick}
             onDelete={handleDeleteClick}
           />
@@ -153,6 +172,13 @@ export default function Employees() {
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveEmployee}
         employeeData={editingEmployee}
+      />
+
+      {/* View Modal */}
+      <EmployeeViewModal 
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        employee={viewingEmployee}
       />
 
       {/* Delete Confirmation Modal */}
