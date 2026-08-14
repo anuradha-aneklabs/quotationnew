@@ -11,6 +11,14 @@ export const validateStep1 = (data) => {
   } else if (data.phone.trim().length !== 10) {
     errors.phone = 'Phone must be exactly 10 digits';
   }
+
+  if (data.panNumber?.trim() && data.panNumber.trim().length !== 10) {
+    errors.panNumber = 'PAN Number must be exactly 10 characters';
+  }
+
+  if (data.gstNumber?.trim() && data.gstNumber.trim().length !== 15) {
+    errors.gstNumber = 'GST Number must be exactly 15 characters';
+  }
   
   if (!data.currency?.trim()) errors.currency = 'Currency is required';
   if (!data.billingAddress?.trim()) errors.billingAddress = 'Billing Address is required';
@@ -29,13 +37,13 @@ export const validateStep1 = (data) => {
 
 export const validateStep2 = (data) => {
   const errors = {};
-  if (!data.proposalTitle?.trim()) errors.proposalTitle = 'Proposal Title is required';
-  if (!data.quotationNumber?.trim()) errors.quotationNumber = 'Quotation Number is required';
+  if (!data.proposalTitle?.toString().trim()) errors.proposalTitle = 'Proposal Title is required';
+  if (!data.quotationNumber?.toString().trim()) errors.quotationNumber = 'Quotation Number is required';
   if (!data.proposalDate) errors.proposalDate = 'Proposal Date is required';
   if (!data.validTill) errors.validTill = 'Valid Till Date is required';
-  if (!data.preparedBy?.trim()) errors.preparedBy = 'Prepared By is required';
-  if (!data.engagementType?.trim()) errors.engagementType = 'Engagement Type is required';
-  if (!data.pricingCurrency?.trim()) errors.pricingCurrency = 'Pricing Currency is required';
+  if (!data.preparedBy?.toString().trim()) errors.preparedBy = 'Prepared By is required';
+  if (!data.engagementType?.toString().trim()) errors.engagementType = 'Engagement Type is required';
+  if (!data.pricingCurrency?.toString().trim()) errors.pricingCurrency = 'Pricing Currency is required';
 
   return errors;
 };
@@ -58,6 +66,12 @@ export const validateStep3 = (data) => {
           if (!func.name?.trim()) errors[`module_${modIdx}_func_${funcIdx}_name`] = 'Functionality name is required';
           if (!func.effort) errors[`module_${modIdx}_func_${funcIdx}_effort`] = 'Effort is required';
           if (!func.duration) errors[`module_${modIdx}_func_${funcIdx}_duration`] = 'Duration is required';
+          
+          const totalFuncEffort = Number(func.effort) || 0;
+          const totalTeamEffort = (func.teamAllocations || []).reduce((sum, tm) => sum + (Number(tm.effort) || 0), 0);
+          if (totalTeamEffort > totalFuncEffort) {
+            errors[`module_${modIdx}_func_${funcIdx}_team`] = `Team effort (${totalTeamEffort}h) exceeds functionality effort (${totalFuncEffort}h)`;
+          }
         });
       }
     });

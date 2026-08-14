@@ -1,8 +1,69 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, Upload } from 'lucide-react';
+import * as clientService from '../../../../services/clientService';
 
 export default function ClientInfoStep({ formData, handleChange, errors, setFormData }) {
-  const [logoError, setLogoError] = React.useState('');
+  const [logoError, setLogoError] = useState('');
+  const [clients, setClients] = useState([]);
+  const [isClientDropdownOpen, setIsClientDropdownOpen] = useState(false);
+  const [clientSearch, setClientSearch] = useState(formData.clientName || '');
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    const loadClients = async () => {
+      try {
+        const data = await clientService.fetchClients();
+        setClients(data);
+      } catch (err) {
+        console.error('Failed to load clients', err);
+      }
+    };
+    loadClients();
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setIsClientDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [wrapperRef]);
+
+  const filteredClients = clients.filter(c => {
+    // If user just clicks the dropdown and the search exactly matches the selected client, show all
+    if (clientSearch && clientSearch === formData.clientName) return true;
+    
+    const term = clientSearch.toLowerCase();
+    return (c.company_name?.toLowerCase().includes(term) || c.contact_person?.toLowerCase().includes(term));
+  });
+
+  const handleClientSelect = (client) => {
+    const name = client.company_name;
+    setClientSearch(name);
+    setIsClientDropdownOpen(false);
+    
+    // Auto populate other fields mapping from Client API fields to Quotation fields
+    setFormData(prev => ({
+      ...prev,
+      clientId: client.id,
+      clientName: name,
+      contactPerson: client.contact_person || prev.contactPerson,
+      phone: client.phone || prev.phone,
+      email: client.email || prev.email,
+      website: client.website || prev.website,
+      currency: client.currency || prev.currency,
+      gstNumber: client.gst_number || prev.gstNumber,
+      panNumber: client.pan_number || prev.panNumber,
+      billingAddress: client.address || prev.billingAddress,
+      shippingAddress: client.address || prev.shippingAddress,
+      pincode: client.pincode || prev.pincode,
+      country: client.country || prev.country,
+      state: client.state || prev.state,
+      city: client.city || prev.city
+    }));
+  };
 
   const handleLogoUpload = (e) => {
     const file = e.target.files && e.target.files[0];
@@ -10,10 +71,10 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
       setLogoError('');
       const img = new Image();
       img.onload = () => {
-        if (img.width === 512 && img.height === 512) {
+        if (img.width <= 512 && img.height <= 512) {
           setFormData(prev => ({ ...prev, logo: file }));
         } else {
-          setLogoError(`Image must be exactly 512x512 pixels (Current: ${img.width}x${img.height})`);
+          setLogoError(`Image must be 512x512 pixels or smaller (Current: ${img.width}x${img.height})`);
           e.target.value = ''; // clear input
         }
       };
@@ -32,8 +93,8 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          {/* Client Name */}
-          <div className="relative">
+          {/* Client Name (Searchable Dropdown) */}
+          <div className="relative" ref={wrapperRef}>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Client Name <span className="text-red-500">*</span>
             </label>
@@ -41,14 +102,38 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
               <input
                 type="text"
                 name="clientName"
-                value={formData.clientName}
-                onChange={handleChange}
-                placeholder="Select Client"
+                value={clientSearch}
+                onChange={(e) => {
+                  setClientSearch(e.target.value);
+                  setIsClientDropdownOpen(true);
+                  handleChange({ target: { name: 'clientName', value: e.target.value } });
+                }}
+                onFocus={() => setIsClientDropdownOpen(true)}
+                placeholder="Search Client..."
                 className={`w-full px-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors
                   ${errors.clientName ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
               />
               <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
             </div>
+            
+            {isClientDropdownOpen && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                {filteredClients.length > 0 ? (
+                  filteredClients.map(client => (
+                    <div
+                      key={client.id}
+                      className="px-4 py-2 hover:bg-indigo-50 cursor-pointer text-sm text-gray-700"
+                      onClick={() => handleClientSelect(client)}
+                    >
+                      <div className="font-medium">{client.company_name}</div>
+                      
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-4 py-3 text-sm text-gray-500">No clients found</div>
+                )}
+              </div>
+            )}
             {errors.clientName && <p className="mt-1 text-xs text-red-500">{errors.clientName}</p>}
           </div>
 
@@ -141,8 +226,10 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
               value={formData.gstNumber}
               onChange={handleChange}
               placeholder="09AABCT1234Q1Z5"
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors uppercase"
+              className={`w-full px-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors uppercase
+                ${errors.gstNumber ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
             />
+            {errors.gstNumber && <p className="mt-1 text-xs text-red-500">{errors.gstNumber}</p>}
           </div>
 
           {/* PAN Number */}
@@ -154,8 +241,10 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
               value={formData.panNumber}
               onChange={handleChange}
               placeholder="AABCT1234Q"
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors uppercase"
+              className={`w-full px-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors uppercase
+                ${errors.panNumber ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
             />
+            {errors.panNumber && <p className="mt-1 text-xs text-red-500">{errors.panNumber}</p>}
           </div>
 
           {/* Logo Upload */}

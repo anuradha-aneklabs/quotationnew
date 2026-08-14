@@ -91,13 +91,23 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
       modules: prev.modules.map(m =>
         m.id === moduleId ? {
           ...m,
-          functionalities: m.functionalities.map(f =>
-            f.id === funcId ? { ...f, [field]: value } : f
-          )
+          functionalities: m.functionalities.map(f => {
+            if (f.id === funcId) {
+              const updated = { ...f, [field]: value };
+              if (field === 'effort') {
+                const effortHours = Number(value) || 0;
+                updated.duration = effortHours > 0 ? String(effortHours / 8) : '';
+              }
+              return updated;
+            }
+            return f;
+          })
         } : m
       )
     }));
   };
+
+  const [teamErrors, setTeamErrors] = useState({});
 
   const updateTeamMember = (moduleId, funcId, memberId, field, value) => {
     setFormData(prev => ({
@@ -110,10 +120,33 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
               ...f,
               teamAllocations: f.teamAllocations.map(tm => {
                 if (tm.id === memberId) {
-                  const updated = { ...tm, [field]: value };
+                  let finalValue = value;
+                  if (field === 'effort') {
+                    const newEffort = Number(value) || 0;
+                    const otherTeamEffort = f.teamAllocations
+                      .filter(t => t.id !== memberId)
+                      .reduce((sum, t) => sum + (Number(t.effort) || 0), 0);
+                    const totalEffort = newEffort + otherTeamEffort;
+                    const functionalityEffort = Number(f.effort) || 0;
+                    
+                    if (totalEffort > functionalityEffort) {
+                      setTeamErrors(prev => ({
+                        ...prev,
+                        [`${moduleId}_${funcId}_${memberId}`]: `Limit exceeded. Total assigned (${totalEffort}h) exceeds available (${functionalityEffort}h).`
+                      }));
+                    } else {
+                      setTeamErrors(prev => {
+                        const newErrs = { ...prev };
+                        delete newErrs[`${moduleId}_${funcId}_${memberId}`];
+                        return newErrs;
+                      });
+                    }
+                  }
+
+                  const updated = { ...tm, [field]: finalValue };
                   // If employee selected, auto-fill rate and role
                   if (field === 'memberId') {
-                    const emp = employees.find(e => e.id === value || e.employee_code === value);
+                    const emp = employees.find(e => String(e.id) === String(finalValue) || String(e.employee_code) === String(finalValue));
                     if (emp) {
                       updated.rate = String(emp.hourly_rate).replace('₹', '');
                       updated.role = emp.role || emp.designation || '';
@@ -301,6 +334,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
       <div className="space-y-5">
         {formData.modules.map((module, mIdx) => {
           const moduleEffort = module.functionalities.reduce((sum, f) => sum + (Number(f.effort) || 0), 0);
+          const functionalitiesDurationTotal = module.functionalities.reduce((sum, f) => sum + (Number(f.duration) || 0), 0);
           const moduleDuration = Number(module.duration) || 0;
           const moduleCost = module.functionalities.reduce((sum, f) => sum + f.teamAllocations.reduce((s, tm) => s + (Number(tm.cost) || 0), 0), 0);
 
@@ -419,7 +453,8 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                             </td>
                             <td className="py-2 px-1 align-top">
                               <input
-                                type="text"
+                                type="number"
+                                min="0" step="any"
                                 value={func.effort}
                                 onChange={(e) => updateFunctionality(module.id, func.id, 'effort', e.target.value)}
                                 className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 ${errors[`module_${mIdx}_func_${fIdx}_effort`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-indigo-500'}`}
@@ -427,7 +462,8 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                             </td>
                             <td className="py-2 px-1 align-top">
                               <input
-                                type="text"
+                                type="number"
+                                min="0" step="any"
                                 value={func.duration}
                                 onChange={(e) => updateFunctionality(module.id, func.id, 'duration', e.target.value)}
                                 className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 ${errors[`module_${mIdx}_func_${fIdx}_duration`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-indigo-500'}`}
@@ -440,7 +476,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                         <tr className="bg-indigo-50/30">
                           <td colSpan={3} className="py-2 text-right font-bold text-indigo-600 pr-4">Total</td>
                           <td className="py-2 text-center font-bold text-indigo-600">{moduleEffort}</td>
-                          <td className="py-2 text-center font-bold text-indigo-600">{moduleDuration}</td>
+                          <td className="py-2 text-center font-bold text-indigo-600">{functionalitiesDurationTotal}</td>
                         </tr>
                       </tfoot>
                     </table>
@@ -484,44 +520,61 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100">
-                        {module.functionalities.map((func) => 
-                          func.teamAllocations.map((tm) => (
-                            <tr key={tm.id} className="group hover:bg-gray-50">
-                              <td className="py-2 pr-2">
-                                <div className="flex items-center gap-1.5">
-                                  <div className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[8px] font-bold uppercase shrink-0">
-                                    {employees.find(e => e.id === tm.memberId)?.name?.substring(0, 2) || 'UN'}
+                        {module.functionalities.map((func, fIdx) => 
+                          func.teamAllocations.map((tm, tIdx) => (
+                            <React.Fragment key={tm.id}>
+                              <tr className="group hover:bg-gray-50">
+                                <td className="py-2 pr-2">
+                                  <div className="flex items-center gap-1.5">
+                                    <div className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[8px] font-bold uppercase shrink-0">
+                                      {employees.find(e => e.id === tm.memberId)?.name?.substring(0, 2) || 'UN'}
+                                    </div>
+                                    <select
+                                      value={tm.memberId}
+                                      onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'memberId', e.target.value)}
+                                      className="w-full bg-transparent border-0 focus:ring-0 text-xs text-gray-700 p-0 cursor-pointer focus:outline-none"
+                                    >
+                                      <option value="">Select...</option>
+                                      {employees.map(emp => (
+                                        <option key={emp.id} value={emp.id}>{emp.name}</option>
+                                      ))}
+                                    </select>
                                   </div>
-                                  <select
-                                    value={tm.memberId}
-                                    onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'memberId', e.target.value)}
-                                    className="w-full bg-transparent border-0 focus:ring-0 text-xs text-gray-700 p-0 cursor-pointer focus:outline-none"
-                                  >
-                                    <option value="">Select...</option>
-                                    {employees.map(emp => (
-                                      <option key={emp.id} value={emp.id}>{emp.name}</option>
-                                    ))}
-                                  </select>
-                                </div>
-                              </td>
-                              <td className="py-2 pr-2 text-gray-500 truncate">{tm.role || '-'}</td>
-                              <td className="py-2 px-1">
-                                <input
-                                  type="text"
-                                  value={tm.effort}
-                                  onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'effort', e.target.value)}
-                                  className="w-full text-center bg-transparent focus:outline-none border-b border-transparent group-hover:border-gray-300 focus:border-indigo-500 py-0.5"
-                                  placeholder="0"
-                                />
-                              </td>
-                              <td className="py-2 text-center text-gray-500">₹ {tm.rate || '0'}</td>
-                              <td className="py-2 text-center font-medium">₹ {(Number(tm.cost) || 0).toLocaleString()}</td>
-                              <td className="py-2 text-center">
-                                <button onClick={() => deleteTeamMember(module.id, func.id, tm.id)} className="text-gray-400 hover:text-red-500">
-                                  <Trash2 className="h-3.5 w-3.5 mx-auto" />
-                                </button>
-                              </td>
-                            </tr>
+                                </td>
+                                <td className="py-2 pr-2 text-gray-500 truncate">{tm.role || '-'}</td>
+                                <td className="py-2 px-1">
+                                  <input
+                                    type="number"
+                                    min="0" step="any"
+                                    value={tm.effort}
+                                    onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'effort', e.target.value)}
+                                    className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 ${teamErrors[`${module.id}_${func.id}_${tm.id}`] || errors[`module_${mIdx}_func_${fIdx}_team`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-300 focus:border-indigo-500'}`}
+                                    placeholder="0"
+                                  />
+                                  {teamErrors[`${module.id}_${func.id}_${tm.id}`] && (
+                                    <div className="text-[9px] text-red-500 text-center leading-tight mt-0.5">
+                                      {teamErrors[`${module.id}_${func.id}_${tm.id}`]}
+                                    </div>
+                                  )}
+                                </td>
+                                <td className="py-2 text-center text-gray-500">₹ {tm.rate || '0'}</td>
+                                <td className="py-2 text-center font-medium">₹ {(Number(tm.cost) || 0).toLocaleString()}</td>
+                                <td className="py-2 text-center">
+                                  <button onClick={() => deleteTeamMember(module.id, func.id, tm.id)} className="text-gray-400 hover:text-red-500">
+                                    <Trash2 className="h-3.5 w-3.5 mx-auto" />
+                                  </button>
+                                </td>
+                              </tr>
+                              {tIdx === func.teamAllocations.length - 1 && errors[`module_${mIdx}_func_${fIdx}_team`] && (
+                                <tr>
+                                  <td colSpan={6} className="py-1">
+                                    <div className="text-[10px] text-red-500 bg-red-50 p-1.5 rounded border border-red-100 flex items-center gap-1">
+                                      <span className="font-bold">{func.name || `Functionality ${fIdx + 1}`}:</span> {errors[`module_${mIdx}_func_${fIdx}_team`]}
+                                    </div>
+                                  </td>
+                                </tr>
+                              )}
+                            </React.Fragment>
                           ))
                         )}
                       </tbody>

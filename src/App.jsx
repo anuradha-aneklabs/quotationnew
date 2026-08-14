@@ -9,14 +9,25 @@ import './index.css';
 
 function App() {
   const [currentView, setCurrentView] = useState('Dashboard');
+  const [editQuotationId, setEditQuotationId] = useState(null);
+
+  const handleEditQuotation = (id) => {
+    setEditQuotationId(id);
+    setCurrentView('CreateQuotation');
+  };
+
+  const handleCreateNew = () => {
+    setEditQuotationId(null);
+    setCurrentView('CreateQuotation');
+  };
 
   return (
     <DashboardLayout currentView={currentView} setCurrentView={setCurrentView}>
       {currentView === 'Dashboard' && <Dashboard />}
       {currentView === 'Employees' && <Employees />}
       {currentView === 'Clients' && <Clients />}
-      {currentView === 'Quotations' && <Quotations setCurrentView={setCurrentView} />}
-      {currentView === 'CreateQuotation' && <CreateQuotation setCurrentView={setCurrentView} />}
+      {currentView === 'Quotations' && <Quotations setCurrentView={setCurrentView} onEditQuotation={handleEditQuotation} onCreateNew={handleCreateNew} />}
+      {currentView === 'CreateQuotation' && <CreateQuotation setCurrentView={setCurrentView} editId={editQuotationId} />}
     </DashboardLayout>
   );
 }
