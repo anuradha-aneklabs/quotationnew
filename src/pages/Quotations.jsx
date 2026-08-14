@@ -6,7 +6,7 @@ import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import * as quotationService from '../services/quotationService';
 
-export default function Quotations({ setCurrentView }) {
+export default function Quotations({ setCurrentView, onEditQuotation, onCreateNew }) {
   const [quotations, setQuotations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -93,7 +93,7 @@ export default function Quotations({ setCurrentView }) {
           <p className="text-gray-500 text-sm -mt-5">Manage and track all your quotations.</p>
         </div>
         <button 
-          onClick={() => setCurrentView('CreateQuotation')}
+          onClick={() => onCreateNew ? onCreateNew() : setCurrentView('CreateQuotation')}
           className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
         >
           <Plus className="h-4 w-4 mr-2" />
@@ -132,6 +132,7 @@ export default function Quotations({ setCurrentView }) {
         ) : (
           <QuotationsTable 
             quotations={filteredQuotations} 
+            onEdit={(quote) => onEditQuotation && onEditQuotation(quote.id)}
             onDelete={handleDeleteClick}
             onDownload={handleDownloadClick}
           />

@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
+import * as employeeService from '../../../../services/employeeService';
 
 export default function ProposalDetailsStep({ formData, handleChange, errors }) {
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    const loadEmployees = async () => {
+      try {
+        const data = await employeeService.fetchEmployees();
+        setEmployees(data);
+      } catch (err) {
+        console.error("Failed to fetch employees", err);
+      }
+    };
+    loadEmployees();
+  }, []);
+
   const engagementTypes = [
     {
       id: 'Fixed Price',
@@ -42,7 +57,7 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
               name="proposalTitle"
               value={formData.proposalTitle}
               onChange={handleChange}
-              placeholder="e.g. eye testing website"
+              placeholder="Enter title here..."
               className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-sm
                 ${errors.proposalTitle ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
             />
@@ -57,7 +72,7 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
               name="sector"
               value={formData.sector}
               onChange={handleChange}
-              placeholder="e.g. health"
+              placeholder="Enter sector name here..."
               className="w-full px-3 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors text-sm"
             />
           </div>
@@ -134,15 +149,18 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
             <label className="block text-xs font-medium text-gray-700 mb-1">
               Prepared By <span className="text-red-500">*</span>
             </label>
-            <input
-              type="text"
+            <select
               name="preparedBy"
               value={formData.preparedBy}
               onChange={handleChange}
-              placeholder="e.g. anuradha"
-              className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-sm
+              className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors bg-white text-sm
                 ${errors.preparedBy ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-            />
+            >
+              <option value="">Select Employee</option>
+              {employees.map(emp => (
+                <option key={emp.id} value={emp.id}>{emp.name}</option>
+              ))}
+            </select>
             {errors.preparedBy && <p className="mt-0.5 text-[10px] text-red-500">{errors.preparedBy}</p>}
           </div>
 
