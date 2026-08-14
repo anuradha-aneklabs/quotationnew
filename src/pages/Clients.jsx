@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import ClientsTable from '../components/clients/ClientsTable';
 import ClientModal from '../components/clients/ClientModal';
+import ClientViewModal from '../components/clients/ClientViewModal';
 import Header from '../components/layout/Header';
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { fetchClients, createClient, updateClient, deleteClient } from '../services/clientService';
+import { useToast } from '../contexts/ToastContext';
 
 export default function Clients() {
+  const { showToast } = useToast();
   const [clients, setClients] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,13 +20,16 @@ export default function Clients() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
   
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewingClient, setViewingClient] = useState(null);
+  
   // Delete modal state
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7;
+  const itemsPerPage = 10;
 
   const loadClients = async () => {
     try {
@@ -62,6 +68,11 @@ export default function Clients() {
     setIsModalOpen(true);
   };
 
+  const handleViewClick = (client) => {
+    setViewingClient(client);
+    setIsViewModalOpen(true);
+  };
+
   const handleDeleteClick = (id) => {
     setClientToDelete(id);
     setIsDeleteModalOpen(true);
@@ -76,8 +87,9 @@ export default function Clients() {
       await loadClients();
       setIsDeleteModalOpen(false);
       setClientToDelete(null);
+      showToast('Client deleted successfully', 'success');
     } catch (err) {
-      alert(`Failed to delete client: ${err.message}`);
+      showToast(`Failed to delete client: ${err.message}`, 'error');
     } finally {
       setIsDeleting(false);
     }
@@ -93,10 +105,16 @@ export default function Clients() {
       // Refresh list on success
       await loadClients();
       setIsModalOpen(false);
+      showToast(editingClient ? 'Client updated successfully' : 'Client created successfully', 'success');
     } catch (err) {
-      alert(`Failed to save client: ${err.message}`);
+      showToast(`Failed to save client: ${err.message}`, 'error');
     }
   };
+
+  const paginatedClients = filteredClients.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="space-y-6 flex flex-col h-full pb-6">
@@ -133,7 +151,8 @@ export default function Clients() {
           </div>
         ) : (
           <ClientsTable 
-            clients={filteredClients} 
+            clients={paginatedClients} 
+            onView={handleViewClick}
             onEdit={handleEditClick}
             onDelete={handleDeleteClick}
           />
@@ -153,6 +172,13 @@ export default function Clients() {
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveClient}
         clientData={editingClient}
+      />
+
+      {/* View Modal */}
+      <ClientViewModal 
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        client={viewingClient}
       />
 
       {/* Delete Confirmation Modal */}

@@ -1,19 +1,19 @@
 import React from 'react';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 
-export default function EmployeesTable({ employees, onEdit, onDelete }) {
+export default function EmployeesTable({ employees, onView, onEdit, onDelete }) {
   return (
     <div className="overflow-x-auto flex-1">
       <table className="w-full text-left border-collapse min-w-[800px]">
         <thead>
           <tr className="border-b border-gray-100">
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Role</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Phone</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Assigned Project</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Hourly Rate</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Name</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Role</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Email</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Phone</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Assigned Project</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Hourly Rate</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider text-right">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
@@ -42,7 +42,10 @@ export default function EmployeesTable({ employees, onEdit, onDelete }) {
               </td>
               <td className="px-6 py-4">
                 <div className="flex items-center justify-end space-x-3">
-                  <button className="text-gray-400 hover:text-indigo-600 transition-colors">
+                  <button 
+                    onClick={() => onView(employee)}
+                    className="text-gray-400 hover:text-indigo-600 transition-colors"
+                  >
                     <Eye className="h-4 w-4" />
                   </button>
                   <button 

@@ -7,12 +7,12 @@ export default function QuotationsTable({ quotations, onEdit, onDelete, onView, 
       <table className="w-full text-left border-collapse min-w-[1000px]">
         <thead>
           <tr className="border-b border-gray-100">
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Quotation Number</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Client Name</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Subject</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Days</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Amount</th>
-            <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Quotation Number</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Client Name</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Subject</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Total Days</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Total Amount</th>
+            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider text-right">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">

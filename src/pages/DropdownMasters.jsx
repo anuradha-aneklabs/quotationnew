@@ -7,8 +7,10 @@ import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { fetchDropdowns, fetchDropdownById, createDropdown, updateDropdown, deleteDropdown } from '../services/dropdownMasterService';
+import { useToast } from '../contexts/ToastContext';
 
 export default function DropdownMasters() {
+  const { showToast } = useToast();
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,7 +64,7 @@ export default function DropdownMasters() {
       setEditingDropdown(fullDetails);
       setIsModalOpen(true);
     } catch (err) {
-      alert(`Failed to fetch dropdown details: ${err.message}`);
+      showToast(`Failed to fetch dropdown details: ${err.message}`, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -82,8 +84,9 @@ export default function DropdownMasters() {
       await loadDropdowns();
       setIsDeleteModalOpen(false);
       setDropdownToDelete(null);
+      showToast('Dropdown deleted successfully', 'success');
     } catch (err) {
-      alert(`Failed to delete dropdown: ${err.message}`);
+      showToast(`Failed to delete dropdown: ${err.message}`, 'error');
     } finally {
       setIsDeleting(false);
     }
@@ -99,8 +102,9 @@ export default function DropdownMasters() {
       }
       await loadDropdowns();
       setIsModalOpen(false);
+      showToast(editingDropdown ? 'Dropdown updated successfully' : 'Dropdown created successfully', 'success');
     } catch (err) {
-      alert(`Failed to save dropdown: ${err.message}`);
+      showToast(`Failed to save dropdown: ${err.message}`, 'error');
     } finally {
       setIsSubmitting(false);
     }

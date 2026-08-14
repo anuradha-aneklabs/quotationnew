@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Filter, Loader2 } from 'lucide-react';
 import QuotationsTable from '../components/quotations/QuotationsTable';
 import Header from '../components/layout/Header';
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import * as quotationService from '../services/quotationService';
+import { useToast } from '../contexts/ToastContext';
 
 export default function Quotations({ setCurrentView, onEditQuotation, onCreateNew }) {
+  const { showToast } = useToast();
   const [quotations, setQuotations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,10 +16,27 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     fetchQuotations();
+  }, []);
+
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      if (containerRef.current) {
+        // Search bar (~65px) + pagination (~55px) + table header (~53px) = ~173px
+        const availableHeight = containerRef.current.clientHeight - 175;
+        const rowHeight = 57; // Accurate height of a table row
+        const calculated = Math.max(1, Math.floor(availableHeight / rowHeight));
+        setItemsPerPage(calculated);
+      }
+    };
+
+    updateItemsPerPage();
+    window.addEventListener('resize', updateItemsPerPage);
+    return () => window.removeEventListener('resize', updateItemsPerPage);
   }, []);
 
   const fetchQuotations = async () => {
@@ -56,14 +75,20 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
     );
   });
 
+  const paginatedQuotations = filteredQuotations.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const handleDeleteClick = async (id) => {
     if (window.confirm('Are you sure you want to delete this quotation?')) {
       try {
         await quotationService.deleteQuotation(id);
         setQuotations(quotations.filter(q => q.id !== id));
+        showToast('Quotation deleted successfully', 'success');
       } catch (err) {
         console.error('Failed to delete quotation:', err);
-        alert('Failed to delete quotation');
+        showToast('Failed to delete quotation', 'error');
       }
     }
   };
@@ -78,9 +103,10 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
+      showToast('PDF downloaded successfully', 'success');
     } catch (err) {
       console.error('Failed to download PDF:', err);
-      alert('Failed to download PDF');
+      showToast('Failed to download PDF', 'error');
     }
   };
 
@@ -102,7 +128,7 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
       </div>
 
       {/* Unified Table Container */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col flex-1 min-h-0">
+      <div ref={containerRef} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col flex-1 min-h-0 overflow-hidden">
         <SearchBar 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -131,7 +157,7 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
           <div className="p-10 flex justify-center"><Loader2 className="animate-spin text-indigo-600 h-8 w-8" /></div>
         ) : (
           <QuotationsTable 
-            quotations={filteredQuotations} 
+            quotations={paginatedQuotations} 
             onEdit={(quote) => onEditQuotation && onEditQuotation(quote.id)}
             onDelete={handleDeleteClick}
             onDownload={handleDownloadClick}

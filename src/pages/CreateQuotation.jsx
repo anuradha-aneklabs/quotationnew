@@ -9,8 +9,10 @@ import TimelineStep from '../components/quotations/form/steps/TimelineStep';
 import PreviewStep from '../components/quotations/form/steps/PreviewStep';
 import { validateStep1, validateStep2, validateStep3 } from '../utils/quotationValidation';
 import * as quotationService from '../services/quotationService';
+import { useToast } from '../contexts/ToastContext';
 
 export default function CreateQuotation({ setCurrentView, editId = null }) {
+  const { showToast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState({});
   const [createdQuoteId, setCreatedQuoteId] = useState(editId);
@@ -380,7 +382,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
       if (currentStep < 6) setCurrentStep(prev => prev + 1);
     } catch (err) {
       console.error("API Save Error:", err);
-      alert(err.message || "Failed to save step.");
+      showToast(err.message || "Failed to save step.", 'error');
     } finally {
       setIsSaving(false);
     }
@@ -396,11 +398,11 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
       if (createdQuoteId) {
          await quotationService.saveCommercial(createdQuoteId, { wizard_step: 6 });
       }
-      alert("Quotation saved successfully!");
+      showToast("Quotation saved successfully!", 'success');
       setCurrentView('Quotations');
     } catch (err) {
       console.error(err);
-      alert("Final submit failed.");
+      showToast("Final submit failed.", 'error');
     } finally {
       setIsSaving(false);
     }

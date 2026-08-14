@@ -9,6 +9,7 @@ import TaxMasters from './pages/TaxMasters';
 import DropdownMasters from './pages/DropdownMasters';
 import Login from './pages/Login';
 import Reports from './pages/Reports';
+import { ToastProvider } from './contexts/ToastContext';
 import './index.css';
 
 function App() {
@@ -29,16 +30,18 @@ function App() {
   }
 
   return (
-    <DashboardLayout currentView={currentView} setCurrentView={setCurrentView} setToken={setToken}>
-      {currentView === 'Dashboard' && <Dashboard />}
-      {currentView === 'Employees' && <Employees />}
-      {currentView === 'Clients' && <Clients />}
-      {currentView === 'Quotations' && <Quotations setCurrentView={setCurrentView} onEditQuotation={(id) => { setEditQuotationId(id); setCurrentView('CreateQuotation'); }} onCreateNew={() => { setEditQuotationId(null); setCurrentView('CreateQuotation'); }} />}
-      {currentView === 'CreateQuotation' && <CreateQuotation setCurrentView={setCurrentView} editId={editQuotationId} />}
-      {currentView === 'Tax Masters' && <TaxMasters />}
-      {currentView === 'Dropdown Masters' && <DropdownMasters />}
-      {currentView === 'Reports' && <Reports />}
-    </DashboardLayout>
+    <ToastProvider>
+      <DashboardLayout currentView={currentView} setCurrentView={setCurrentView} setToken={setToken}>
+        {currentView === 'Dashboard' && <Dashboard />}
+        {currentView === 'Employees' && <Employees />}
+        {currentView === 'Clients' && <Clients />}
+        {currentView === 'Quotations' && <Quotations setCurrentView={setCurrentView} onEditQuotation={(id) => { setEditQuotationId(id); setCurrentView('CreateQuotation'); }} onCreateNew={() => { setEditQuotationId(null); setCurrentView('CreateQuotation'); }} />}
+        {currentView === 'CreateQuotation' && <CreateQuotation setCurrentView={setCurrentView} editId={editQuotationId} />}
+        {currentView === 'Tax Masters' && <TaxMasters />}
+        {currentView === 'Dropdown Masters' && <DropdownMasters />}
+        {currentView === 'Reports' && <Reports />}
+      </DashboardLayout>
+    </ToastProvider>
   );
 }
 
