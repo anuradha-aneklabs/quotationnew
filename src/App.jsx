@@ -14,6 +14,7 @@ import './index.css';
 function App() {
   const [currentView, setCurrentView] = useState('Dashboard');
   const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const [editQuotationId, setEditQuotationId] = useState(null);
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -32,8 +33,8 @@ function App() {
       {currentView === 'Dashboard' && <Dashboard />}
       {currentView === 'Employees' && <Employees />}
       {currentView === 'Clients' && <Clients />}
-      {currentView === 'Quotations' && <Quotations setCurrentView={setCurrentView} />}
-      {currentView === 'CreateQuotation' && <CreateQuotation setCurrentView={setCurrentView} />}
+      {currentView === 'Quotations' && <Quotations setCurrentView={setCurrentView} onEditQuotation={(id) => { setEditQuotationId(id); setCurrentView('CreateQuotation'); }} onCreateNew={() => { setEditQuotationId(null); setCurrentView('CreateQuotation'); }} />}
+      {currentView === 'CreateQuotation' && <CreateQuotation setCurrentView={setCurrentView} editId={editQuotationId} />}
       {currentView === 'Tax Masters' && <TaxMasters />}
       {currentView === 'Dropdown Masters' && <DropdownMasters />}
       {currentView === 'Reports' && <Reports />}
