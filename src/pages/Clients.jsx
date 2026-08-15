@@ -87,7 +87,7 @@ export default function Clients() {
       await loadClients();
       setIsDeleteModalOpen(false);
       setClientToDelete(null);
-      showToast('Client deleted successfully', 'success');
+      showToast('Client deleted successfully', 'error');
     } catch (err) {
       showToast(`Failed to delete client: ${err.message}`, 'error');
     } finally {

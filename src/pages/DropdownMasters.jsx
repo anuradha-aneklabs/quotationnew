@@ -84,7 +84,7 @@ export default function DropdownMasters() {
       await loadDropdowns();
       setIsDeleteModalOpen(false);
       setDropdownToDelete(null);
-      showToast('Dropdown deleted successfully', 'success');
+      showToast('Dropdown deleted successfully', 'error');
     } catch (err) {
       showToast(`Failed to delete dropdown: ${err.message}`, 'error');
     } finally {
