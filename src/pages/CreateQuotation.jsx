@@ -154,42 +154,51 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
             if (!Array.isArray(rawModules)) rawModules = [];
 
             if (rawModules.length > 0) {
-              newData.modules = rawModules.map(m => ({
-                id: m.id || Date.now().toString(),
-                name: m.name || '',
-                description: m.description || '',
-                duration: m.duration || '',
-                functionalities: (m.functionalities || []).map(f => ({
+              newData.modules = rawModules.map(m => {
+                // Backend returns teamAllocations at module level, put them in first functionality
+                const moduleTeamAllocations = (m.teamAllocations || []).map(tm => {
+                  const memberId = String(tm.employeeId || tm.employee_id || tm.memberId || tm.member_id || '');
+                  const mappedTm = {
+                    id: tm.id || Date.now().toString(),
+                    memberId: memberId,
+                    role: tm.role || '',
+                    effort: String(tm.effort || ''),
+                    rate: String(tm.rate || ''),
+                    cost: Number(tm.total_cost || tm.cost || 0)
+                  };
+                  
+                  // Auto-fill rate/role from employees list if not already present
+                  if (memberId) {
+                    const emp = allEmployees.find(e => String(e.id) === memberId);
+                    if (emp) {
+                      mappedTm.rate = mappedTm.rate || String(emp.hourly_rate).replace('₹', '');
+                      mappedTm.role = mappedTm.role || emp.role || emp.designation || '';
+                      const effortNum = Number(mappedTm.effort) || 0;
+                      const rateNum = Number(mappedTm.rate) || 0;
+                      mappedTm.cost = effortNum * rateNum;
+                    }
+                  }
+                  return mappedTm;
+                });
+
+                const functionalities = (m.functionalities || []).map((f, fIdx) => ({
                   id: f.id || Date.now().toString(),
                   name: f.name || '',
                   description: f.description || '',
-                  effort: f.effort || '',
-                  duration: f.duration || '',
-                  teamAllocations: (f.teamAllocations || f.team_allocations || []).map(tm => {
-                    const mappedTm = {
-                      id: tm.id || Date.now().toString(),
-                      memberId: tm.memberId || tm.member_id || '',
-                      role: tm.role || '',
-                      effort: tm.effort || '',
-                      rate: tm.rate || '',
-                      cost: tm.cost || 0
-                    };
-                    
-                    // Auto-fill from employees if empty (e.g. backend doesn't store rate/role)
-                    if (mappedTm.memberId) {
-                      const emp = allEmployees.find(e => String(e.id) === String(mappedTm.memberId) || String(e.employee_code) === String(mappedTm.memberId));
-                      if (emp) {
-                        mappedTm.rate = mappedTm.rate || String(emp.hourly_rate).replace('₹', '');
-                        mappedTm.role = mappedTm.role || emp.role || emp.designation || '';
-                      }
-                      const effortNum = Number(mappedTm.effort) || 0;
-                      const rateNum = Number(mappedTm.rate) || 0;
-                      mappedTm.cost = effortNum * rateNum; // always recalculate just in case
-                    }
-                    return mappedTm;
-                  })
-                }))
-              }));
+                  effort: String(f.effort || ''),
+                  duration: String(f.duration || ''),
+                  // Put all team allocations in the first functionality
+                  teamAllocations: fIdx === 0 ? moduleTeamAllocations : []
+                }));
+
+                return {
+                  id: m.id || Date.now().toString(),
+                  name: m.name || '',
+                  description: m.description || '',
+                  duration: String(m.durationDays || m.duration || ''),
+                  functionalities
+                };
+              });
             }
             return newData;
           });
@@ -326,18 +335,10 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
         const mapStep3Payload = () => {
           const parseId = (id) => (id && id.toString().length > 10) ? undefined : id;
           return {
-            modules: formData.modules.map(m => ({
-              id: parseId(m.id),
-              name: m.name,
-              description: m.description,
-              duration: Number(m.duration) || 0,
-              functionalities: m.functionalities.map(f => ({
-                id: parseId(f.id),
-                name: f.name,
-                description: f.description,
-                effort: Number(f.effort) || 0,
-                duration: Number(f.duration) || 0,
-                teamAllocations: f.teamAllocations.map(tm => ({
+            modules: formData.modules.map(m => {
+              // Flatten all teamAllocations from every functionality into module level (backend expects this)
+              const allTeamAllocations = m.functionalities.flatMap(f =>
+                f.teamAllocations.map(tm => ({
                   id: parseId(tm.id),
                   employeeId: tm.memberId,
                   role: tm.role,
@@ -345,8 +346,22 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
                   rate: Number(tm.rate) || 0,
                   cost: Number(tm.cost) || 0
                 }))
-              }))
-            }))
+              );
+              return {
+                id: parseId(m.id),
+                name: m.name,
+                description: m.description,
+                durationDays: Number(m.duration) || 0,
+                functionalities: m.functionalities.map(f => ({
+                  id: parseId(f.id),
+                  name: f.name,
+                  description: f.description,
+                  effort: Number(f.effort) || 0,
+                  duration: Number(f.duration) || 0
+                })),
+                teamAllocations: allTeamAllocations
+              };
+            })
           };
         };
 
@@ -417,7 +432,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
       case 3: return <ModuleManagementStep formData={formData} setFormData={setFormData} errors={errors} />;
       case 4: return <CommercialStep formData={formData} handleChange={handleChange} />;
       case 5: return <TimelineStep formData={formData} />;
-      case 6: return <PreviewStep formData={formData} onSave={handleSaveQuotation} isSaving={isSaving} />;
+      case 6: return <PreviewStep formData={formData} onSave={handleSaveQuotation} isSaving={isSaving} onEdit={() => setCurrentStep(1)} />;
       default: return null;
     }
   };

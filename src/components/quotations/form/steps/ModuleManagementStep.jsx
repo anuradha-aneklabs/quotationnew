@@ -88,10 +88,9 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
   const updateFunctionality = (moduleId, funcId, field, value) => {
     setFormData(prev => ({
       ...prev,
-      modules: prev.modules.map(m =>
-        m.id === moduleId ? {
-          ...m,
-          functionalities: m.functionalities.map(f => {
+      modules: prev.modules.map(m => {
+        if (m.id === moduleId) {
+          const newFunctionalities = m.functionalities.map(f => {
             if (f.id === funcId) {
               const updated = { ...f, [field]: value };
               if (field === 'effort') {
@@ -101,13 +100,20 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
               return updated;
             }
             return f;
-          })
-        } : m
-      )
+          });
+          
+          const totalDuration = newFunctionalities.reduce((sum, f) => sum + (Number(f.duration) || 0), 0);
+          
+          return {
+            ...m,
+            functionalities: newFunctionalities,
+            duration: totalDuration > 0 ? String(totalDuration) : ''
+          };
+        }
+        return m;
+      })
     }));
   };
-
-  const [teamErrors, setTeamErrors] = useState({});
 
   const updateTeamMember = (moduleId, funcId, memberId, field, value) => {
     setFormData(prev => ({
@@ -123,23 +129,19 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                   let finalValue = value;
                   if (field === 'effort') {
                     const newEffort = Number(value) || 0;
-                    const otherTeamEffort = f.teamAllocations
-                      .filter(t => t.id !== memberId)
-                      .reduce((sum, t) => sum + (Number(t.effort) || 0), 0);
-                    const totalEffort = newEffort + otherTeamEffort;
-                    const functionalityEffort = Number(f.effort) || 0;
                     
-                    if (totalEffort > functionalityEffort) {
-                      setTeamErrors(prev => ({
-                        ...prev,
-                        [`${moduleId}_${funcId}_${memberId}`]: `Limit exceeded. Total assigned (${totalEffort}h) exceeds available (${functionalityEffort}h).`
-                      }));
-                    } else {
-                      setTeamErrors(prev => {
-                        const newErrs = { ...prev };
-                        delete newErrs[`${moduleId}_${funcId}_${memberId}`];
-                        return newErrs;
-                      });
+                    // Calculate total module effort
+                    const moduleEffort = m.functionalities.reduce((sum, funcObj) => sum + (Number(funcObj.effort) || 0), 0);
+                    
+                    // Calculate other team members' effort across the entire module
+                    const allOtherTeamEffort = m.functionalities.reduce((sum, funcObj) => {
+                      return sum + funcObj.teamAllocations.reduce((s, t) => {
+                        return s + (t.id === memberId ? 0 : (Number(t.effort) || 0));
+                      }, 0);
+                    }, 0);
+                    
+                    if (newEffort + allOtherTeamEffort > moduleEffort) {
+                      finalValue = String(Math.max(0, moduleEffort - allOtherTeamEffort));
                     }
                   }
 
@@ -177,12 +179,18 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
   const deleteFunctionality = (moduleId, funcId) => {
     setFormData(prev => ({
       ...prev,
-      modules: prev.modules.map(m =>
-        m.id === moduleId ? {
-          ...m,
-          functionalities: m.functionalities.filter(f => f.id !== funcId)
-        } : m
-      )
+      modules: prev.modules.map(m => {
+        if (m.id === moduleId) {
+          const newFunctionalities = m.functionalities.filter(f => f.id !== funcId);
+          const totalDuration = newFunctionalities.reduce((sum, f) => sum + (Number(f.duration) || 0), 0);
+          return {
+            ...m,
+            functionalities: newFunctionalities,
+            duration: totalDuration > 0 ? String(totalDuration) : ''
+          };
+        }
+        return m;
+      })
     }));
   };
 
@@ -208,8 +216,9 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
     if (!formData.projectStartDate || !formData.projectEndDate) return 0;
     const start = new Date(formData.projectStartDate);
     const end = new Date(formData.projectEndDate);
+    if (end < start) return 0;
     const diffTime = Math.abs(end - start);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
     return diffDays;
   };
 
@@ -427,6 +436,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                           <th className="pb-2 font-bold min-w-[150px]">Description</th>
                           <th className="pb-2 font-bold text-center w-20">Effort (Hours)</th>
                           <th className="pb-2 font-bold text-center w-24">Duration (Days)</th>
+                          <th className="pb-2 font-bold text-center w-10">Action</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -469,6 +479,11 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                 className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 ${errors[`module_${mIdx}_func_${fIdx}_duration`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-indigo-500'}`}
                               />
                             </td>
+                            <td className="py-2 align-top text-center pt-2.5">
+                              <button onClick={() => deleteFunctionality(module.id, func.id)} className="text-gray-400 hover:text-red-500">
+                                <Trash2 className="h-3.5 w-3.5 mx-auto" />
+                              </button>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -477,6 +492,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                           <td colSpan={3} className="py-2 text-right font-bold text-indigo-600 pr-4">Total</td>
                           <td className="py-2 text-center font-bold text-indigo-600">{moduleEffort}</td>
                           <td className="py-2 text-center font-bold text-indigo-600">{functionalitiesDurationTotal}</td>
+                          <td></td>
                         </tr>
                       </tfoot>
                     </table>
@@ -527,16 +543,16 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                 <td className="py-2 pr-2">
                                   <div className="flex items-center gap-1.5">
                                     <div className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[8px] font-bold uppercase shrink-0">
-                                      {employees.find(e => e.id === tm.memberId)?.name?.substring(0, 2) || 'UN'}
+                                      {employees.find(e => String(e.id) === String(tm.memberId))?.name?.substring(0, 2) || 'UN'}
                                     </div>
                                     <select
-                                      value={tm.memberId}
+                                      value={String(tm.memberId || '')}
                                       onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'memberId', e.target.value)}
                                       className="w-full bg-transparent border-0 focus:ring-0 text-xs text-gray-700 p-0 cursor-pointer focus:outline-none"
                                     >
                                       <option value="">Select...</option>
                                       {employees.map(emp => (
-                                        <option key={emp.id} value={emp.id}>{emp.name}</option>
+                                        <option key={emp.id} value={String(emp.id)}>{emp.name}</option>
                                       ))}
                                     </select>
                                   </div>
@@ -548,14 +564,9 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                     min="0" step="any"
                                     value={tm.effort}
                                     onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'effort', e.target.value)}
-                                    className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 ${teamErrors[`${module.id}_${func.id}_${tm.id}`] || errors[`module_${mIdx}_func_${fIdx}_team`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-300 focus:border-indigo-500'}`}
+                                    className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 ${errors[`module_${mIdx}_func_${fIdx}_team`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-300 focus:border-indigo-500'}`}
                                     placeholder="0"
                                   />
-                                  {teamErrors[`${module.id}_${func.id}_${tm.id}`] && (
-                                    <div className="text-[9px] text-red-500 text-center leading-tight mt-0.5">
-                                      {teamErrors[`${module.id}_${func.id}_${tm.id}`]}
-                                    </div>
-                                  )}
                                 </td>
                                 <td className="py-2 text-center text-gray-500">₹ {tm.rate || '0'}</td>
                                 <td className="py-2 text-center font-medium">₹ {(Number(tm.cost) || 0).toLocaleString()}</td>

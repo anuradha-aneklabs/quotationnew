@@ -10,7 +10,8 @@ export default function CommercialStep({ formData, handleChange }) {
 
   // Calculate Discount
   const discountValue = Number(formData.discountValue) || 0;
-  const isPercentage = formData.discountType === 'Percentage (%)';
+  const discountType = formData.discountType || 'Percentage (%)';
+  const isPercentage = discountType.toLowerCase().includes('percent');
   const discountAmount = isPercentage ? (baseCost * (discountValue / 100)) : discountValue;
 
   // Calculate GST (18%) on discounted amount
@@ -61,7 +62,9 @@ export default function CommercialStep({ formData, handleChange }) {
                 value={formData.discountValue}
                 onChange={handleChange}
                 min="0"
-                className="w-24 px-3 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500"
+                step="any"
+                placeholder="0"
+                className="w-28 px-3 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500"
               />
             </div>
             <div className="text-red-500 font-medium">
