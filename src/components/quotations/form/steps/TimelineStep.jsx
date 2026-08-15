@@ -73,7 +73,8 @@ export default function TimelineStep({ formData }) {
     let end = null;
     if (start && durDays > 0) {
       end = new Date(start);
-      end.setDate(end.getDate() + durDays - 1);
+      const calendarDays = Math.max(1, Math.ceil(durDays));
+      end.setDate(end.getDate() + calendarDays - 1);
       cursor = new Date(end);
       cursor.setDate(cursor.getDate() + 1);
     }

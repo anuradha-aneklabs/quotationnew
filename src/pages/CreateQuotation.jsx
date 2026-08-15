@@ -262,7 +262,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
   };
 
   const mapStep1Payload = () => ({
-    client_id: formData.clientId || 12,
+    client_id: formData.clientId || null,
     title: formData.proposalTitle,
     proposal_date: formData.proposalDate || null,
     valid_till: formData.validTill || null,
@@ -276,7 +276,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
     ...mapStep1Payload(),
     sector: formData.sector,
     revision_version: formData.revision,
-    prepared_by_id: formData.preparedBy,
+    prepared_by_id: formData.preparedBy || null,
     prepared_by_designation: formData.designation,
     prepared_by_department: formData.department,
     engagement_type: formData.engagementType,

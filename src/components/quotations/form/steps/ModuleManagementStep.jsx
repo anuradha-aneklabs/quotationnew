@@ -413,10 +413,10 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
 
               {/* Functionalities & Team Allocation Split */}
               {!collapsedModules[module.id] && (
-              <div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-200">
+              <div className="flex flex-col lg:flex-row gap-4 p-4 bg-gray-50/50">
                 
                 {/* Left: Functionalities */}
-                <div className="flex-1 p-3 flex flex-col min-w-0">
+                <div className="flex-1 p-4 flex flex-col min-w-0 bg-white border border-gray-200 rounded-xl shadow-sm">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="text-xs font-bold text-gray-900">Functionalities</h3>
                     <button
@@ -501,7 +501,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                 </div>
 
                 {/* Right: Team Effort Allocation */}
-                <div className="flex-[1.2] p-3 flex flex-col min-w-0 bg-gray-50/30">
+                <div className="flex-[1.2] p-4 flex flex-col min-w-0 bg-white border border-gray-200 rounded-xl shadow-sm">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="text-xs font-bold text-gray-900">Team Effort Allocation</h3>
                     <button
