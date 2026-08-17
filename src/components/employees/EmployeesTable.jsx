@@ -56,7 +56,7 @@ export default function EmployeesTable({ employees, onView, onEdit, onDelete }) 
                   </button>
                   <button 
                     onClick={() => onDelete(employee.id)}
-                    className="text-gray-400 hover:text-red-500 transition-colors"
+                    className="text-red-500 hover:text-red-600 transition-colors"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

@@ -155,7 +155,17 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
             <select
               name="preparedBy"
               value={formData.preparedBy}
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e);
+                const selectedEmp = employees.find(emp => String(emp.id) === String(e.target.value));
+                if (selectedEmp) {
+                  handleChange({ target: { name: 'designation', value: selectedEmp.designation || selectedEmp.role || '' }});
+                  handleChange({ target: { name: 'department', value: selectedEmp.department || '' }});
+                } else {
+                  handleChange({ target: { name: 'designation', value: '' }});
+                  handleChange({ target: { name: 'department', value: '' }});
+                }
+              }}
               className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors bg-white text-sm
                 ${errors.preparedBy ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
             >

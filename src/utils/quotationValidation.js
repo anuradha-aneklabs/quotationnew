@@ -62,17 +62,21 @@ export const validateStep3 = (data) => {
       if (!mod.functionalities || mod.functionalities.length === 0) {
         errors[`module_${modIdx}_func`] = 'At least one functionality is required';
       } else {
+        const totalModuleEffort = mod.functionalities.reduce((sum, f) => sum + (Number(f.effort) || 0), 0);
+        let totalModuleTeamEffort = 0;
+
         mod.functionalities.forEach((func, funcIdx) => {
           if (!func.name?.trim()) errors[`module_${modIdx}_func_${funcIdx}_name`] = 'Functionality name is required';
           if (!func.effort) errors[`module_${modIdx}_func_${funcIdx}_effort`] = 'Effort is required';
           if (!func.duration) errors[`module_${modIdx}_func_${funcIdx}_duration`] = 'Duration is required';
           
-          const totalFuncEffort = Number(func.effort) || 0;
-          const totalTeamEffort = (func.teamAllocations || []).reduce((sum, tm) => sum + (Number(tm.effort) || 0), 0);
-          if (totalTeamEffort > totalFuncEffort) {
-            errors[`module_${modIdx}_func_${funcIdx}_team`] = `Team effort (${totalTeamEffort}h) exceeds functionality effort (${totalFuncEffort}h)`;
-          }
+          totalModuleTeamEffort += (func.teamAllocations || []).reduce((sum, tm) => sum + (Number(tm.effort) || 0), 0);
         });
+
+        if (totalModuleTeamEffort > totalModuleEffort) {
+          const lastFuncIdx = mod.functionalities.length - 1;
+          errors[`module_${modIdx}_func_${lastFuncIdx}_team`] = `Total team effort (${totalModuleTeamEffort}h) exceeds module effort (${totalModuleEffort}h)`;
+        }
       }
     });
   }

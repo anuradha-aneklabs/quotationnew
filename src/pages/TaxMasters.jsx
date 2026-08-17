@@ -76,7 +76,7 @@ export default function TaxMasters() {
       await loadTaxes();
       setIsDeleteModalOpen(false);
       setTaxToDelete(null);
-      showToast('Tax deleted successfully', 'success');
+      showToast('Tax deleted successfully', 'error');
     } catch (err) {
       showToast(`Failed to delete tax: ${err.message}`, 'error');
     } finally {

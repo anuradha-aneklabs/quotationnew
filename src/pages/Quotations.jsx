@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Filter, Loader2 } from 'lucide-react';
 import QuotationsTable from '../components/quotations/QuotationsTable';
+import QuotationViewModal from '../components/quotations/QuotationViewModal';
 import Header from '../components/layout/Header';
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
@@ -18,6 +19,9 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
   
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const containerRef = useRef(null);
+
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewingQuote, setViewingQuote] = useState(null);
 
   useEffect(() => {
     fetchQuotations();
@@ -85,7 +89,7 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
       try {
         await quotationService.deleteQuotation(id);
         setQuotations(quotations.filter(q => q.id !== id));
-        showToast('Quotation deleted successfully', 'success');
+        showToast('Quotation deleted successfully', 'error');
       } catch (err) {
         console.error('Failed to delete quotation:', err);
         showToast('Failed to delete quotation', 'error');
@@ -108,6 +112,11 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
       console.error('Failed to download PDF:', err);
       showToast('Failed to download PDF', 'error');
     }
+  };
+
+  const handleViewClick = async (quote) => {
+    setViewingQuote(quote);
+    setIsViewModalOpen(true);
   };
 
   return (
@@ -158,6 +167,7 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
         ) : (
           <QuotationsTable 
             quotations={paginatedQuotations} 
+            onView={handleViewClick}
             onEdit={(quote) => onEditQuotation && onEditQuotation(quote.id)}
             onDelete={handleDeleteClick}
             onDownload={handleDownloadClick}
@@ -171,6 +181,12 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
           onPageChange={setCurrentPage}
         />
       </div>
+
+      <QuotationViewModal 
+        isOpen={isViewModalOpen} 
+        onClose={() => setIsViewModalOpen(false)} 
+        quote={viewingQuote} 
+      />
     </div>
   );
 }

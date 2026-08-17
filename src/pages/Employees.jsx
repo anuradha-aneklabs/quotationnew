@@ -87,7 +87,7 @@ export default function Employees() {
       await loadEmployees();
       setIsDeleteModalOpen(false);
       setEmployeeToDelete(null);
-      showToast('Employee deleted successfully', 'success');
+      showToast('Employee deleted successfully', 'error');
     } catch (err) {
       showToast(`Failed to delete employee: ${err.message}`, 'error');
     } finally {

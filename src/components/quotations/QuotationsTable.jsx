@@ -47,7 +47,7 @@ export default function QuotationsTable({ quotations, onEdit, onDelete, onView, 
                   </button>
                   <button 
                     onClick={() => onDelete && onDelete(quote.id)}
-                    className="text-gray-400 hover:text-red-500 transition-colors"
+                    className="text-red-500 hover:text-red-600 transition-colors"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>

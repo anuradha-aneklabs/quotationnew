@@ -6,7 +6,7 @@ function numToWords(num) {
   return "Indian Rupees " + num.toLocaleString() + " Only";
 }
 
-export default function PreviewStep({ formData, onSave }) {
+export default function PreviewStep({ formData, onSave, onEdit }) {
   // Calculations
   const baseCost = formData.modules.reduce((sum, m) => {
     return sum + m.functionalities.reduce((fs, f) => {
@@ -28,7 +28,8 @@ export default function PreviewStep({ formData, onSave }) {
   });
 
   const discountValue = Number(formData.discountValue) || 0;
-  const isPercentage = formData.discountType === 'Percentage (%)';
+  const discountType = formData.discountType || 'Percentage (%)';
+  const isPercentage = discountType.toLowerCase().includes('percent');
   const discountAmount = isPercentage ? (baseCost * (discountValue / 100)) : discountValue;
   const discountedBase = Math.max(0, baseCost - discountAmount);
   const gstAmount = discountedBase * 0.18;
@@ -36,7 +37,7 @@ export default function PreviewStep({ formData, onSave }) {
   
   const avgRate = totalEffort > 0 ? (baseCost / totalEffort) : 0;
   const totalDuration = formData.projectStartDate && formData.projectEndDate 
-    ? Math.ceil(Math.abs(new Date(formData.projectEndDate) - new Date(formData.projectStartDate)) / (1000 * 60 * 60 * 24)) 
+    ? Math.ceil(Math.abs(new Date(formData.projectEndDate) - new Date(formData.projectStartDate)) / (1000 * 60 * 60 * 24)) + 1
     : 0;
 
   return (
@@ -50,7 +51,7 @@ export default function PreviewStep({ formData, onSave }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="flex items-center px-4 py-1.5 border border-gray-200 text-[11px] font-bold rounded-lg text-gray-700 hover:bg-gray-50 transition-colors bg-white shadow-sm">
+          <button onClick={onEdit} className="flex items-center px-4 py-1.5 border border-gray-200 text-[11px] font-bold rounded-lg text-gray-700 hover:bg-gray-50 transition-colors bg-white shadow-sm">
             <Edit2 className="h-3.5 w-3.5 mr-1.5" />
             Edit Quotation
           </button>
@@ -167,7 +168,7 @@ export default function PreviewStep({ formData, onSave }) {
               </div>
               <div className="flex justify-between font-bold text-indigo-700 bg-indigo-50/50 p-2 rounded -mx-2">
                 <span>Total Cost (Excl. GST)</span>
-                <span>₹ {baseCost.toLocaleString()}</span>
+                <span>₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between text-gray-600 pt-1">
                 <span>Total Working Days</span>
@@ -190,11 +191,11 @@ export default function PreviewStep({ formData, onSave }) {
               </div>
               <div className="flex justify-between text-gray-600 pb-3 border-b border-gray-100">
                 <span>Total Labor Cost</span>
-                <span className="font-bold text-gray-900">₹ {baseCost.toLocaleString()}</span>
+                <span className="font-bold text-gray-900">₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between font-bold text-indigo-700 bg-indigo-50/50 p-2 rounded -mx-2 mt-4">
                 <span>Total Project Cost (Excl. GST)</span>
-                <span>₹ {baseCost.toLocaleString()}</span>
+                <span>₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
             </div>
           </div>
@@ -229,15 +230,15 @@ export default function PreviewStep({ formData, onSave }) {
             <div className="space-y-3 text-[11px]">
               <div className="flex justify-between text-gray-600">
                 <span>Total Outstanding Pricing (Excl. GST)</span>
-                <span className="font-bold text-gray-900">₹ {baseCost.toLocaleString()}</span>
+                <span className="font-bold text-gray-900">₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>GST @ 18%</span>
-                <span className="font-bold text-gray-900">₹ {gstAmount.toLocaleString()}</span>
+                <span className="font-bold text-gray-900">₹ {gstAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between text-red-500 pb-3 border-b border-gray-100">
                 <span>Discount</span>
-                <span className="font-bold">- ₹ {discountAmount.toLocaleString()}</span>
+                <span className="font-bold">- ₹ {discountAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               
               <div className="flex justify-between items-end pt-1">
@@ -246,7 +247,7 @@ export default function PreviewStep({ formData, onSave }) {
                   <div className="text-[8px] text-gray-400 italic">({numToWords(finalAmount)})</div>
                 </div>
                 <div className="text-xl font-bold text-indigo-700">
-                  ₹ {finalAmount.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+                  ₹ {finalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
               </div>
             </div>

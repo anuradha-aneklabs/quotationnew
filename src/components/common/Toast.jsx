@@ -2,12 +2,23 @@ import React, { useEffect } from 'react';
 import { CheckCircle, XCircle, Info, X } from 'lucide-react';
 
 export default function Toast({ id, message, type = 'success', onClose }) {
+  const [progress, setProgress] = React.useState(100);
+
   useEffect(() => {
+    // Start progress bar animation
+    const raf = requestAnimationFrame(() => {
+      // Need a tiny delay for transition to register after initial mount
+      setTimeout(() => setProgress(0), 10);
+    });
+
     const timer = setTimeout(() => {
       onClose(id);
-    }, 4000); // auto dismiss after 4 seconds
+    }, 3000); // auto dismiss after 3 seconds
 
-    return () => clearTimeout(timer);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+    };
   }, [id, onClose]);
 
   const icons = {
@@ -22,8 +33,14 @@ export default function Toast({ id, message, type = 'success', onClose }) {
     info: 'bg-blue-50 border-blue-200'
   };
 
+  const progressColors = {
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+    info: 'bg-blue-500'
+  };
+
   return (
-    <div className={`pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg shadow-lg border ${bgs[type]} animate-in fade-in slide-in-from-top-2 duration-300`}>
+    <div className={`pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg shadow-lg border ${bgs[type]} animate-in fade-in slide-in-from-top-2 duration-300 relative`}>
       <div className="p-4">
         <div className="flex items-start">
           <div className="flex-shrink-0">
@@ -43,6 +60,14 @@ export default function Toast({ id, message, type = 'success', onClose }) {
             </button>
           </div>
         </div>
+      </div>
+      
+      {/* Animated Progress Line */}
+      <div className="h-[3px] w-full bg-black/5 absolute bottom-0 left-0">
+        <div 
+          className={`h-full transition-all duration-[3000ms] ease-linear ${progressColors[type]}`}
+          style={{ width: `${progress}%` }}
+        />
       </div>
     </div>
   );
