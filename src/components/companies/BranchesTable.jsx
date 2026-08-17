@@ -3,8 +3,8 @@ import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 export default function BranchesTable({ branches, onView, onEdit, onDelete }) {
   return (
-    <div className="flex-1">
-      <table className="w-full text-left border-collapse">
+    <div className="flex-1 w-full overflow-x-auto">
+      <table className="w-full text-left border-collapse min-w-[900px]">
         <thead>
           <tr className="border-b border-gray-100">
             <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Branch Name</th>
