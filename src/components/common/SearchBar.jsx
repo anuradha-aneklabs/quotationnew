@@ -17,7 +17,7 @@ export default function SearchBar({ value, onChange, placeholder = "Search...", 
         />
       </div>
       {children && (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
           {children}
         </div>
       )}

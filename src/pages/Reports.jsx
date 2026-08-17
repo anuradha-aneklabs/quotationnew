@@ -65,7 +65,7 @@ export default function Reports() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#f8fafc] -m-6 p-4">
+    <div className="flex flex-col min-h-full lg:h-full bg-[#f8fafc] -m-6 p-4">
       
       {/* Header */}
       <div className="flex justify-between items-start shrink-0 mb-3">
@@ -174,10 +174,10 @@ export default function Reports() {
         </div>
 
         {/* Row 2: 3 Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-1 min-h-[200px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-none lg:flex-1 lg:min-h-[200px]">
           
           {/* Quotations Created Area Chart */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex flex-col">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex flex-col min-h-[250px] lg:min-h-0">
             <div className="flex justify-between items-start mb-2">
               <div>
                 <h3 className="font-bold text-gray-900 text-sm">Quotations Created</h3>
@@ -206,7 +206,7 @@ export default function Reports() {
           </div>
 
           {/* Revenue Trend Area Chart */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex flex-col">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex flex-col min-h-[250px] lg:min-h-0">
             <div className="flex justify-between items-start mb-2">
               <div>
                 <h3 className="font-bold text-gray-900 text-sm">Revenue Trend</h3>
@@ -241,7 +241,7 @@ export default function Reports() {
           </div>
 
           {/* Top 5 Clients Donut Chart */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex flex-col">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex flex-col min-h-[250px] lg:min-h-0">
             <h3 className="font-bold text-gray-900 text-sm">Top 5 Clients by Revenue</h3>
             <p className="text-[10px] text-gray-500 mb-2">Revenue contribution by clients</p>
             
@@ -297,7 +297,7 @@ export default function Reports() {
         </div>
 
         {/* Row 3: 3 Tables */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-1 min-h-[200px] pb-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-none lg:flex-1 lg:min-h-[200px] pb-2">
           
           {/* Recent Quotations */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col overflow-hidden">

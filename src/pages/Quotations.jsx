@@ -144,20 +144,20 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
           placeholder="Search by ID, client or subject..."
         >
           {/* Right side children: Filters */}
-          <div className="flex items-center space-x-3 text-gray-500">
-            <Filter className="h-4 w-4" />
+          <div className="flex items-center gap-2 text-gray-500 w-full min-w-max">
+            <Filter className="h-4 w-4 shrink-0" />
             <input 
               type="date" 
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 flex-1 min-w-[130px]"
             />
-            <span className="text-sm">to</span>
+            <span className="text-sm shrink-0">to</span>
             <input 
               type="date" 
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 flex-1 min-w-[130px]"
             />
           </div>
         </SearchBar>
