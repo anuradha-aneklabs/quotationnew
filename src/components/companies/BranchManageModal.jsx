@@ -103,7 +103,7 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
     <>
       {/* Branch Manage Modal (z-40 so it sits below branch sub-modals at z-50) */}
       <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 overflow-y-auto pt-10 pb-10">
-        <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl mx-4 my-auto relative flex flex-col" style={{ maxHeight: '85vh' }}>
+        <div className="bg-white rounded-xl shadow-xl w-full max-w-6xl mx-4 my-auto relative flex flex-col" style={{ maxHeight: '85vh' }}>
           {/* Header */}
           <div className="flex justify-between items-center p-6 border-b border-gray-100 shrink-0">
             <div>
