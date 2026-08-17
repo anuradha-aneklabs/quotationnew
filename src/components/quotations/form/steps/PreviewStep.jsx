@@ -88,10 +88,20 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
         <div className="flex justify-between items-start mb-8 text-[11px]">
           <div className="w-1/2 pr-8">
             <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">From,</p>
-            <p className="font-bold text-gray-900 mb-1">Aneka Labs Pvt. Ltd.</p>
-            <p className="text-gray-500 mb-2">Office No. 202, 2nd Floor, Baner Road,<br />Pune - 411045, Maharashtra, India</p>
-            <p className="text-gray-500 mb-1"><span className="text-gray-400">PAN:</span> AABCA1234A | <span className="text-gray-400">GSTIN:</span> 27AABCA1234A1Z5</p>
-            <p className="text-gray-500"><span className="text-gray-400">Email:</span> info@anekalabs.com | <span className="text-gray-400">Phone:</span> +91 20 1234 5678</p>
+            <p className="font-bold text-gray-900 mb-1">
+              {formData.companyDetails?.companyName || 'Aneka Labs Pvt. Ltd.'}
+              {formData.companyDetails?.branchName && ` - ${formData.companyDetails.branchName}`}
+            </p>
+            <p className="text-gray-500 mb-2">
+              {formData.companyDetails?.branchAddress1 || 'Office No. 202, 2nd Floor, Baner Road'},<br />
+              {formData.companyDetails?.branchCity || 'Pune'} - {formData.companyDetails?.branchPincode || '411045'}, {formData.companyDetails?.branchState || 'Maharashtra'}, {formData.companyDetails?.branchCountry || 'India'}
+            </p>
+            <p className="text-gray-500 mb-1">
+              <span className="text-gray-400">PAN:</span> {formData.companyDetails?.pan || 'N/A'} | <span className="text-gray-400">GSTIN:</span> {formData.companyDetails?.gstin || 'N/A'}
+            </p>
+            <p className="text-gray-500">
+              <span className="text-gray-400">Email:</span> {formData.companyDetails?.email || formData.companyDetails?.branchEmail || 'hello@anekalabs.com'} | <span className="text-gray-400">Website:</span> {formData.companyDetails?.website || 'www.anekalabs.com'}
+            </p>
           </div>
           <div className="w-1/2 pl-8">
             <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">To,</p>

@@ -117,7 +117,7 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
             >
               <option value="">Select Branch</option>
               {branches.map(branch => (
-                <option key={branch.id} value={branch.id}>{branch.branch_name || branch.branchName || branch.name}</option>
+                <option key={branch.id || branch.branchId} value={branch.id || branch.branchId}>{branch.branch_name || branch.branchName || branch.name}</option>
               ))}
             </select>
             {errors.branchId && <p className="mt-0.5 text-[10px] text-red-500">{errors.branchId}</p>}
