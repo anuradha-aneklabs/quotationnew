@@ -63,12 +63,12 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
       </div>
 
       {/* A4 Document Wrapper */}
-      <div className="bg-white border border-gray-200 shadow-sm mx-auto overflow-hidden text-gray-800" style={{ maxWidth: '1000px', minHeight: '1414px', padding: '40px 50px' }}>
+      <div className="bg-white border border-gray-200 shadow-sm mx-auto overflow-hidden text-gray-800 p-4 sm:p-8 md:p-[50px] max-w-[1000px] min-h-screen">
 
         {/* Document Header */}
-        <div className="flex justify-between items-start mb-12">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-6 mb-12">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center transform rotate-12">
+            <div className="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center transform rotate-12 shrink-0">
               <Hexagon className="h-8 w-8 text-white -rotate-12" fill="currentColor" />
             </div>
             <div>
@@ -76,17 +76,17 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
               <p className="text-[10px] text-gray-500 font-medium">Building Digital Excellence</p>
             </div>
           </div>
-          <div className="text-right">
+          <div className="text-left sm:text-right">
             <h2 className="text-2xl font-black text-gray-900 tracking-widest uppercase mb-2">Quotation</h2>
-            <p className="text-xs font-bold text-gray-700">{formData.quotationNumber}</p>
+            <p className="text-xs font-bold text-gray-700 break-all">{formData.quotationNumber}</p>
             <p className="text-[10px] text-gray-500 mt-1">Date: {formData.proposalDate || '12 Aug 2026'}</p>
             <p className="text-[10px] text-gray-500">Valid Till: {formData.validTill || '14 Aug 2026'}</p>
           </div>
         </div>
 
         {/* Address Blocks */}
-        <div className="flex justify-between items-start mb-8 text-[11px]">
-          <div className="w-1/2 pr-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-8 mb-8 text-[11px]">
+          <div className="w-full sm:w-1/2 sm:pr-4">
             <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">From,</p>
             <p className="font-bold text-gray-900 mb-1">
               {formData.companyDetails?.companyName || 'Aneka Labs Pvt. Ltd.'}
@@ -99,16 +99,16 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
             <p className="text-gray-500 mb-1">
               <span className="text-gray-400">PAN:</span> {formData.companyDetails?.pan || 'N/A'} | <span className="text-gray-400">GSTIN:</span> {formData.companyDetails?.gstin || 'N/A'}
             </p>
-            <p className="text-gray-500">
-              <span className="text-gray-400">Email:</span> {formData.companyDetails?.email || formData.companyDetails?.branchEmail || 'hello@anekalabs.com'} | <span className="text-gray-400">Website:</span> {formData.companyDetails?.website || 'www.anekalabs.com'}
+            <p className="text-gray-500 break-all">
+              <span className="text-gray-400">Email:</span> {formData.companyDetails?.email || formData.companyDetails?.branchEmail || 'hello@anekalabs.com'} <span className="hidden sm:inline">|</span><br className="sm:hidden" /> <span className="text-gray-400">Website:</span> {formData.companyDetails?.website || 'www.anekalabs.com'}
             </p>
           </div>
-          <div className="w-1/2 pl-8">
+          <div className="w-full sm:w-1/2 sm:pl-4">
             <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">To,</p>
             <p className="font-bold text-gray-900 mb-1">{formData.clientName || 'New Company'}</p>
             <p className="text-gray-500 mb-2">{formData.billingAddress || 'vijay nagar'}</p>
-            <p className="text-gray-500 mb-1"><span className="text-gray-400">PAN:</span> {formData.panNumber || 'ADHFJ8378E'} | <span className="text-gray-400">GSTIN:</span> {formData.gstNumber || '22ASDFR0986A2Z2'}</p>
-            <p className="text-gray-500"><span className="text-gray-400">Email:</span> {formData.email || 'client@example.com'} | <span className="text-gray-400">Phone:</span> {formData.phone || '9876543210'}</p>
+            <p className="text-gray-500 mb-1 break-all"><span className="text-gray-400">PAN:</span> {formData.panNumber || 'ADHFJ8378E'} | <span className="text-gray-400">GSTIN:</span> {formData.gstNumber || '22ASDFR0986A2Z2'}</p>
+            <p className="text-gray-500 break-all"><span className="text-gray-400">Email:</span> {formData.email || 'client@example.com'} <span className="hidden sm:inline">|</span><br className="sm:hidden" /> <span className="text-gray-400">Phone:</span> {formData.phone || '9876543210'}</p>
           </div>
         </div>
 
@@ -148,7 +148,7 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
               </thead>
               <tbody>
                 {formData.modules.map((m, idx) => {
-                  const effort = m.functionalities.reduce((s, f) => s + (Number(f.effort)||0), 0);
+                  const effort = m.functionalities.reduce((s, f) => s + (Number(f.effort) || 0), 0);
                   return (
                     <tr key={idx} className="border-b border-gray-100 last:border-0">
                       <td className="py-4 px-4 text-center text-gray-600 border-r border-gray-100 text-xs">{idx + 1}</td>
@@ -174,21 +174,21 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
 
           {/* Commercial Summary Row */}
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-stretch">
-            
+
             {/* Base Cost */}
             <div className="flex-1 flex flex-col justify-center gap-1.5 py-2 px-1">
               <div className="flex items-center gap-3">
                 <div className="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl shrink-0">
                   <IndianRupee className="h-4 w-4" />
                 </div>
-                <p className="text-[11px] text-gray-500 font-medium leading-tight">Total Outstanding Pricing<br/>(Excl. GST)</p>
+                <p className="text-[11px] text-gray-500 font-medium leading-tight">Total Outstanding Pricing<br />(Excl. GST)</p>
               </div>
               <p className="text-lg font-bold text-gray-900 pl-[46px]">₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
             </div>
-            
+
             {/* Vertical Divider */}
             <div className="hidden lg:block w-px bg-gray-100 shrink-0 my-2"></div>
-            
+
             {/* GST */}
             <div className="flex-1 flex flex-col justify-center gap-1.5 py-2 px-1">
               <div className="flex items-center gap-3">
@@ -235,7 +235,7 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
             <h3 className="text-[15px] font-bold text-gray-900">2. Timeline Overview</h3>
           </div>
           <p className="text-[11px] text-gray-500 mb-10 ml-8">{formData.projectStartDate || '2026-08-01'} - {formData.projectEndDate || '2026-08-31'}</p>
-          
+
           <div className="relative mt-8 pt-6 pb-6">
             <div className="absolute top-0 left-[60%] text-[10px] text-gray-500 -translate-x-1/2 bg-white px-2 -mt-2">Aug 2026</div>
             <div className="absolute top-0 bottom-0 left-[60%] w-px border-l border-dashed border-red-300 -translate-x-1/2 z-0"></div>
