@@ -42,7 +42,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
     // Step 2: Proposal Details
     proposalTitle: '',
     sector: '',
-    quotationNumber: `QTN-${new Date().getFullYear()}${(new Date().getMonth()+1).toString().padStart(2,'0')}-${Math.floor(Math.random() * 1000).toString().padStart(4,'0')}`,
+    quotationNumber: `QTN-${new Date().getFullYear()}${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${Math.floor(Math.random() * 1000).toString().padStart(4, '0')}`,
     proposalDate: new Date().toISOString().split('T')[0],
     validTill: '',
     revision: '1.0',
@@ -68,19 +68,19 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
   useEffect(() => {
     const loadStepData = async () => {
       if (!createdQuoteId) return;
-      
+
       setIsLoading(true);
       try {
         if (currentStep === 1 || currentStep === 2) {
           const res = await quotationService.getQuotation(createdQuoteId);
           if (res.data) {
             const data = res.data;
-            
+
             // Try to fetch missing client fields (like state, city) directly from the Client API
             let clientState = data.client_state || '';
             let clientCity = data.client_city || '';
             let clientCountry = data.client_country || '';
-            
+
             if (data.client_id) {
               try {
                 const { fetchClients } = await import('../services/clientService.js');
@@ -132,7 +132,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
             quotationService.getQuotation(createdQuoteId),
             quotationService.getScopesTree(createdQuoteId)
           ]);
-          
+
           let allEmployees = [];
           try {
             const { fetchEmployees } = await import('../services/employeeService.js');
@@ -140,14 +140,14 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
           } catch (e) {
             console.error("Failed to load employees for edit mapping");
           }
-          
+
           setFormData(prev => {
             const newData = { ...prev };
             if (quoteRes.data) {
               newData.projectStartDate = quoteRes.data.project_start_date || prev.projectStartDate;
               newData.projectEndDate = quoteRes.data.project_end_date || prev.projectEndDate;
             }
-            
+
             // The API response could have modules directly on .data, or nested
             let rawModules = scopesRes.data?.modules || scopesRes.data || scopesRes.modules || scopesRes.data?.data?.modules || scopesRes.data?.data?.quotations?.modules || [];
             if (!Array.isArray(rawModules) && rawModules.data) rawModules = rawModules.data; // fallback unwrapping
@@ -166,7 +166,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
                     rate: String(tm.rate || ''),
                     cost: Number(tm.total_cost || tm.cost || 0)
                   };
-                  
+
                   // Auto-fill rate/role from employees list if not already present
                   if (memberId) {
                     const emp = allEmployees.find(e => String(e.id) === memberId);
@@ -205,11 +205,11 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
         } else if (currentStep === 4) {
           const res = await quotationService.getCommercial(createdQuoteId);
           if (res.data) {
-             setFormData(prev => ({ 
-               ...prev, 
-               discountType: res.data.discount_type || prev.discountType,
-               discountValue: res.data.discount_value || prev.discountValue 
-             }));
+            setFormData(prev => ({
+              ...prev,
+              discountType: res.data.discount_type || prev.discountType,
+              discountValue: res.data.discount_value || prev.discountValue
+            }));
           }
         } else if (currentStep === 5) {
           const res = await quotationService.getMilestones(createdQuoteId);
@@ -231,7 +231,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     let newValue = type === 'checkbox' ? checked : value;
-    
+
     if (name === 'phone') {
       newValue = value.replace(/\D/g, '').slice(0, 10);
     } else if (name === 'pincode') {
@@ -247,7 +247,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
       if (name === 'isShippingSameAsBilling') {
         newData.shippingAddress = newValue ? prev.billingAddress : '';
       }
-      
+
       if (name === 'pricingCurrency') {
         if (newValue.includes('USD')) newData.exchangeRate = '1 USD = 83.0000 INR';
         else if (newValue.includes('EUR')) newData.exchangeRate = '1 EUR = 90.0000 INR';
@@ -257,7 +257,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
 
       return newData;
     });
-    
+
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
@@ -376,17 +376,17 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
         }
 
         await quotationService.syncScopes(createdQuoteId, mapStep3Payload());
-        await quotationService.updateQuotation(createdQuoteId, { 
-          project_start_date: formData.projectStartDate || null, 
+        await quotationService.updateQuotation(createdQuoteId, {
+          project_start_date: formData.projectStartDate || null,
           project_end_date: formData.projectEndDate || null,
           total_timeline_days: calculatedDays,
           wizard_step: 3
         });
       } else if (currentStep === 4) {
-        await quotationService.saveCommercial(createdQuoteId, { 
-          discount_type: formData.discountType, 
-          discount_value: formData.discountValue, 
-          wizard_step: 4 
+        await quotationService.saveCommercial(createdQuoteId, {
+          discount_type: formData.discountType,
+          discount_value: formData.discountValue,
+          wizard_step: 4
         });
       } else if (currentStep === 5) {
         // Mock bulk save
@@ -411,7 +411,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
     setIsSaving(true);
     try {
       if (createdQuoteId) {
-         await quotationService.saveCommercial(createdQuoteId, { wizard_step: 6 });
+        await quotationService.saveCommercial(createdQuoteId, { wizard_step: 6 });
       }
       showToast("Quotation saved successfully!", 'success');
       setCurrentView('Quotations');
@@ -426,7 +426,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
   const renderStep = () => {
     if (isLoading) return <div className="p-10 flex justify-center"><Loader2 className="animate-spin text-indigo-600 h-8 w-8" /></div>;
 
-    switch(currentStep) {
+    switch (currentStep) {
       case 1: return <ClientInfoStep formData={formData} handleChange={handleChange} errors={errors} setFormData={setFormData} />;
       case 2: return <ProposalDetailsStep formData={formData} handleChange={handleChange} errors={errors} />;
       case 3: return <ModuleManagementStep formData={formData} setFormData={setFormData} errors={errors} />;
@@ -440,7 +440,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
   return (
     <div className="flex flex-col h-full overflow-hidden bg-gray-50/50 -mx-6 -mt-6 pt-4 px-4 pb-0">
       <div className="flex items-center mb-4">
-        <button 
+        <button
           onClick={() => setCurrentView('Quotations')}
           className="flex items-center text-sm text-gray-500 hover:text-indigo-600 transition-colors"
         >
@@ -462,20 +462,20 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
             disabled={currentStep === 1 || isSaving}
             className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center
               ${currentStep === 1 || isSaving
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}`}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Previous
           </button>
-          
+
           {currentStep < 6 ? (
             <button
               onClick={handleNext}
               disabled={isSaving}
               className={`px-4 py-1.5 text-sm font-medium text-white rounded-lg transition-colors flex items-center ${isSaving ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
             >
-              {isSaving ? <><Loader2 className="animate-spin h-4 w-4 mr-2"/> Saving...</> : 'Save & Next'}
+              {isSaving ? <><Loader2 className="animate-spin h-4 w-4 mr-2" /> Saving...</> : 'Save & Next'}
               {!isSaving && <ArrowLeft className="h-4 w-4 ml-2 rotate-180" />}
             </button>
           ) : null}

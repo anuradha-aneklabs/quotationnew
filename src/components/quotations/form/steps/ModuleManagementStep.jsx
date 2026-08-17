@@ -224,6 +224,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
 
   const totals = formData.modules.reduce((acc, m) => {
     acc.modules++;
+    acc.estimatedDays += Number(m.duration) || 0;
     m.functionalities.forEach(f => {
       acc.functionalities++;
       acc.effort += Number(f.effort) || 0;
@@ -232,7 +233,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
       });
     });
     return acc;
-  }, { modules: 0, functionalities: 0, effort: 0, cost: 0 });
+  }, { modules: 0, functionalities: 0, effort: 0, cost: 0, estimatedDays: 0 });
 
   const projectDurationDays = calculateTotalDuration();
 
@@ -611,20 +612,38 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
       {/* Grand Total Footer */}
       {formData.modules.length > 0 && (
         <div className="mt-6 bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
+          <div className="flex-shrink-0 min-w-[150px]">
             <h3 className="text-sm font-bold text-indigo-600">Grand Total</h3>
             <p className="text-xs text-gray-500">{totals.functionalities} Functionalities</p>
           </div>
-          <div className="flex items-center gap-8 md:gap-12 text-center divide-x divide-gray-100">
-            <div className="px-4">
-              <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Total Duration</p>
-              <p className="text-sm font-bold text-gray-900">{projectDurationDays} Days</p>
+
+          <div className="flex-1 flex  items-center justify-start gap-6 px-6 py-2  mx-auto">
+             <div className="text-center">
+                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Project Start Date</p>
+                <p className="text-sm font-bold text-gray-900">{formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB') : '-'}</p>
+             </div>
+             <div className="hidden md:block h-8 w-px bg-gray-200"></div>
+             <div className="text-center">
+                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Project End Date</p>
+                <p className="text-sm font-bold text-gray-900">{formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB') : '-'}</p>
+             </div>
+             <div className="hidden md:block h-8 w-px bg-gray-200"></div>
+             <div className="text-center">
+                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Total Duration</p>
+                <p className="text-sm font-bold text-gray-900">{projectDurationDays} Days</p>
+             </div>
+          </div>
+
+          <div className="flex items-center gap-6 md:gap-8 text-center divide-x divide-gray-100 flex-shrink-0">
+            <div className="px-2">
+              <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Estimated Days</p>
+              <p className="text-sm font-bold text-gray-900">{totals.estimatedDays} Days</p>
             </div>
-            <div className="px-4">
+            <div className="px-2">
               <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Total Effort (Hours)</p>
               <p className="text-sm font-bold text-gray-900">{totals.effort} Hrs</p>
             </div>
-            <div className="px-4 text-right">
+            <div className="pl-4 pr-2 text-right">
               <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Total Cost (INR)</p>
               <p className="text-lg font-bold text-indigo-600">₹ {totals.cost.toLocaleString()}</p>
             </div>

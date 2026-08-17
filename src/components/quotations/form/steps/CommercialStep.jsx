@@ -1,4 +1,5 @@
 import React from 'react';
+import { Clock, Calendar, Code, Monitor } from 'lucide-react';
 
 export default function CommercialStep({ formData, handleChange }) {
   // Calculate Base Cost from modules
@@ -28,6 +29,86 @@ export default function CommercialStep({ formData, handleChange }) {
         <p className="text-sm text-gray-500 mb-8">Provide commercial details for this quotation.</p>
 
         <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+
+          {/* Modules Breakdown Table */}
+          {formData.modules && formData.modules.length > 0 && (
+            <div className="p-6 border-b border-gray-100">
+              <h3 className="text-sm font-bold text-gray-900 mb-4">Modules Breakdown</h3>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="border-b border-gray-100 bg-gray-50/50">
+                      <th className="py-3 px-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-16 text-center">#</th>
+                      <th className="py-3 px-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Module Name</th>
+                      <th className="py-3 px-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">
+                        <div className="flex items-center justify-center gap-1.5">
+                          Total Hours <Clock className="h-3.5 w-3.5" />
+                        </div>
+                      </th>
+                      <th className="py-3 px-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">
+                        <div className="flex items-center justify-center gap-1.5">
+                          Total Days <Calendar className="h-3.5 w-3.5" />
+                        </div>
+                      </th>
+                      <th className="py-3 px-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider text-right">Total Cost (INR)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {formData.modules.map((m, idx) => {
+                      const mCost = m.functionalities.reduce((fs, f) => {
+                        return fs + f.teamAllocations.reduce((ts, tm) => ts + (Number(tm.cost) || 0), 0);
+                      }, 0);
+
+                      const mHours = m.functionalities.reduce((fs, f) => {
+                        return fs + (Number(f.effort) || 0);
+                      }, 0);
+
+                      const isFrontend = m.name?.toLowerCase().includes('frontend') || m.name?.toLowerCase().includes('ui');
+
+                      return (
+                        <tr key={m.id || idx} className="hover:bg-gray-50/30 transition-colors">
+                          <td className="py-4 px-4 text-center">
+                            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold mx-auto">
+                              {idx + 1}
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                                {isFrontend ? <Monitor className="h-4 w-4" /> : <Code className="h-4 w-4" />}
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-gray-900">{m.name || `Module ${idx + 1}`}</p>
+                                <p className="text-[10px] text-gray-500 mt-0.5">{m.description || 'No description provided'}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 text-center">
+                            <div className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600">
+                              <Clock className="h-3.5 w-3.5" />
+                              {mHours} Hrs
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 text-center">
+                            <div className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600">
+                              <Calendar className="h-3.5 w-3.5" />
+                              {Number(m.duration) || 0} Days
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 text-right">
+                            <span className="text-sm font-bold text-gray-900">
+                              ₹ {mCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
           {/* Total Outstanding Pricing */}
           <div className="p-6 border-b border-gray-100 flex items-center justify-between">
