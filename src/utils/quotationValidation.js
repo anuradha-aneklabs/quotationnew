@@ -37,6 +37,8 @@ export const validateStep1 = (data) => {
 
 export const validateStep2 = (data) => {
   const errors = {};
+  if (!data.companyId?.toString().trim()) errors.companyId = 'Company Name is required';
+  if (!data.branchId?.toString().trim()) errors.branchId = 'Branch Name is required';
   if (!data.proposalTitle?.toString().trim()) errors.proposalTitle = 'Proposal Title is required';
   if (!data.quotationNumber?.toString().trim()) errors.quotationNumber = 'Quotation Number is required';
   if (!data.proposalDate) errors.proposalDate = 'Proposal Date is required';

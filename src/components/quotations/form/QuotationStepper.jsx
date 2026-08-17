@@ -12,7 +12,7 @@ const steps = [
 
 export default function QuotationStepper({ currentStep }) {
   return (
-    <div className="w-full px-6 py-4 bg-white border border-gray-200 rounded-xl flex items-center justify-between shadow-sm mb-6 overflow-x-auto">
+    <div className="w-full px-6 py-4 bg-white border border-gray-200 rounded-xl flex items-center justify-between shadow-sm mb-4 overflow-x-auto">
       <div className="flex items-center w-full min-w-max">
         {steps.map((step, index) => {
           const isCompleted = step.id < currentStep;

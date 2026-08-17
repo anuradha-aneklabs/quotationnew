@@ -35,7 +35,8 @@ const navItems = [
     hasSubmenu: true,
     subItems: [
       { name: 'Tax Masters' },
-      { name: 'Dropdown Masters' }
+      { name: 'Dropdown Masters' },
+      { name: 'Companies' }
     ]
   },
   { name: 'Reports', icon: BarChart2 },
@@ -45,7 +46,7 @@ const navItems = [
 
 export default function Sidebar({ currentView, setCurrentView, setToken, isOpen, onClose }) {
   const [expandedMenus, setExpandedMenus] = useState({
-    'Masters': currentView === 'Tax Masters' || currentView === 'Dropdown Masters'
+    'Masters': currentView === 'Tax Masters' || currentView === 'Dropdown Masters' || currentView === 'Companies'
   });
 
   const toggleSubmenu = (name) => {
