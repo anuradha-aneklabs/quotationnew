@@ -124,8 +124,8 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
               preparedBy: data.prepared_by_id || prev.preparedBy,
               designation: data.prepared_by_designation || prev.designation,
               department: data.prepared_by_department || prev.department,
-              companyId: data.company_id || prev.companyId,
-              branchId: data.branch_id || prev.branchId,
+              companyId: data.companyId || prev.companyId,
+              branchId: data.branchId || prev.branchId,
               engagementType: data.engagement_type || prev.engagementType,
               pricingCurrency: data.pricing_currency || prev.pricingCurrency,
               exchangeRate: data.exchange_rate || prev.exchangeRate,
@@ -220,7 +220,12 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
           // Auto populate timeline logic if needed
         } else if (currentStep === 6) {
           const res = await quotationService.getSummary(createdQuoteId);
-          // Override formData with full summary mapping if needed
+          if (res?.data?.company) {
+            setFormData(prev => ({
+              ...prev,
+              companyDetails: res.data.company
+            }));
+          }
         }
       } catch (err) {
         console.error("Failed to load step data:", err);
@@ -287,8 +292,8 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
     pricing_currency: formData.pricingCurrency,
     exchange_rate: parseFloat(formData.exchangeRate?.split(' ')[3]) || 1.0,
     description: formData.projectSummary,
-    company_id: formData.companyId || null,
-    branch_id: formData.branchId || null,
+    companyId: formData.companyId || null,
+    branchId: formData.branchId || null,
     wizard_step: 2
   });
 
