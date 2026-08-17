@@ -50,6 +50,8 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
     designation: '',
     department: '',
     projectSummary: '',
+    companyId: '',
+    branchId: '',
     engagementType: 'Fixed Price',
     pricingCurrency: 'USD - US Dollar ($)',
     exchangeRate: '83.0000',
@@ -122,6 +124,8 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
               preparedBy: data.prepared_by_id || prev.preparedBy,
               designation: data.prepared_by_designation || prev.designation,
               department: data.prepared_by_department || prev.department,
+              companyId: data.company_id || prev.companyId,
+              branchId: data.branch_id || prev.branchId,
               engagementType: data.engagement_type || prev.engagementType,
               pricingCurrency: data.pricing_currency || prev.pricingCurrency,
               exchangeRate: data.exchange_rate || prev.exchangeRate,
@@ -283,6 +287,8 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
     pricing_currency: formData.pricingCurrency,
     exchange_rate: parseFloat(formData.exchangeRate?.split(' ')[3]) || 1.0,
     description: formData.projectSummary,
+    company_id: formData.companyId || null,
+    branch_id: formData.branchId || null,
     wizard_step: 2
   });
 
