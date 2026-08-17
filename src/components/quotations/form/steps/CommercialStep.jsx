@@ -111,28 +111,28 @@ export default function CommercialStep({ formData, handleChange }) {
           )}
 
           {/* Total Outstanding Pricing */}
-          <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+          <div className="p-4 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
             <div>
               <h3 className="text-sm font-bold text-gray-900">Total Outstanding Pricing (Excl. GST)</h3>
               <p className="text-xs text-gray-500 mt-1">Total cost of the application</p>
             </div>
-            <div className="text-lg font-bold text-gray-900">
+            <div className="text-base sm:text-lg font-bold text-gray-900 self-start sm:self-auto">
               ₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
           </div>
 
           {/* Discount */}
-          <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/30">
-            <div className="w-1/3">
+          <div className="p-4 sm:p-6 border-b border-gray-100 flex flex-col lg:flex-row lg:items-center justify-between bg-gray-50/30 gap-4">
+            <div className="w-full lg:w-1/3">
               <h3 className="text-sm font-bold text-gray-900">Discount</h3>
               <p className="text-xs text-gray-500 mt-1">Discount on total amount</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
               <select
                 name="discountType"
                 value={formData.discountType}
                 onChange={handleChange}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 bg-white"
+                className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 bg-white"
               >
                 <option value="Percentage (%)">Percentage (%)</option>
                 <option value="Flat Amount">Flat Amount</option>
@@ -145,32 +145,32 @@ export default function CommercialStep({ formData, handleChange }) {
                 min="0"
                 step="any"
                 placeholder="0"
-                className="w-28 px-3 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500"
+                className="w-24 sm:w-28 px-3 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500"
               />
             </div>
-            <div className="text-red-500 font-medium">
+            <div className="text-red-500 font-medium self-start lg:self-auto whitespace-nowrap">
               - ₹ {discountAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
           </div>
 
           {/* GST */}
-          <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+          <div className="p-4 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
             <div>
               <h3 className="text-sm font-bold text-gray-900">GST</h3>
               <p className="text-xs text-gray-500 mt-1">18% of Total Outstanding Pricing</p>
             </div>
-            <div className="text-gray-900 font-medium">
+            <div className="text-gray-900 font-medium self-start sm:self-auto">
               ₹ {gstAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
           </div>
 
           {/* Final Amount */}
-          <div className="p-6 bg-green-50/50 flex items-center justify-between">
+          <div className="p-4 sm:p-6 bg-green-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 rounded-b-2xl">
             <div>
               <h3 className="text-sm font-bold text-gray-900">Final Outstanding Amount</h3>
               <p className="text-xs text-gray-500 mt-1">Total amount to be paid</p>
             </div>
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-xl sm:text-2xl font-bold text-green-600 self-start sm:self-auto">
               ₹ {finalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
           </div>

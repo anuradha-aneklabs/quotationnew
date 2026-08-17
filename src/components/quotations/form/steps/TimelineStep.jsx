@@ -102,8 +102,8 @@ export default function TimelineStep({ formData }) {
     ? (todayIdx / allDates.length) * 100 : -1;
 
   const renderGantt = () => (
-    <div className="border border-gray-200 rounded-xl shadow-sm bg-white overflow-hidden">
-      <div className="w-full">
+    <div className="border border-gray-200 rounded-xl shadow-sm bg-white overflow-x-auto">
+      <div className="min-w-[800px]">
 
         {/* Month Row */}
         <div className="flex border-b border-gray-200 bg-gray-50/70">
@@ -235,8 +235,8 @@ export default function TimelineStep({ formData }) {
   );
 
   const renderTable = () => (
-    <div className="border border-gray-200 rounded-xl shadow-sm bg-white overflow-hidden">
-      <table className="w-full text-left text-sm">
+    <div className="border border-gray-200 rounded-xl shadow-sm bg-white overflow-x-auto">
+      <table className="w-full text-left text-sm min-w-[800px]">
         <thead>
           <tr className="border-b border-gray-200 bg-gray-50/70">
             <th className="px-4 py-3 text-xs font-bold text-gray-700">#</th>
@@ -311,8 +311,8 @@ export default function TimelineStep({ formData }) {
 
       {/* Top Dates Card + View Toggle */}
       <div className="flex flex-wrap items-center gap-4 justify-between">
-        <div className="flex flex-wrap items-center gap-4 border border-gray-200 rounded-xl py-2 px-1 w-max shadow-sm bg-white">
-          <div className="flex items-center px-5 border-r border-gray-100">
+        <div className="flex flex-wrap items-center gap-4 border border-gray-200 rounded-xl py-2 px-1 w-full md:w-max shadow-sm bg-white overflow-x-auto">
+          <div className="flex items-center px-5 border-r border-gray-100 min-w-max">
             <Calendar className="h-4 w-4 text-indigo-400 mr-3" />
             <div>
               <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Project Start Date</p>
@@ -321,7 +321,7 @@ export default function TimelineStep({ formData }) {
               </p>
             </div>
           </div>
-          <div className="flex items-center px-5 border-r border-gray-100">
+          <div className="flex items-center px-5 border-r border-gray-100 min-w-max">
             <Calendar className="h-4 w-4 text-indigo-400 mr-3" />
             <div>
               <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Project End Date</p>
@@ -330,7 +330,7 @@ export default function TimelineStep({ formData }) {
               </p>
             </div>
           </div>
-          <div className="flex items-center px-5">
+          <div className="flex items-center px-5 min-w-max">
             <Clock className="h-4 w-4 text-indigo-400 mr-3" />
             <div>
               <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Total Duration</p>

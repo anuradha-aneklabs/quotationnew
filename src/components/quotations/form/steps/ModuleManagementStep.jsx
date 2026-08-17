@@ -352,59 +352,58 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
             <div key={module.id} className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
               
               {/* Module Header */}
-              <div className="p-5 border-b border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6 bg-white">
+              <div className="p-5 border-b border-gray-100 flex flex-col lg:flex-row items-center justify-between gap-6 bg-white">
                 
-                <div className="flex items-center gap-4 flex-1">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto lg:flex-1">
                   <div className="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl font-bold text-sm whitespace-nowrap shadow-sm border border-indigo-100/50">
                     Module {mIdx + 1}
-                    
                   </div>
-                  <div className='flex-[1.5] flex flex-col items-center md:items-start'>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Module Name</p>
-                  <input
-                    type="text"
-                    value={module.name}
-                    onChange={(e) => updateModule(module.id, 'name', e.target.value)}
-                    placeholder="Module Name (e.g. Backend)"
-                    className={`text-base font-bold text-gray-900 bg-transparent focus:outline-none border-b-2 py-1 flex-1 max-w-[200px] ${errors[`module_${mIdx}_name`] ? 'border-red-500' : 'border-transparent hover:border-gray-200 focus:border-indigo-500 transition-colors'}`}
-                  />
+                  <div className='flex-1 flex flex-col items-center sm:items-start w-full'>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Module Name</p>
+                    <input
+                      type="text"
+                      value={module.name}
+                      onChange={(e) => updateModule(module.id, 'name', e.target.value)}
+                      placeholder="Module Name (e.g. Backend)"
+                      className={`w-full sm:max-w-[200px] text-base font-bold text-gray-900 bg-transparent focus:outline-none border-b-2 py-1 text-center sm:text-left ${errors[`module_${mIdx}_name`] ? 'border-red-500' : 'border-transparent hover:border-gray-200 focus:border-indigo-500 transition-colors'}`}
+                    />
                   </div>
                 </div>
 
-                <div className="flex-[1.5] flex flex-col items-center md:items-start">
+                <div className="w-full lg:w-auto lg:flex-[1.5] flex flex-col items-center lg:items-start">
                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Module Description</p>
                    <input
                      type="text"
                      value={module.description}
                      onChange={(e) => updateModule(module.id, 'description', e.target.value)}
                      placeholder="e.g. Core API Services"
-                     className="w-full text-sm text-gray-600 bg-transparent focus:outline-none border-b-2 border-transparent hover:border-gray-200 focus:border-indigo-500 py-1 text-center md:text-left transition-colors"
+                     className="w-full text-sm text-gray-600 bg-transparent focus:outline-none border-b-2 border-transparent hover:border-gray-200 focus:border-indigo-500 py-1 text-center lg:text-left transition-colors"
                    />
                 </div>
 
-                <div className="flex items-center gap-8 flex-shrink-0">
+                <div className="flex flex-wrap items-center justify-center lg:justify-end gap-4 sm:gap-6 lg:gap-8 w-full lg:w-auto flex-shrink-0">
                   <div className="text-center">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Module Duration</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Duration</p>
                     <div className="flex items-center justify-center">
                       <input
                         type="text"
                         value={module.duration}
                         onChange={(e) => updateModule(module.id, 'duration', e.target.value)}
-                        className="w-12 text-center text-sm font-bold bg-transparent focus:outline-none border-b-2 border-transparent hover:border-gray-300 focus:border-indigo-500 transition-colors"
+                        className="w-10 text-center text-sm font-bold bg-transparent focus:outline-none border-b-2 border-transparent hover:border-gray-300 focus:border-indigo-500 transition-colors"
                         placeholder="0"
                       />
                       <span className="text-sm font-bold text-gray-900 ml-1">Days</span>
                     </div>
                   </div>
                   <div className="text-center">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Total Effort (Hours)</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Effort</p>
                     <p className="text-sm font-bold text-gray-900">{moduleEffort} Hrs</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Total Cost (INR)</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Cost</p>
                     <p className="text-sm font-bold text-gray-900">₹ {moduleCost.toLocaleString()}</p>
                   </div>
-                  <div className="flex items-center gap-2 ml-4">
+                  <div className="flex items-center gap-2 w-full sm:w-auto justify-center mt-2 sm:mt-0 lg:ml-4">
                     <button 
                       onClick={() => toggleCollapse(module.id)} 
                       className="p-1.5 text-gray-400 hover:text-indigo-600 transition-colors rounded-lg hover:bg-indigo-50 border border-transparent hover:border-indigo-100"
@@ -616,53 +615,67 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
 
       {/* Grand Total Footer */}
       {formData.modules.length > 0 && (
-        <div className="mt-6 bg-indigo-50/50 border border-indigo-100 rounded-2xl p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-8 shadow-sm">
-          <div className="flex-shrink-0 min-w-[120px]">
-            <h3 className="text-lg font-bold text-gray-900">Grand Total</h3>
-            <p className="text-sm font-medium text-indigo-600">{totals.modules} Modules</p>
+        <div className="mt-6 bg-indigo-50/50 border border-indigo-100 rounded-2xl p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-8 shadow-sm">
+          
+          {/* Left Group */}
+          <div className="flex flex-wrap items-center gap-6 lg:gap-10">
+            <div className="flex-shrink-0 min-w-[120px] mr-2">
+              <h3 className="text-lg font-bold text-gray-900">Grand Total</h3>
+              <p className="text-sm font-medium text-indigo-600">{totals.modules} Modules</p>
+            </div>
+
+            <div className="flex items-center gap-3">
+               <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
+               <div>
+                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Project Start Date</p>
+                 <p className="text-sm font-bold text-gray-900">{formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB') : '-'}</p>
+               </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+               <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
+               <div>
+                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Project End Date</p>
+                 <p className="text-sm font-bold text-gray-900">{formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB') : '-'}</p>
+               </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+               <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
+               <div>
+                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Days</p>
+                 <p className="text-sm font-bold text-gray-900">{projectDurationDays} Days</p>
+               </div>
+            </div>
           </div>
 
-          <div className="flex-1 flex flex-wrap items-center justify-start lg:justify-center gap-6 md:gap-10">
-             <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
-                <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Project Start Date</p>
-                  <p className="text-sm font-bold text-gray-900">{formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB') : '-'}</p>
-                </div>
-             </div>
-             
-             <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
-                <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Project End Date</p>
-                  <p className="text-sm font-bold text-gray-900">{formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB') : '-'}</p>
-                </div>
-             </div>
-             
-             <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
-                <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Days</p>
-                  <p className="text-sm font-bold text-gray-900">{projectDurationDays} Days</p>
-                </div>
-             </div>
+          {/* Right Group */}
+          <div className="flex flex-wrap items-center gap-6 lg:gap-10">
+            <div className="flex items-center gap-3">
+               <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Clock className="h-5 w-5" /></div>
+               <div>
+                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Effort (Hours)</p>
+                 <p className="text-sm font-bold text-gray-900">{totals.effort} Hrs</p>
+               </div>
+            </div>
 
-             <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Clock className="h-5 w-5" /></div>
-                <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Effort (Hours)</p>
-                  <p className="text-sm font-bold text-gray-900">{totals.effort} Hrs</p>
-                </div>
-             </div>
+            <div className="flex items-center gap-3">
+               <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
+               <div>
+                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Estimated Days</p>
+                 <p className="text-sm font-bold text-gray-900">{totals.estimatedDays} Days</p>
+               </div>
+            </div>
+
+            <div className="flex items-center gap-4 flex-shrink-0 xl:pl-8 xl:border-l border-indigo-200/60 pt-4 xl:pt-0">
+               <div className="p-3 bg-white rounded-xl text-indigo-600 shadow-sm border border-indigo-50/50"><IndianRupee className="h-6 w-6" /></div>
+               <div className="text-left xl:text-right">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Cost (INR)</p>
+                  <p className="text-xl font-bold text-indigo-600">₹ {totals.cost.toLocaleString()}</p>
+               </div>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4 flex-shrink-0 lg:pl-8 lg:border-l border-indigo-200/60 pt-4 lg:pt-0">
-             <div className="p-3 bg-white rounded-xl text-indigo-600 shadow-sm border border-indigo-50/50"><IndianRupee className="h-6 w-6" /></div>
-             <div className="text-left lg:text-right">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Cost (INR)</p>
-                <p className="text-xl font-bold text-indigo-600">₹ {totals.cost.toLocaleString()}</p>
-             </div>
-          </div>
         </div>
       )}
     </div>
