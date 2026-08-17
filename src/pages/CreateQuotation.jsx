@@ -120,6 +120,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
               quotationNumber: data.quotation_number || prev.quotationNumber,
               // Other Step 2 fields from API if they exist
               sector: data.sector || prev.sector,
+              projectSummary: data.description || prev.projectSummary,
               revision: data.revision_version || prev.revision,
               preparedBy: data.prepared_by_id || prev.preparedBy,
               designation: data.prepared_by_designation || prev.designation,
