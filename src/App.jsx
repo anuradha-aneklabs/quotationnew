@@ -3,6 +3,7 @@ import DashboardLayout from './components/layout/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
 import Clients from './pages/Clients';
+import Companies from './pages/Companies';
 import Quotations from './pages/Quotations';
 import CreateQuotation from './pages/CreateQuotation';
 import TaxMasters from './pages/TaxMasters';
@@ -37,6 +38,7 @@ function App() {
         {currentView === 'Clients' && <Clients />}
         {currentView === 'Quotations' && <Quotations setCurrentView={setCurrentView} onEditQuotation={(id) => { setEditQuotationId(id); setCurrentView('CreateQuotation'); }} onCreateNew={() => { setEditQuotationId(null); setCurrentView('CreateQuotation'); }} />}
         {currentView === 'CreateQuotation' && <CreateQuotation setCurrentView={setCurrentView} editId={editQuotationId} />}
+        {currentView === 'Companies' && <Companies />}
         {currentView === 'Tax Masters' && <TaxMasters />}
         {currentView === 'Dropdown Masters' && <DropdownMasters />}
         {currentView === 'Reports' && <Reports />}

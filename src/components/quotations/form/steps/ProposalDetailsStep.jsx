@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
 import * as employeeService from '../../../../services/employeeService';
+import * as companyService from '../../../../services/companyService';
+import * as branchService from '../../../../services/branchService';
 
 export default function ProposalDetailsStep({ formData, handleChange, errors }) {
   const [employees, setEmployees] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  const [branches, setBranches] = useState([]);
   const today = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
@@ -15,8 +19,35 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
         console.error("Failed to fetch employees", err);
       }
     };
+    
+    const loadCompanies = async () => {
+      try {
+        const data = await companyService.fetchCompanies();
+        setCompanies(data || []);
+      } catch (err) {
+        console.error("Failed to fetch companies", err);
+      }
+    };
+
     loadEmployees();
+    loadCompanies();
   }, []);
+
+  useEffect(() => {
+    const loadBranches = async () => {
+      if (!formData.companyId) {
+        setBranches([]);
+        return;
+      }
+      try {
+        const data = await branchService.fetchBranchesByCompany(formData.companyId);
+        setBranches(data || []);
+      } catch (err) {
+        console.error("Failed to fetch branches", err);
+      }
+    };
+    loadBranches();
+  }, [formData.companyId]);
 
   const engagementTypes = [
     {
@@ -46,8 +77,52 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
       <div>
         <h2 className="text-lg font-bold text-gray-900 mb-4">2. Proposal Details</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
           
+          {/* Company Name */}
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">
+              Company Name <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="companyId"
+              value={formData.companyId || ''}
+              onChange={(e) => {
+                handleChange(e);
+                handleChange({ target: { name: 'branchId', value: '' } });
+              }}
+              className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors bg-white text-sm
+                ${errors.companyId ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
+            >
+              <option value="">Select Company</option>
+              {companies.map(comp => (
+                <option key={comp.id || comp.companyId} value={comp.id || comp.companyId}>{comp.company_name || comp.companyName || comp.name}</option>
+              ))}
+            </select>
+            {errors.companyId && <p className="mt-0.5 text-[10px] text-red-500">{errors.companyId}</p>}
+          </div>
+
+          {/* Branch Name */}
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">
+              Branch Name <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="branchId"
+              value={formData.branchId || ''}
+              onChange={handleChange}
+              disabled={!formData.companyId}
+              className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-sm
+                ${!formData.companyId ? 'bg-gray-50 border-gray-200 text-gray-400' : errors.branchId ? 'border-red-500 focus:ring-red-200 bg-white' : 'bg-white border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
+            >
+              <option value="">Select Branch</option>
+              {branches.map(branch => (
+                <option key={branch.id} value={branch.id}>{branch.branch_name || branch.branchName || branch.name}</option>
+              ))}
+            </select>
+            {errors.branchId && <p className="mt-0.5 text-[10px] text-red-500">{errors.branchId}</p>}
+          </div>
+
           {/* Subject / Proposal Title */}
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -217,16 +292,16 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
             placeholder="using this website user can test their website and according to the result user can start treatment..."
             className="w-full px-3 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors resize-none text-sm"
           />
-          <div className="absolute -bottom-5 right-0 text-[10px] text-gray-500">
+          <div className="absolute -bottom-3 right-0 text-[10px] text-gray-500">
             {formData.projectSummary.length} / 1000
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 ">
         {/* Engagement Type */}
-        <div className="p-4 border border-gray-200 rounded-xl bg-white shadow-sm">
-          <label className="block text-xs font-medium text-gray-700 mb-3">
+        <div className="p-2 border border-gray-200 rounded-xl bg-white shadow-sm">
+          <label className="block text-xs font-medium text-gray-700 mb-2">
             Engagement Type <span className="text-red-500">*</span>
           </label>
           <div className="space-y-2">
@@ -261,9 +336,9 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
         </div>
 
         {/* Pricing & Currency */}
-        <div className="p-4 border border-gray-200 rounded-xl bg-white shadow-sm flex flex-col space-y-4">
+        <div className="p-2 border border-gray-200 rounded-xl bg-white shadow-sm flex flex-col space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-gray-700 mb-2">
               Pricing Currency <span className="text-red-500">*</span>
             </label>
             <select
