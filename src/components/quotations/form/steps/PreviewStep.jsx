@@ -1,5 +1,5 @@
 import React from 'react';
-import { Edit2, Download, Hexagon } from 'lucide-react';
+import { Edit2, Download, Hexagon, FileText, Calendar, Percent, Tag, IndianRupee } from 'lucide-react';
 
 function numToWords(num) {
   // simplified for mockup
@@ -34,15 +34,15 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
   const discountedBase = Math.max(0, baseCost - discountAmount);
   const gstAmount = discountedBase * 0.18;
   const finalAmount = discountedBase + gstAmount;
-  
+
   const avgRate = totalEffort > 0 ? (baseCost / totalEffort) : 0;
-  const totalDuration = formData.projectStartDate && formData.projectEndDate 
+  const totalDuration = formData.projectStartDate && formData.projectEndDate
     ? Math.ceil(Math.abs(new Date(formData.projectEndDate) - new Date(formData.projectStartDate)) / (1000 * 60 * 60 * 24)) + 1
     : 0;
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300 pb-10">
-      
+
       {/* Header Actions */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
         <div>
@@ -63,12 +63,12 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
       </div>
 
       {/* A4 Document Wrapper */}
-      <div className="bg-white border border-gray-200 shadow-sm mx-auto overflow-hidden text-gray-800" style={{ maxWidth: '1000px', minHeight: '1414px', padding: '40px 50px' }}>
-        
+      <div className="bg-white border border-gray-200 shadow-sm mx-auto overflow-hidden text-gray-800 p-4 sm:p-8 md:p-[50px] max-w-[1000px] min-h-screen">
+
         {/* Document Header */}
-        <div className="flex justify-between items-start mb-12">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-6 mb-12">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center transform rotate-12">
+            <div className="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center transform rotate-12 shrink-0">
               <Hexagon className="h-8 w-8 text-white -rotate-12" fill="currentColor" />
             </div>
             <div>
@@ -76,17 +76,17 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
               <p className="text-[10px] text-gray-500 font-medium">Building Digital Excellence</p>
             </div>
           </div>
-          <div className="text-right">
+          <div className="text-left sm:text-right">
             <h2 className="text-2xl font-black text-gray-900 tracking-widest uppercase mb-2">Quotation</h2>
-            <p className="text-xs font-bold text-gray-700">{formData.quotationNumber}</p>
+            <p className="text-xs font-bold text-gray-700 break-all">{formData.quotationNumber}</p>
             <p className="text-[10px] text-gray-500 mt-1">Date: {formData.proposalDate || '12 Aug 2026'}</p>
             <p className="text-[10px] text-gray-500">Valid Till: {formData.validTill || '14 Aug 2026'}</p>
           </div>
         </div>
 
         {/* Address Blocks */}
-        <div className="flex justify-between items-start mb-8 text-[11px]">
-          <div className="w-1/2 pr-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-8 mb-8 text-[11px]">
+          <div className="w-full sm:w-1/2 sm:pr-4">
             <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">From,</p>
             <p className="font-bold text-gray-900 mb-1">
               {formData.companyDetails?.companyName || 'Aneka Labs Pvt. Ltd.'}
@@ -99,16 +99,16 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
             <p className="text-gray-500 mb-1">
               <span className="text-gray-400">PAN:</span> {formData.companyDetails?.pan || 'N/A'} | <span className="text-gray-400">GSTIN:</span> {formData.companyDetails?.gstin || 'N/A'}
             </p>
-            <p className="text-gray-500">
-              <span className="text-gray-400">Email:</span> {formData.companyDetails?.email || formData.companyDetails?.branchEmail || 'hello@anekalabs.com'} | <span className="text-gray-400">Website:</span> {formData.companyDetails?.website || 'www.anekalabs.com'}
+            <p className="text-gray-500 break-all">
+              <span className="text-gray-400">Email:</span> {formData.companyDetails?.email || formData.companyDetails?.branchEmail || 'hello@anekalabs.com'} <span className="hidden sm:inline">|</span><br className="sm:hidden" /> <span className="text-gray-400">Website:</span> {formData.companyDetails?.website || 'www.anekalabs.com'}
             </p>
           </div>
-          <div className="w-1/2 pl-8">
+          <div className="w-full sm:w-1/2 sm:pl-4">
             <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">To,</p>
             <p className="font-bold text-gray-900 mb-1">{formData.clientName || 'New Company'}</p>
             <p className="text-gray-500 mb-2">{formData.billingAddress || 'vijay nagar'}</p>
-            <p className="text-gray-500 mb-1"><span className="text-gray-400">PAN:</span> {formData.panNumber || 'ADHFJ8378E'} | <span className="text-gray-400">GSTIN:</span> {formData.gstNumber || '22ASDFR0986A2Z2'}</p>
-            <p className="text-gray-500"><span className="text-gray-400">Email:</span> {formData.email || 'client@example.com'} | <span className="text-gray-400">Phone:</span> {formData.phone || '9876543210'}</p>
+            <p className="text-gray-500 mb-1 break-all"><span className="text-gray-400">PAN:</span> {formData.panNumber || 'ADHFJ8378E'} | <span className="text-gray-400">GSTIN:</span> {formData.gstNumber || '22ASDFR0986A2Z2'}</p>
+            <p className="text-gray-500 break-all"><span className="text-gray-400">Email:</span> {formData.email || 'client@example.com'} <span className="hidden sm:inline">|</span><br className="sm:hidden" /> <span className="text-gray-400">Phone:</span> {formData.phone || '9876543210'}</p>
           </div>
         </div>
 
@@ -124,145 +124,138 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
           </div>
         </div>
 
-        {/* 1. Scope of Work */}
-        <div className="mb-10">
-          <h3 className="text-xs font-bold text-gray-900 mb-4">1. Scope of Work</h3>
-          <table className="w-full text-left text-[11px] border border-gray-200">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-gray-600">
-                <th className="py-2.5 px-4 font-bold w-12 text-center border-r border-gray-200">#</th>
-                <th className="py-2.5 px-4 font-bold w-1/4 border-r border-gray-200">Module / Feature</th>
-                <th className="py-2.5 px-4 font-bold border-r border-gray-200">Description</th>
-                <th className="py-2.5 px-4 font-bold text-center w-24 border-r border-gray-200">Total Effort</th>
-                <th className="py-2.5 px-4 font-bold text-center w-40">Timeline</th>
-              </tr>
-            </thead>
-            <tbody>
-              {formData.modules.map((m, idx) => {
-                const effort = m.functionalities.reduce((s, f) => s + (Number(f.effort)||0), 0);
-                return (
-                  <tr key={idx} className="border-b border-gray-100 last:border-0">
-                    <td className="py-3 px-4 text-center text-gray-500 border-r border-gray-200">{idx + 1}</td>
-                    <td className="py-3 px-4 font-bold text-gray-900 border-r border-gray-200">{m.name}</td>
-                    <td className="py-3 px-4 text-gray-500 border-r border-gray-200">{m.description}</td>
-                    <td className="py-3 px-4 text-center font-bold text-gray-900 border-r border-gray-200">{effort} Hrs</td>
-                    <td className="py-3 px-4 text-center text-indigo-600 font-medium">{formData.projectStartDate || '01 Aug 2026'} - {formData.projectEndDate || '10 Aug 2026'}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-            <tfoot>
-              <tr className="bg-gray-50 border-t border-gray-200">
-                <td colSpan={3} className="py-3 px-4 text-right font-bold text-gray-900 border-r border-gray-200">Total Effort</td>
-                <td className="py-3 px-4 text-center font-bold text-gray-900 border-r border-gray-200">{totalEffort} Hrs</td>
-                <td></td>
-              </tr>
-            </tfoot>
-          </table>
+        {/* 1. Scope of Work & Commercial Summary */}
+        <div className="bg-white rounded-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 p-6 mb-6">
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="text-indigo-600">
+              <FileText className="h-5 w-5" />
+            </div>
+            <h3 className="text-[15px] font-bold text-gray-900">1. Scope of Work & Commercial Summary</h3>
+          </div>
+
+          {/* Table */}
+          <div className="border border-gray-100 rounded-lg overflow-x-auto mb-6">
+            <table className="w-full text-left text-sm min-w-[800px]">
+              <thead>
+                <tr className="bg-gray-50/70 border-b border-gray-100 text-gray-700">
+                  <th className="py-3.5 px-4 font-bold text-center w-12 border-r border-gray-100 text-xs">#</th>
+                  <th className="py-3.5 px-4 font-bold border-r border-gray-100 w-1/4 text-xs">Module / Feature</th>
+                  <th className="py-3.5 px-4 font-bold border-r border-gray-100 text-xs">Description</th>
+                  <th className="py-3.5 px-4 font-bold text-center border-r border-gray-100 w-32 text-xs">Total Effort</th>
+                  <th className="py-3.5 px-4 font-bold text-center w-56 text-xs">Timeline</th>
+                </tr>
+              </thead>
+              <tbody>
+                {formData.modules.map((m, idx) => {
+                  const effort = m.functionalities.reduce((s, f) => s + (Number(f.effort) || 0), 0);
+                  return (
+                    <tr key={idx} className="border-b border-gray-100 last:border-0">
+                      <td className="py-4 px-4 text-center text-gray-600 border-r border-gray-100 text-xs">{idx + 1}</td>
+                      <td className="py-4 px-4 font-bold text-gray-900 border-r border-gray-100 text-xs">{m.name}</td>
+                      <td className="py-4 px-4 text-gray-600 border-r border-gray-100 text-xs">{m.description}</td>
+                      <td className="py-4 px-4 text-center font-bold text-gray-900 border-r border-gray-100 text-xs">{effort} Hrs</td>
+                      <td className="py-4 px-4 text-center text-indigo-600 font-medium text-xs">
+                        {formData.projectStartDate || '2026-08-01'} - {formData.projectEndDate || '2026-08-31'}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr className="bg-gray-50/70 border-t border-gray-100">
+                  <td colSpan={3} className="py-3.5 px-4 text-right font-bold text-gray-900 border-r border-gray-100 text-xs">Total Effort</td>
+                  <td className="py-3.5 px-4 text-center font-bold text-gray-900 border-r border-gray-100 text-xs">{totalEffort} Hrs</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          {/* Commercial Summary Row */}
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-stretch">
+
+            {/* Base Cost */}
+            <div className="flex-1 flex flex-col justify-center gap-1.5 py-2 px-1">
+              <div className="flex items-center gap-3">
+                <div className="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl shrink-0">
+                  <IndianRupee className="h-4 w-4" />
+                </div>
+                <p className="text-[11px] text-gray-500 font-medium leading-tight">Total Outstanding Pricing<br />(Excl. GST)</p>
+              </div>
+              <p className="text-lg font-bold text-gray-900 pl-[46px]">₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            </div>
+
+            {/* Vertical Divider */}
+            <div className="hidden lg:block w-px bg-gray-100 shrink-0 my-2"></div>
+
+            {/* GST */}
+            <div className="flex-1 flex flex-col justify-center gap-1.5 py-2 px-1">
+              <div className="flex items-center gap-3">
+                <div className="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl shrink-0">
+                  <Percent className="h-4 w-4" />
+                </div>
+                <p className="text-[11px] text-gray-500 font-medium">GST @ 18%</p>
+              </div>
+              <p className="text-lg font-bold text-gray-900 pl-[46px]">₹ {gstAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            </div>
+
+            {/* Vertical Divider */}
+            <div className="hidden lg:block w-px bg-gray-100 shrink-0 my-2"></div>
+
+            {/* Discount */}
+            <div className="flex-1 flex flex-col justify-center gap-1.5 py-2 px-1">
+              <div className="flex items-center gap-3">
+                <div className="bg-red-50 text-red-500 p-2.5 rounded-xl shrink-0">
+                  <Tag className="h-4 w-4" />
+                </div>
+                <p className="text-[11px] text-gray-500 font-medium">Discount</p>
+              </div>
+              <p className="text-lg font-bold text-red-500 pl-[46px]">- ₹ {discountAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+            </div>
+
+            {/* Final Amount */}
+            <div className="flex-[1.2] bg-[#f8f9fe] rounded-xl p-4 flex flex-col justify-center items-center text-center">
+              <p className="text-[13px] font-bold text-indigo-600 mb-0.5">Final Outstanding Amount</p>
+              <p className="text-2xl font-black text-indigo-700 mb-0.5">
+                ₹ {finalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+              <p className="text-[10px] text-gray-500 italic font-medium">({numToWords(finalAmount)})</p>
+            </div>
+
+          </div>
         </div>
 
-        {/* 2x2 Grid for Summaries */}
-        <div className="grid grid-cols-2 gap-6 mb-10">
-          
-          {/* 2. Estimation Summary */}
-          <div className="border border-gray-200 rounded-lg p-5">
-            <h3 className="text-xs font-bold text-gray-900 mb-4">2. Estimation Summary</h3>
-            <div className="space-y-3 text-[11px]">
-              <div className="flex justify-between text-gray-600">
-                <span>Total Effort</span>
-                <span className="font-bold text-gray-900">{totalEffort} Hrs</span>
-              </div>
-              <div className="flex justify-between text-gray-600 pb-3 border-b border-gray-100">
-                <span>Average Rate</span>
-                <span className="font-bold text-gray-900">₹ {avgRate.toLocaleString(undefined, {maximumFractionDigits:0})} / Hr</span>
-              </div>
-              <div className="flex justify-between font-bold text-indigo-700 bg-indigo-50/50 p-2 rounded -mx-2">
-                <span>Total Cost (Excl. GST)</span>
-                <span>₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-              <div className="flex justify-between text-gray-600 pt-1">
-                <span>Total Working Days</span>
-                <span className="font-bold text-gray-900">{totalDuration} Days</span>
-              </div>
-              <div className="flex justify-between text-gray-600">
-                <span>Total Project Duration</span>
-                <span className="font-bold text-gray-900">{totalDuration} Days</span>
-              </div>
+        {/* 2. Timeline Overview */}
+        <div className="bg-white rounded-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 p-6 mb-10">
+          <div className="flex items-center gap-3 mb-1">
+            <div className="text-indigo-600">
+              <Calendar className="h-5 w-5" />
             </div>
+            <h3 className="text-[15px] font-bold text-gray-900">2. Timeline Overview</h3>
           </div>
+          <p className="text-[11px] text-gray-500 mb-10 ml-8">{formData.projectStartDate || '2026-08-01'} - {formData.projectEndDate || '2026-08-31'}</p>
 
-          {/* 3. Team & Costing Summary */}
-          <div className="border border-gray-200 rounded-lg p-5">
-            <h3 className="text-xs font-bold text-gray-900 mb-4">3. Team & Costing Summary</h3>
-            <div className="space-y-3 text-[11px]">
-              <div className="flex justify-between text-gray-600">
-                <span>Total Team Members</span>
-                <span className="font-bold text-gray-900">{uniqueTeamMembers.size || 4}</span>
-              </div>
-              <div className="flex justify-between text-gray-600 pb-3 border-b border-gray-100">
-                <span>Total Labor Cost</span>
-                <span className="font-bold text-gray-900">₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-              <div className="flex justify-between font-bold text-indigo-700 bg-indigo-50/50 p-2 rounded -mx-2 mt-4">
-                <span>Total Project Cost (Excl. GST)</span>
-                <span>₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-            </div>
-          </div>
+          <div className="relative mt-8 pt-6 pb-6">
+            <div className="absolute top-0 left-[60%] text-[10px] text-gray-500 -translate-x-1/2 bg-white px-2 -mt-2">Aug 2026</div>
+            <div className="absolute top-0 bottom-0 left-[60%] w-px border-l border-dashed border-red-300 -translate-x-1/2 z-0"></div>
+            <div className="absolute bottom-0 left-[60%] -translate-x-1/2 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full z-10 translate-y-1/2">Today</div>
 
-          {/* 4. Timeline Overview */}
-          <div className="border border-gray-200 rounded-lg p-5">
-            <h3 className="text-xs font-bold text-gray-900 mb-1">4. Timeline Overview</h3>
-            <p className="text-[9px] text-gray-400 mb-4">{formData.projectStartDate || '01 Aug 2026'} - {formData.projectEndDate || '10 Aug 2026'}</p>
-            
-            <div className="relative mt-6 pt-4 border-t border-gray-100">
-              <div className="absolute top-0 left-1/2 text-[8px] text-gray-400 -translate-x-1/2 bg-white px-1 -mt-2">Aug 2026</div>
-              <div className="absolute top-0 bottom-0 left-1/2 w-px border-l border-dashed border-red-300 -translate-x-1/2 z-0"></div>
-              <div className="absolute bottom-[-14px] left-1/2 -translate-x-1/2 bg-red-500 text-white text-[7px] px-1 rounded z-10">Today</div>
-
-              <div className="space-y-3 relative z-10 pb-2">
-                {formData.modules.slice(0,2).map((m, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <div className="w-24 text-[9px] text-gray-600 truncate">{m.name}</div>
-                    <div className="flex-1 bg-gray-50 h-1.5 rounded-full relative">
-                       {/* Mock progress bar positions */}
-                       <div className="absolute h-1.5 bg-indigo-500 rounded-full" style={{ left: `${idx*10}%`, right: `${50 - (idx*20)}%` }}></div>
+            <div className="space-y-6 relative z-10 px-4">
+              {formData.modules.map((m, idx) => {
+                const left = 20 + (idx * 5);
+                const right = 20 + ((formData.modules.length - idx) * 5);
+                return (
+                  <div key={idx} className="flex items-center gap-6">
+                    <div className="w-24 text-[13px] text-gray-700 truncate">{m.name}</div>
+                    <div className="flex-1 bg-gray-50/50 h-2 rounded-full relative">
+                      <div className="absolute h-2 bg-[#4f46e5] rounded-full shadow-sm" style={{ left: `${left}%`, right: `${right}%` }}></div>
                     </div>
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
           </div>
-
-          {/* 5. Commercial Summary */}
-          <div className="border border-gray-200 rounded-lg p-5">
-            <h3 className="text-xs font-bold text-gray-900 mb-4">5. Commercial Summary</h3>
-            <div className="space-y-3 text-[11px]">
-              <div className="flex justify-between text-gray-600">
-                <span>Total Outstanding Pricing (Excl. GST)</span>
-                <span className="font-bold text-gray-900">₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-              <div className="flex justify-between text-gray-600">
-                <span>GST @ 18%</span>
-                <span className="font-bold text-gray-900">₹ {gstAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-              <div className="flex justify-between text-red-500 pb-3 border-b border-gray-100">
-                <span>Discount</span>
-                <span className="font-bold">- ₹ {discountAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-              </div>
-              
-              <div className="flex justify-between items-end pt-1">
-                <div>
-                  <div className="font-bold text-indigo-700 mb-1">Final Outstanding Amount</div>
-                  <div className="text-[8px] text-gray-400 italic">({numToWords(finalAmount)})</div>
-                </div>
-                <div className="text-xl font-bold text-indigo-700">
-                  ₹ {finalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
 
         {/* Important Notes */}
