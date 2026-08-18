@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Filter, Loader2 } from 'lucide-react';
 import QuotationsTable from '../components/quotations/QuotationsTable';
 import QuotationViewModal from '../components/quotations/QuotationViewModal';
-import Header from '../components/layout/Header';
+
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import * as quotationService from '../services/quotationService';
@@ -124,8 +124,7 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
       {/* Header Area */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Header title="Quotations" />
-          <p className="text-gray-500 text-sm -mt-5">Manage and track all your quotations.</p>
+          <p className="text-gray-500 text-sm">Manage and track all your quotations.</p>
         </div>
         <button 
           onClick={() => onCreateNew ? onCreateNew() : setCurrentView('CreateQuotation')}
