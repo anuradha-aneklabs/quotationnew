@@ -9,6 +9,7 @@ import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { fetchClients, createClient, updateClient, deleteClient } from '../services/clientService';
 import { useToast } from '../contexts/ToastContext';
+import useItemsPerPage from '../hooks/useItemsPerPage';
 
 export default function Clients() {
   const { showToast } = useToast();
@@ -29,7 +30,7 @@ export default function Clients() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = useItemsPerPage();
 
   const loadClients = async () => {
     try {
@@ -50,7 +51,6 @@ export default function Clients() {
 
   const filteredClients = clients.filter(client => {
     const term = searchTerm.toLowerCase();
-    // Use snake_case properties from API response
     return (
       (client.company_name || '').toLowerCase().includes(term) ||
       (client.contact_person || '').toLowerCase().includes(term) ||
@@ -102,7 +102,6 @@ export default function Clients() {
       } else {
         await createClient(clientData);
       }
-      // Refresh list on success
       await loadClients();
       setIsModalOpen(false);
       showToast(editingClient ? 'Client updated successfully' : 'Client created successfully', 'success');
@@ -117,29 +116,27 @@ export default function Clients() {
   );
 
   return (
-    <div className="space-y-6 flex flex-col h-full pb-6">
-      {/* Header Area */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <p className="text-gray-500 text-sm">Manage your clients and their information.</p>
+    <div className="flex flex-col flex-1 min-h-0 overflow-hidden gap-3">
+
+      <SearchBar
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search clients....."
+      >
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleAddClick}
+            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#1A9F9A] rounded-md hover:bg-teal-600 transition-colors"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Client
+          </button>
         </div>
-        <button 
-          onClick={handleAddClick}
-          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Client
-        </button>
-      </div>
+      </SearchBar>
 
       {/* Unified Table Container */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col flex-1 min-h-0">
-        <SearchBar 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search clients..."
-        />
-        
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col flex-1 min-h-0 overflow-hidden mb-4">
+
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center min-h-[200px]">
             <span className="text-gray-500">Loading clients...</span>
@@ -149,15 +146,15 @@ export default function Clients() {
             <span className="text-red-500 bg-red-50 px-4 py-3 rounded-lg">Error: {error}</span>
           </div>
         ) : (
-          <ClientsTable 
-            clients={paginatedClients} 
+          <ClientsTable
+            clients={paginatedClients}
             onView={handleViewClick}
             onEdit={handleEditClick}
             onDelete={handleDeleteClick}
           />
         )}
-        
-        <Pagination 
+
+        <Pagination
           totalItems={filteredClients.length}
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
@@ -166,7 +163,7 @@ export default function Clients() {
       </div>
 
       {/* Add/Edit Modal */}
-      <ClientModal 
+      <ClientModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveClient}
@@ -174,7 +171,7 @@ export default function Clients() {
       />
 
       {/* View Modal */}
-      <ClientViewModal 
+      <ClientViewModal
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
         client={viewingClient}

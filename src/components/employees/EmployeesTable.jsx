@@ -1,64 +1,73 @@
 import React from 'react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
+import iconEdit from '../../assets/Employee/edit-2.svg';
+import iconEye from '../../assets/Employee/eye.svg';
+import iconTrash from '../../assets/Employee/trash.svg';
 
 export default function EmployeesTable({ employees, onView, onEdit, onDelete }) {
   return (
-    <div className="overflow-x-auto flex-1">
-      <table className="w-full text-left border-collapse min-w-[800px]">
-        <thead>
+    <div className="overflow-auto flex-1 scrollbar-hide w-full">
+      <table className="w-full min-w-[800px] text-left border-collapse">
+        <thead className="sticky top-0 bg-white z-10">
           <tr className="border-b border-gray-100">
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Name</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Role</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Email</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Phone</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Assigned Project</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Hourly Rate</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider text-right">Actions</th>
+            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">ID</th>
+            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Name</th>
+            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Role</th>
+            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Email</th>
+            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Phone</th>
+            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Assign Project</th>
+            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Hourly Rate</th>
+            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] text-right whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
           {employees.map((employee) => (
             <tr key={employee.id} className="hover:bg-gray-50/50 transition-colors">
-              <td className="px-6 py-4">
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-indigo-600">{employee.name}</span>
-                  <span className="text-xs text-gray-400">{employee.employee_code || `ID: ${employee.id}`}</span>
-                </div>
+              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                {employee.employee_code || `EMP${String(employee.id).padStart(3, '0')}`}
               </td>
-              <td className="px-6 py-4 text-sm text-gray-600">{employee.role || employee.designation}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{employee.email}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{employee.phone || '-'}</td>
-              <td className="px-6 py-4">
+              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                {employee.name}
+              </td>
+              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                {employee.role || employee.designation}
+              </td>
+              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                {employee.email}
+              </td>
+              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                {employee.phone || '-'}
+              </td>
+              <td className="px-6 py-3 whitespace-nowrap">
                 {employee.assigned_project ? (
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600">
+                  <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-[#E2F3FF] text-[#0E5C9D]">
                     {employee.assigned_project}
                   </span>
                 ) : (
                   <span className="text-sm text-gray-400">Unassigned</span>
                 )}
               </td>
-              <td className="px-6 py-4 text-sm text-gray-900">
-                {String(employee.hourly_rate).startsWith('₹') ? employee.hourly_rate : `₹${Number(employee.hourly_rate || 0).toFixed(2)}`}
+              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                {String(employee.hourly_rate).startsWith('₹') ? employee.hourly_rate : `₹ ${Number(employee.hourly_rate || 0).toFixed(2)}`}
               </td>
-              <td className="px-6 py-4">
-                <div className="flex items-center justify-end space-x-3">
-                  <button 
-                    onClick={() => onView(employee)}
-                    className="text-gray-400 hover:text-indigo-600 transition-colors"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </button>
-                  <button 
+              <td className="px-6 py-3">
+                <div className="flex items-center justify-end space-x-2">
+                  <button
                     onClick={() => onEdit(employee)}
-                    className="text-gray-400 hover:text-indigo-600 transition-colors"
+                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
                   >
-                    <Pencil className="h-4 w-4" />
+                    <img src={iconEdit} alt="Edit" className="h-4 w-4" />
                   </button>
-                  <button 
-                    onClick={() => onDelete(employee.id)}
-                    className="text-red-500 hover:text-red-600 transition-colors"
+                  <button
+                    onClick={() => onView(employee)}
+                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <img src={iconEye} alt="View" className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => onDelete(employee.id)}
+                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                  >
+                    <img src={iconTrash} alt="Delete" className="h-4 w-4" />
                   </button>
                 </div>
               </td>
@@ -66,7 +75,7 @@ export default function EmployeesTable({ employees, onView, onEdit, onDelete }) 
           ))}
           {employees.length === 0 && (
             <tr>
-              <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
+              <td colSpan="8" className="px-6 py-8 text-center text-gray-500">
                 No employees found.
               </td>
             </tr>

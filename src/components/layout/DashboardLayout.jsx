@@ -12,8 +12,8 @@ export default function DashboardLayout({ children, currentView, setCurrentView,
       case 'CreateQuotation': return { title: 'Create New Quotations', breadcrumbs: ['Dashboard', 'Quotations', 'Create New Quotation'] };
       case 'Quotations': return { title: 'Quotations', breadcrumbs: ['Dashboard', 'Quotations'] };
       case 'Dashboard': return { title: 'Dashboard', description: "Welcome back! Here's an overview of your quotation metrics." };
-      case 'Employees': return { title: 'Employees', breadcrumbs: ['Dashboard', 'Employees'] };
-      case 'Clients': return { title: 'Clients', breadcrumbs: ['Dashboard', 'Clients'] };
+      case 'Employees': return { title: 'Employees', description: 'Manage your team and track project assignments.' };
+      case 'Clients': return { title: 'Clients', description: 'Manage your clients and their information.' };
       case 'Companies': return { title: 'Companies', breadcrumbs: ['Dashboard', 'Masters', 'Companies'] };
       case 'Tax Masters': return { title: 'Tax Masters', breadcrumbs: ['Dashboard', 'Masters', 'Tax Masters'] };
       case 'Dropdown Masters': return { title: 'Dropdown Masters', breadcrumbs: ['Dashboard', 'Masters', 'Dropdown Masters'] };
@@ -25,7 +25,7 @@ export default function DashboardLayout({ children, currentView, setCurrentView,
   const headerProps = getHeaderProps(currentView);
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
+    <div className="flex h-screen bg-white overflow-hidden font-sans">
       <Sidebar 
         currentView={currentView} 
         setCurrentView={(view) => {
@@ -50,8 +50,8 @@ export default function DashboardLayout({ children, currentView, setCurrentView,
           <Header title={headerProps.title} breadcrumbs={headerProps.breadcrumbs} description={headerProps.description} />
         </div>
 
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 pt-6 px-4 md:px-6 pb-0">
-          <div className=" mx-auto h-full">
+        <main className="flex-1 flex flex-col overflow-hidden bg-white pt-6 px-4 md:px-6 min-h-0">
+          <div className="mx-auto w-full flex-1 flex flex-col min-h-0 overflow-hidden">
             {children}
           </div>
         </main>
