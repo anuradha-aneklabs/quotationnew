@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Briefcase, FileText, IndianRupee } from 'lucide-react';
-import Header from '../components/layout/Header';
+
 import ActivityChart from '../components/dashboard/ActivityChart';
 import RecentActivity from '../components/dashboard/RecentActivity';
 import QuotationsTable from '../components/dashboard/QuotationsTable';
@@ -49,8 +49,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-4">
-      <Header title="Dashboard" />
-      <p className="text-gray-600 text-medium -mt-5">Welcome back! Here's an overview of your quotation metrics.</p>
+      <p className="text-gray-600 text-medium">Welcome back! Here's an overview of your quotation metrics.</p>
       
       {/* Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 shrink-0">

@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react';
 import EmployeesTable from '../components/employees/EmployeesTable';
 import EmployeeModal from '../components/employees/EmployeeModal';
 import EmployeeViewModal from '../components/employees/EmployeeViewModal';
-import Header from '../components/layout/Header';
+
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
@@ -122,8 +122,7 @@ export default function Employees() {
       {/* Header Area */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Header title="Employees" />
-          <p className="text-gray-500 text-sm -mt-5">Manage your team and track project assignments.</p>
+          <p className="text-gray-500 text-sm">Manage your team and track project assignments.</p>
         </div>
         <button 
           onClick={handleAddClick}

@@ -7,7 +7,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell
 } from 'recharts';
-import Header from '../components/layout/Header';
+
 import { fetchDashboardReport, exportReport } from '../services/reportService';
 
 export default function Reports() {

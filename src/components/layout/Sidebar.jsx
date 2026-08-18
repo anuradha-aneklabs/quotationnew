@@ -1,37 +1,38 @@
 import React, { useState } from 'react';
 import { 
-  Home, 
-  FileText, 
-  Briefcase, 
-  Users, 
-  UserPlus, 
-  BookOpen, 
-  AlignLeft, 
-  Coins, 
-  LayoutTemplate, 
-  Layers, 
-  BarChart2, 
-  CheckCircle, 
-  Settings, 
-  LogOut,
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/peoplexlogo.svg';
+
+import iconDashboard from '../../assets/SideBar/Dashboard.svg';
+import iconQuotations from '../../assets/SideBar/Quotation.svg';
+import iconProposals from '../../assets/SideBar/Proposals.svg';
+import iconClients from '../../assets/SideBar/Clients.svg';
+import iconEmployees from '../../assets/SideBar/Empoyee.svg';
+import iconScopeLibrary from '../../assets/SideBar/ScopeLibrary.svg';
+import iconStandardClauses from '../../assets/SideBar/StandardClause.svg';
+import iconCurrencyMaster from '../../assets/SideBar/CurrencyMaster.svg';
+import iconTemplates from '../../assets/SideBar/Templates.svg';
+import iconMasters from '../../assets/SideBar/Master.svg';
+import iconReports from '../../assets/SideBar/Reports.svg';
+import iconApprovals from '../../assets/SideBar/Approvals.svg';
+import iconSettings from '../../assets/SideBar/Settings.svg';
+import iconLogout from '../../assets/SideBar/logout (1).svg';
 
 const navItems = [
-  { name: 'Dashboard', icon: Home },
-  { name: 'Quotations', icon: FileText },
-  { name: 'Proposals', icon: Briefcase },
-  { name: 'Clients', icon: Users },
-  { name: 'Employees', icon: UserPlus },
-  { name: 'Scope Library', icon: BookOpen },
-  { name: 'Standard Clauses', icon: AlignLeft },
-  { name: 'Currency Master', icon: Coins },
-  { name: 'Templates', icon: LayoutTemplate },
+  { name: 'Dashboard', icon: iconDashboard },
+  { name: 'Quotations', icon: iconQuotations },
+  { name: 'Proposals', icon: iconProposals },
+  { name: 'Clients', icon: iconClients },
+  { name: 'Employees', icon: iconEmployees },
+  { name: 'Scope Library', icon: iconScopeLibrary },
+  { name: 'Standard Clauses', icon: iconStandardClauses },
+  { name: 'Currency Master', icon: iconCurrencyMaster },
+  { name: 'Templates', icon: iconTemplates },
   { 
     name: 'Masters', 
-    icon: Layers, 
+    icon: iconMasters, 
     hasSubmenu: true,
     subItems: [
       { name: 'Tax Masters' },
@@ -39,9 +40,9 @@ const navItems = [
       { name: 'Companies' }
     ]
   },
-  { name: 'Reports', icon: BarChart2 },
-  { name: 'Approvals', icon: CheckCircle },
-  { name: 'Settings', icon: Settings },
+  { name: 'Reports', icon: iconReports },
+  { name: 'Approvals', icon: iconApprovals },
+  { name: 'Settings', icon: iconSettings },
 ];
 
 export default function Sidebar({ currentView, setCurrentView, setToken, isOpen, onClose }) {
@@ -73,7 +74,7 @@ export default function Sidebar({ currentView, setCurrentView, setToken, isOpen,
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="h-16 flex items-center px-6 mt-2 mb-4">
-        <img src={logo} alt="ANEKA QuotePro" className="h-20 w-50" />
+        <img src={logo} alt="ANEKA QuotePro" className="w-[140px] h-auto ml-2" />
       </div>
       
       <nav className="flex-1 overflow-y-auto px-4 space-y-1 scrollbar-hide pb-4">
@@ -93,14 +94,14 @@ export default function Sidebar({ currentView, setCurrentView, setToken, isOpen,
                     if (setCurrentView) setCurrentView(item.name);
                   }
                 }}
-                className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors border-l-4 ${
                   isActive 
-                    ? 'bg-indigo-600 text-white' 
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-teal-50 text-teal-600 border-teal-500' 
+                    : 'text-gray-600 border-transparent hover:bg-[#ECF4F7] hover:text-gray-900'
                 }`}
               >
                 <div className="flex items-center">
-                  <item.icon className={`mr-3 h-5 w-5 ${isActive ? 'text-white' : 'text-gray-400'}`} />
+                  <img src={item.icon} alt="" className={`mr-3 h-5 w-5 ${!isActive ? 'opacity-70 grayscale' : ''}`} />
                   {item.name}
                 </div>
                 {item.hasSubmenu && (
@@ -125,15 +126,15 @@ export default function Sidebar({ currentView, setCurrentView, setToken, isOpen,
                           e.preventDefault();
                           if (setCurrentView) setCurrentView(subItem.name);
                         }}
-                        className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                        className={`flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors border-l-4 ${
                           isSubActive 
-                            ? 'bg-indigo-600 text-white' 
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            ? 'bg-teal-50 text-teal-600 border-teal-500' 
+                            : 'text-gray-600 border-transparent hover:bg-[#ECF4F7] hover:text-gray-900'
                         }`}
                       >
                         <div className="w-5 flex justify-center mr-3">
                           {isSubActive ? (
-                            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                            <div className="w-1.5 h-1.5 bg-teal-600 rounded-full"></div>
                           ) : (
                             <div className="w-1.5 h-1.5 border border-gray-400 rounded-sm"></div>
                           )}
@@ -149,7 +150,7 @@ export default function Sidebar({ currentView, setCurrentView, setToken, isOpen,
         })}
       </nav>
 
-      <div className="p-4 border-t border-gray-200">
+      <div className="px-4 pb-4">
         <button
           onClick={() => {
             localStorage.removeItem('token');
@@ -157,9 +158,9 @@ export default function Sidebar({ currentView, setCurrentView, setToken, isOpen,
             localStorage.removeItem('user');
             if (setToken) setToken(null);
           }}
-          className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          className="w-full flex items-center px-3 py-2 font-['Instrument_Sans',sans-serif] font-medium text-[15px] leading-[130%] text-[#FF4343] rounded-lg hover:bg-red-50 transition-colors"
         >
-          <LogOut className="mr-3 h-5 w-5 text-gray-400" />
+          <img src={iconLogout} alt="" className="mr-3 h-5 w-5" />
           Logout
         </button>
       </div>

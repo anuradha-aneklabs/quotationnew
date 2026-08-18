@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import TaxMastersTable from '../components/masters/TaxMastersTable';
 import CreateTaxModal from '../components/masters/CreateTaxModal';
-import Header from '../components/layout/Header';
+
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
@@ -106,8 +106,7 @@ export default function TaxMasters() {
     <div className="space-y-6 flex flex-col h-full pb-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Header title="Tax Masters" />
-          <p className="text-gray-500 text-sm -mt-5">Manage tax components used in quotations and invoices.</p>
+          <p className="text-gray-500 text-sm">Manage tax components used in quotations and invoices.</p>
         </div>
         <button 
           onClick={handleAddClick}
