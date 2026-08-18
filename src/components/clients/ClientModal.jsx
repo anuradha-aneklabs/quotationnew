@@ -299,7 +299,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
             type="submit"
             form="clientForm"
             disabled={isSubmitting}
-            className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
+            className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-[#1A9F9A] rounded-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50"
           >
             {isSubmitting ? (
               <>

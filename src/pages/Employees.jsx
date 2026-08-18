@@ -10,6 +10,7 @@ import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { fetchEmployees, createEmployee, updateEmployee, deleteEmployee } from '../services/employeeService';
 import { useToast } from '../contexts/ToastContext';
+import useItemsPerPage from '../hooks/useItemsPerPage';
 
 export default function Employees() {
   const { showToast } = useToast();
@@ -30,7 +31,7 @@ export default function Employees() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = useItemsPerPage();
 
   const loadEmployees = async () => {
     try {
@@ -118,28 +119,34 @@ export default function Employees() {
   );
 
   return (
-    <div className="space-y-6 flex flex-col h-full pb-6">
-      {/* Header Area */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <p className="text-gray-500 text-sm">Manage your team and track project assignments.</p>
+    <div className="flex flex-col flex-1 min-h-0 overflow-hidden gap-3">
+
+      <SearchBar 
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search by name, role or project..."
+      >
+        <div className="flex items-center gap-3">
+          <div className="relative border border-gray-200 rounded-md bg-white hover:border-gray-300 transition-colors">
+            <select className="appearance-none bg-transparent pl-3 pr-8 py-2 text-sm font-medium text-[#46505F] focus:outline-none cursor-pointer">
+              <option>All Role</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#46505F]">
+              <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+          </div>
+          <button 
+            onClick={handleAddClick}
+            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#1A9F9A] rounded-md hover:bg-teal-600 transition-colors"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Employee
+          </button>
         </div>
-        <button 
-          onClick={handleAddClick}
-          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Employee
-        </button>
-      </div>
+      </SearchBar>
 
       {/* Unified Table Container */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col flex-1 min-h-0">
-        <SearchBar 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search by name, role or project..."
-        />
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col flex-1 min-h-0 overflow-hidden mb-4">
         
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center min-h-[200px]">
