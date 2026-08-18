@@ -1,6 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Trash2, Calendar, Layers, Activity, Clock, IndianRupee, ChevronDown, ChevronUp } from 'lucide-react';
 import { fetchEmployees } from '../../../../services/employeeService'; // Reusing service for team members!
+
+const AutoResizeTextarea = ({ value, onChange, placeholder, className }) => {
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [value]);
+
+  return (
+    <textarea
+      ref={textareaRef}
+      rows={1}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className={`${className} resize-none overflow-hidden`}
+    />
+  );
+};
 
 export default function ModuleManagementStep({ formData, setFormData, errors }) {
   const [employees, setEmployees] = useState([]);
@@ -360,40 +382,29 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                   </div>
                   <div className='flex-1 flex flex-col items-center sm:items-start w-full'>
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Module Name</p>
-                    <input
-                      type="text"
+                    <AutoResizeTextarea
                       value={module.name}
                       onChange={(e) => updateModule(module.id, 'name', e.target.value)}
                       placeholder="Module Name (e.g. Backend)"
-                      className={`w-full sm:max-w-[200px] text-base font-bold text-gray-900 bg-transparent focus:outline-none border-b-2 py-1 text-center sm:text-left ${errors[`module_${mIdx}_name`] ? 'border-red-500' : 'border-transparent hover:border-gray-200 focus:border-indigo-500 transition-colors'}`}
+                      className={`w-full sm:max-w-[400px] text-base font-bold text-gray-900 bg-transparent focus:outline-none border-b-2 py-1 text-center sm:text-left max-h-[84px] overflow-hidden ${errors[`module_${mIdx}_name`] ? 'border-red-500' : 'border-transparent hover:border-gray-200 focus:border-indigo-500 transition-colors'}`}
                     />
                   </div>
                 </div>
 
                 <div className="w-full lg:w-auto lg:flex-[1.5] flex flex-col items-center lg:items-start">
                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Module Description</p>
-                   <input
-                     type="text"
+                   <AutoResizeTextarea
                      value={module.description}
                      onChange={(e) => updateModule(module.id, 'description', e.target.value)}
                      placeholder="e.g. Core API Services"
-                     className="w-full text-sm text-gray-600 bg-transparent focus:outline-none border-b-2 border-transparent hover:border-gray-200 focus:border-indigo-500 py-1 text-center lg:text-left transition-colors"
+                     className="w-full text-sm text-gray-600 bg-transparent focus:outline-none border-b-2 border-transparent hover:border-gray-200 focus:border-indigo-500 py-1 text-center lg:text-left transition-colors max-h-[80px] overflow-hidden"
                    />
                 </div>
 
                 <div className="flex flex-wrap items-center justify-center lg:justify-end gap-4 sm:gap-6 lg:gap-8 w-full lg:w-auto flex-shrink-0">
                   <div className="text-center">
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Duration</p>
-                    <div className="flex items-center justify-center">
-                      <input
-                        type="text"
-                        value={module.duration}
-                        onChange={(e) => updateModule(module.id, 'duration', e.target.value)}
-                        className="w-10 text-center text-sm font-bold bg-transparent focus:outline-none border-b-2 border-transparent hover:border-gray-300 focus:border-indigo-500 transition-colors"
-                        placeholder="0"
-                      />
-                      <span className="text-sm font-bold text-gray-900 ml-1">Days</span>
-                    </div>
+                    <p className="text-sm font-bold text-gray-900">{moduleDuration} Days</p>
                   </div>
                   <div className="text-center">
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Effort</p>
@@ -449,9 +460,8 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                         {module.functionalities.map((func, fIdx) => (
                           <tr key={func.id} className="border-b border-gray-100 last:border-0 group">
                             <td className="py-2 text-gray-500 align-top">{fIdx + 1}</td>
-                            <td className="py-2 pr-2 align-top">
-                              <input
-                                type="text"
+                            <td className="py-2 pr-5 align-top">
+                              <AutoResizeTextarea
                                 value={func.name}
                                 onChange={(e) => updateFunctionality(module.id, func.id, 'name', e.target.value)}
                                 placeholder="Name"
@@ -459,8 +469,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                               />
                             </td>
                             <td className="py-2 pr-2 align-top">
-                              <input
-                                type="text"
+                              <AutoResizeTextarea
                                 value={func.description}
                                 onChange={(e) => updateFunctionality(module.id, func.id, 'description', e.target.value)}
                                 placeholder="Description"
@@ -473,7 +482,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                 min="0" step="any"
                                 value={func.effort}
                                 onChange={(e) => updateFunctionality(module.id, func.id, 'effort', e.target.value)}
-                                className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 ${errors[`module_${mIdx}_func_${fIdx}_effort`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-indigo-500'}`}
+                                className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_effort`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-indigo-500'}`}
                               />
                             </td>
                             <td className="py-2 px-1 align-top">
@@ -482,7 +491,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                 min="0" step="any"
                                 value={func.duration}
                                 onChange={(e) => updateFunctionality(module.id, func.id, 'duration', e.target.value)}
-                                className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 ${errors[`module_${mIdx}_func_${fIdx}_duration`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-indigo-500'}`}
+                                className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_duration`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-indigo-500'}`}
                               />
                             </td>
                             <td className="py-2 align-top text-center pt-2.5">
@@ -564,14 +573,14 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                 </td>
                                 <td className="py-2 pr-2 text-gray-500 truncate">{tm.role || '-'}</td>
                                 <td className="py-2 px-1">
-                                  <input
-                                    type="number"
-                                    min="0" step="any"
-                                    value={tm.effort}
-                                    onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'effort', e.target.value)}
-                                    className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 ${errors[`module_${mIdx}_func_${fIdx}_team`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-300 focus:border-indigo-500'}`}
-                                    placeholder="0"
-                                  />
+                                <input
+                                  type="number"
+                                  min="0" step="any"
+                                  value={tm.effort}
+                                  onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'effort', e.target.value)}
+                                  className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_team`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-300 focus:border-indigo-500'}`}
+                                  placeholder="0"
+                                />
                                 </td>
                                 <td className="py-2 text-center text-gray-500">₹ {tm.rate || '0'}</td>
                                 <td className="py-2 text-center font-medium">₹ {(Number(tm.cost) || 0).toLocaleString()}</td>
