@@ -3,7 +3,7 @@ import { Plus } from 'lucide-react';
 import ClientsTable from '../components/clients/ClientsTable';
 import ClientModal from '../components/clients/ClientModal';
 import ClientViewModal from '../components/clients/ClientViewModal';
-import Header from '../components/layout/Header';
+
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
@@ -121,8 +121,7 @@ export default function Clients() {
       {/* Header Area */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Header title="Clients" />
-          <p className="text-gray-500 text-sm -mt-5">Manage your clients and their information.</p>
+          <p className="text-gray-500 text-sm">Manage your clients and their information.</p>
         </div>
         <button 
           onClick={handleAddClick}

@@ -4,7 +4,7 @@ import CompaniesTable from '../components/companies/CompaniesTable';
 import CompanyModal from '../components/companies/CompanyModal';
 import CompanyViewModal from '../components/companies/CompanyViewModal';
 import BranchManageModal from '../components/companies/BranchManageModal';
-import Header from '../components/layout/Header';
+
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
@@ -131,8 +131,7 @@ export default function Companies() {
       {/* Header Area */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Header title="Companies" />
-          <p className="text-gray-500 text-sm -mt-5">Manage your companies and their branches.</p>
+          <p className="text-gray-500 text-sm">Manage your companies and their branches.</p>
         </div>
         <button
           onClick={handleAddClick}

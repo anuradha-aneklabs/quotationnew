@@ -97,42 +97,41 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
 
   return (
     <div className="space-y-4 animate-in fade-in duration-300">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">1. Client Information</h2>
+      <h2 className="text-lg font-bold border-b-[#DEDEDE] text-[#040715] border-b-[1px] pb-2">1. Client Information</h2>
 
-      <div className="flex flex-col lg:flex-row gap-5">
+      <div className="flex flex-col lg:flex-row gap-6">
         
         {/* Left Column: Logo Upload */}
-        <div className="w-full lg:w-[28%] shrink-0">
-          <label className="block text-[14px] font-normal text-black mb-1.5">Logo</label>
-          <div className={`relative flex flex-col items-center justify-center p-4 border rounded-xl h-[190px] transition-colors ${logoError ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-gray-50/50 hover:bg-gray-50'}`}>
+        <div className="w-full lg:w-[18%] shrink-0 border border-gray-200 rounded-xl p-4">
+          <label className="block text-[14px] font-normal text-black mb-3">Logo</label>
+          <div className={`relative flex flex-col items-center justify-center p-4 border rounded-xl h-[150px] transition-colors ${logoError ? 'border-red-500 bg-red-50' : 'border-gray-100 bg-[#FAFAFA] hover:bg-gray-50'}`}>
             <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onChange={handleLogoUpload} />
             {formData.logo ? (
               <div className="flex flex-col items-center">
-                <img src={formData.logo} alt="Client Logo" className="h-20 w-20 object-contain rounded mb-2" />
-                <span className="text-xs text-indigo-600 font-medium truncate w-32 text-center">
-                  {formData.logoName || 'Logo Uploaded'}
-                </span>
+                <img src={formData.logo} alt="Logo preview" className="h-24 w-auto object-contain mb-3" />
+                <span className="text-xs text-purple-600 font-medium">Click to change logo</span>
               </div>
             ) : (
-              <div className="flex flex-col items-center text-center">
-                <div className="w-14 h-14 rounded-full bg-[#e6f8f5] flex items-center justify-center mb-4">
-                  <img src={logoUploadIcon} alt="Upload Logo" className="w-6 h-6" />
+              <div className="flex flex-col items-center text-center mt-2">
+                <div className="w-14 h-14 rounded-full bg-[#E8F5F4] flex items-center justify-center mb-4">
+                  <img src={logoUploadIcon} alt="Upload Logo" className="w-6 h-6 opacity-80" />
                 </div>
-                <p className="text-sm font-medium text-gray-900 mb-1">Upload Image</p>
-                <p className="text-[10px] text-gray-400">JPG or PNG Max 2mb • 512 px</p>
+                <p className="text-[14px] font-medium text-gray-900 mb-1">Upload Image</p>
+                <p className="text-[11px] text-gray-500">JPG or PNG Max 2mb • 512 px</p>
               </div>
             )}
-            {logoError && <p className="mt-2 text-[10px] text-red-500 text-center">{logoError}</p>}
           </div>
+          {logoError && <p className="mt-1.5 text-xs text-red-500">{logoError}</p>}
         </div>
 
         {/* Right Column: Grid Fields */}
-        <div className="w-full lg:w-[72%]">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3.5">
-
+        <div className="w-full lg:w-[82%]">
+          
+          {/* Top Row: 2 Columns */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3.5 mb-4.5">
             {/* Client Name (Searchable Dropdown) */}
             <div className="relative" ref={wrapperRef}>
-              <label className="block text-[14px] font-normal text-black mb-1">
+              <label className="block text-[14px] font-normal text-black mb-2">
                 Client Name <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -147,35 +146,38 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
                   }}
                   onFocus={() => setIsClientDropdownOpen(true)}
                   placeholder="TechCorp Solutions"
-                  className={`w-full px-3 py-1.5 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors
+                  className={`w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors
                     ${errors.clientName ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
                 />
                 <Search className="absolute right-3 top-3 h-4 w-4 text-[#00bda5]" />
               </div>
-              
-              {isClientDropdownOpen && (
+
+              {isClientDropdownOpen && clients.length > 0 && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                  {filteredClients.length > 0 ? (
-                    filteredClients.map(client => (
+                  {clients
+                    .filter(c => c.company_name.toLowerCase().includes(clientSearch.toLowerCase()))
+                    .map((client) => (
                       <div
                         key={client.id}
-                        className="px-4 py-2 hover:bg-indigo-50 cursor-pointer text-sm text-gray-700"
                         onClick={() => handleClientSelect(client)}
+                        className="px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0"
                       >
-                        <div className="font-medium">{client.company_name}</div>
+                        <p className="text-sm font-medium text-gray-900">{client.company_name}</p>
+                        <p className="text-xs text-gray-500">{client.email}</p>
                       </div>
-                    ))
-                  ) : (
-                    <div className="px-4 py-3 text-sm text-gray-500">No clients found</div>
+                    ))}
+                  {clients.filter(c => c.company_name.toLowerCase().includes(clientSearch.toLowerCase())).length === 0 && (
+                    <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                      No clients found
+                    </div>
                   )}
                 </div>
               )}
-              {errors.clientName && <p className="mt-1 text-xs text-red-500">{errors.clientName}</p>}
             </div>
 
             {/* Contact Person */}
             <div>
-              <label className="block text-[14px] font-normal text-black mb-1">
+              <label className="block text-[14px] font-normal text-black mb-2">
                 Contact Person <span className="text-red-500">*</span>
               </label>
               <input
@@ -184,20 +186,23 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
                 value={formData.contactPerson}
                 onChange={handleChange}
                 placeholder="Rahul Sharma"
-                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors"
+                className="w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors"
               />
             </div>
+          </div>
 
+          {/* Next Rows: 3 Columns */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3.5">
             {/* Phone */}
             <div>
-              <label className="block text-[14px] font-normal text-black mb-1">
+              <label className="block text-[14px] font-normal text-black mb-2">
                 Phone/Mobile <span className="text-red-500">*</span>
               </label>
-              <div className={`flex items-center w-full px-3 py-1.5 rounded-lg border bg-white focus-within:ring-2 transition-colors
+              <div className={`flex items-center bg-[#FAFAFA] w-full px-3 py-2 rounded-lg border  focus-within:ring-2 transition-colors
                 ${errors.phone ? 'border-red-500 focus-within:ring-red-200' : 'border-gray-200 focus-within:border-purple-500 focus-within:ring-purple-100'}`}>
-                <div className="flex items-center gap-1.5 pr-3">
+                <div className="flex items-center gap-1.5 pr-3 border-r border-gray-300">
                   <img src={flagIcon} alt="IN" className="w-5 h-4 object-cover" />
-                  <span className="text-[13px] text-gray-700 font-medium">+91 <span className="text-gray-300 mx-1">v</span></span>
+                  <span className="text-[13px] flex items-center gap-1 text-gray-700 font-medium">+91 <span className="text-gray-300 ml-1">v</span></span>
                 </div>
                 <input
                   type="text"
@@ -205,7 +210,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="9876543210"
-                  className="w-full focus:outline-none text-sm"
+                  className="w-full bg-[#FAFAFA] focus:outline-none text-sm pl-3"
                 />
               </div>
               {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
@@ -213,7 +218,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
 
             {/* Email */}
             <div>
-              <label className="block text-[14px] font-normal text-black mb-1">
+              <label className="block text-[14px] font-normal text-black mb-2">
                 Email <span className="text-red-500">*</span>
               </label>
               <input
@@ -222,30 +227,10 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="rahul@techcorp.in"
-                className={`w-full px-3 py-1.5 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors
+                className={`w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors
                   ${errors.email ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
               />
               {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
-            </div>
-
-            {/* Currency */}
-            <div>
-              <label className="block text-[14px] font-normal text-black mb-1">
-                Currency <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="currency"
-                value={formData.currency}
-                onChange={handleChange}
-                className={`w-full px-3 py-1.5 rounded-lg border text-[14px] focus:outline-none focus:ring-2 transition-colors bg-white
-                  ${errors.currency ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-              >
-                <option value="INR - Indian Rupee (₹)">INR - Indian Rupee (₹)</option>
-                <option value="USD - US Dollar ($)">USD - US Dollar ($)</option>
-                <option value="EUR - Euro (€)">EUR - Euro (€)</option>
-                <option value="GBP - British Pound (£)">GBP - British Pound (£)</option>
-              </select>
-              {errors.currency && <p className="mt-1 text-xs text-red-500">{errors.currency}</p>}
             </div>
 
             {/* Website */}
@@ -257,20 +242,38 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
                 value={formData.website}
                 onChange={handleChange}
                 placeholder="www.techcorp.com"
-                className="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors"
+                className="w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors"
               />
+            </div>
+
+            {/* Currency */}
+            <div>
+              <label className="block text-[14px] font-normal text-black mb-1">
+                Currency <span className="text-red-500">*</span>
+              </label>
+              <select
+                name="currency"
+                value={formData.currency}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border text-[14px] focus:outline-none focus:ring-2 transition-colors
+                  ${errors.currency ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
+              >
+                <option value="INR - Indian Rupee (₹)">INR - Indian Rupee (₹)</option>
+                <option value="USD - US Dollar ($)">USD - US Dollar ($)</option>
+              </select>
+              {errors.currency && <p className="mt-1 text-xs text-red-500">{errors.currency}</p>}
             </div>
 
             {/* GST Number */}
             <div>
-              <label className="block text-[14px] font-normal text-black mb-1">GST Number</label>
+              <label className="block text-[14px]  font-normal text-black mb-1">GST Number</label>
               <input
                 type="text"
                 name="gstNumber"
                 value={formData.gstNumber}
                 onChange={handleChange}
                 placeholder="09AABCT1234Q1Z5"
-                className={`w-full px-3 py-1.5 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors uppercase
+                className={`w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors uppercase
                   ${errors.gstNumber ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
               />
               {errors.gstNumber && <p className="mt-1 text-xs text-red-500">{errors.gstNumber}</p>}
@@ -285,12 +288,11 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
                 value={formData.panNumber}
                 onChange={handleChange}
                 placeholder="AABCT1234Q"
-                className={`w-full px-3 py-1.5 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors uppercase
+                className={`w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors uppercase
                   ${errors.panNumber ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
               />
               {errors.panNumber && <p className="mt-1 text-xs text-red-500">{errors.panNumber}</p>}
             </div>
-
           </div>
         </div>
       </div>
@@ -309,7 +311,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
               onChange={handleChange}
               rows={2}
               placeholder="Enter billing address"
-              className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors resize-none bg-gray-50/30
+              className={`w-full px-3 py-3 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors resize-none bg-[#FAFAFA]
                 ${errors.billingAddress ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
             />
             {errors.billingAddress && <p className="mt-1 text-xs text-red-500">{errors.billingAddress}</p>}
@@ -339,7 +341,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
               rows={2}
               disabled={formData.isShippingSameAsBilling}
               placeholder="Enter shipping address"
-              className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors resize-none disabled:text-gray-500 bg-gray-50/30
+              className={`w-full px-3 py-3 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors resize-none disabled:text-gray-500 bg-[#FAFAFA]
                 ${errors.shippingAddress ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
             />
             {errors.shippingAddress && <p className="mt-1 text-xs text-red-500">{errors.shippingAddress}</p>}
@@ -351,7 +353,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
 
           {/* Pincode */}
           <div>
-            <label className="block text-[14px] font-normal text-black mb-1">
+            <label className="block text-[14px] font-normal text-black mb-2">
               Pincode <span className="text-red-500">*</span>
             </label>
             <input
@@ -360,7 +362,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
               value={formData.pincode}
               onChange={handleChange}
               placeholder="e.g. 201301"
-              className={`w-full px-3 py-1.5 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors bg-gray-50/30
+              className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors bg-[#FAFAFA]
                 ${errors.pincode ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
             />
             {errors.pincode && <p className="mt-1 text-xs text-red-500">{errors.pincode}</p>}
@@ -368,14 +370,14 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
 
           {/* Country */}
           <div>
-            <label className="block text-[14px] font-normal text-black mb-1">
+            <label className="block text-[14px] font-normal text-black mb-2">
               Country <span className="text-red-500">*</span>
             </label>
             <select
               name="country"
               value={formData.country}
               onChange={handleChange}
-              className={`w-full px-3 py-1.5 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors bg-gray-50/30 appearance-none
+              className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors bg-[#FAFAFA] appearance-none
                 ${errors.country ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
             >
               <option value="">Select Country</option>
@@ -386,12 +388,12 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
 
           {/* State */}
           <div>
-            <label className="block text-[14px] font-normal text-black mb-1">State</label>
+            <label className="block text-[14px] font-normal text-black mb-2">State</label>
             <select
               name="state"
               value={formData.state}
               onChange={handleChange}
-              className="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors bg-gray-50/30 appearance-none"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors bg-[#FAFAFA] appearance-none"
             >
               <option value="">Select State</option>
               <option value="Madhya Pradesh">Madhya Pradesh</option>
@@ -401,12 +403,12 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
 
           {/* City */}
           <div>
-            <label className="block text-[14px] font-normal text-black mb-1">City</label>
+            <label className="block text-[14px] font-normal text-black mb-2">City</label>
             <select
               name="city"
               value={formData.city}
               onChange={handleChange}
-              className="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors bg-gray-50/30 appearance-none"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors bg-[#FAFAFA] appearance-none"
             >
               <option value="">Select City</option>
               <option value="Indore">Indore</option>

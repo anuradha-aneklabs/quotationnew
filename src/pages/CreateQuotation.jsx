@@ -453,8 +453,8 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-gray-50/50 -mx-6 -mt-6 pt-4 px-4 pb-0">
-      <div className="flex items-center mb-4">
+    <div className="flex flex-col h-full overflow-hidden bg-white  pt-2 px-4">
+      {/* <div className="flex items-center mb-4">
         <button
           onClick={() => setCurrentView('Quotations')}
           className="flex items-center text-sm text-gray-500 hover:text-indigo-600 transition-colors"
@@ -462,45 +462,44 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
           <ArrowLeft className="h-4 w-4 mr-1" />
           Back to Quotations
         </button>
-      </div>
+      </div> */}
 
       <QuotationStepper currentStep={currentStep} />
-
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col flex-1 min-h-0 overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col shrink min-h-0 overflow-hidden mb-4">
+        <div className="overflow-y-auto p-6">
           {renderStep()}
         </div>
+      </div>
 
-        <div className="p-3 border-t border-gray-100 flex items-center justify-between bg-white rounded-b-xl">
-          {currentStep === 1 ? (
-            <button
-              onClick={() => setCurrentView('Quotations')}
-              className="px-6 py-2 text-[13px] font-medium rounded-lg transition-colors flex items-center bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100"
-            >
-              Cancel
-            </button>
-          ) : (
-            <button
-              onClick={handlePrev}
-              disabled={isSaving}
-              className="px-6 py-2 text-[13px] font-medium rounded-lg transition-colors flex items-center bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Previous
-            </button>
-          )}
+      <div className="py-3 flex items-center justify-between mt-auto pb-6">
+        {currentStep === 1 ? (
+          <button
+            onClick={() => setCurrentView('Quotations')}
+            className="px-6 py-2 text-[13px] font-medium rounded-lg transition-colors flex items-center bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
+          >
+            Cancel
+          </button>
+        ) : (
+          <button
+            onClick={handlePrev}
+            disabled={isSaving}
+            className="px-6 py-2 text-[13px] font-medium rounded-lg transition-colors flex items-center bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Previous
+          </button>
+        )}
 
-          {currentStep < 6 ? (
-            <button
-              onClick={handleNext}
-              disabled={isSaving}
-              className={`px-6 py-2 text-[13px] font-medium text-white rounded-lg transition-colors flex items-center ${isSaving ? 'bg-[#00bda5]/70 cursor-not-allowed' : 'bg-[#00bda5] hover:bg-[#00a38f]'}`}
-            >
-              {isSaving ? <><Loader2 className="animate-spin h-4 w-4 mr-2" /> Saving...</> : 'Save & Next'}
-              {!isSaving && <img src={saveNextIcon} alt="Next" className="h-4 w-4 ml-2" />}
-            </button>
-          ) : null}
-        </div>
+        {currentStep < 6 ? (
+          <button
+            onClick={handleNext}
+            disabled={isSaving}
+            className={`px-6 py-2 text-[13px] font-medium text-white rounded-lg transition-colors flex items-center shadow-sm ${isSaving ? 'bg-[#1A9F9A]/70 cursor-not-allowed' : 'bg-[#1A9F9A] hover:bg-[#00a38f]'}`}
+          >
+            {isSaving ? <><Loader2 className="animate-spin h-4 w-4 mr-2" /> Saving...</> : 'Save & Next'}
+            {!isSaving && <img src={saveNextIcon} alt="Next" className="h-4 w-4 ml-2" />}
+          </button>
+        ) : null}
       </div>
     </div>
   );

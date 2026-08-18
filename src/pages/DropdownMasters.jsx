@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import DropdownMastersTable from '../components/masters/DropdownMastersTable';
 import CreateDropdownModal from '../components/masters/CreateDropdownModal';
-import Header from '../components/layout/Header';
+
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
@@ -114,8 +114,7 @@ export default function DropdownMasters() {
     <div className="space-y-6 flex flex-col h-full pb-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Header title="Dropdown Masters" />
-          <p className="text-gray-500 text-sm -mt-5">Manage dropdown options used in the application.</p>
+          <p className="text-gray-500 text-sm">Manage dropdown options used in the application.</p>
         </div>
         <button 
           onClick={handleAddClick}
