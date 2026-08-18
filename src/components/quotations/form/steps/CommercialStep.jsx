@@ -41,6 +41,7 @@ export default function CommercialStep({ formData, handleChange }) {
                     <tr className="border-b border-gray-100 bg-gray-50/50">
                       <th className="py-3 px-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-16 text-center">#</th>
                       <th className="py-3 px-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Module Name</th>
+                      <th className="py-3 px-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider w-[35%]">Functionalities</th>
                       <th className="py-3 px-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">
                         <div className="flex items-center justify-center gap-1.5">
                           Total Hours <Clock className="h-3.5 w-3.5" />
@@ -68,14 +69,14 @@ export default function CommercialStep({ formData, handleChange }) {
 
                       return (
                         <tr key={m.id || idx} className="hover:bg-gray-50/30 transition-colors">
-                          <td className="py-4 px-4 text-center">
+                          <td className="py-4 px-4 text-center align-top">
                             <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold mx-auto">
                               {idx + 1}
                             </div>
                           </td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                          <td className="py-4 px-4 align-top">
+                            <div className="flex items-start gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
                                 {isFrontend ? <Monitor className="h-4 w-4" /> : <Code className="h-4 w-4" />}
                               </div>
                               <div>
@@ -84,19 +85,40 @@ export default function CommercialStep({ formData, handleChange }) {
                               </div>
                             </div>
                           </td>
-                          <td className="py-4 px-4 text-center">
+                          <td className="py-4 px-4 align-top">
+                            <ul className="space-y-3">
+                              {m.functionalities && m.functionalities.length > 0 ? (
+                                m.functionalities.map((func, fIdx) => (
+                                  <li key={func.id || fIdx} className="text-sm">
+                                    <div className="font-semibold text-gray-800 flex items-start gap-1.5 leading-tight">
+                                      <span className="text-gray-400 font-normal shrink-0">{fIdx + 1}.</span> 
+                                      <span className="text-gray-700">{func.name || 'Unnamed Functionality'}</span>
+                                    </div>
+                                    {/* {func.description && (
+                                      <div className="text-[10px] text-gray-500 ml-4 mt-1 leading-relaxed">
+                                        {func.description}
+                                      </div>
+                                    )} */}
+                                  </li>
+                                ))
+                              ) : (
+                                <span className="text-xs text-gray-400 italic">No functionalities</span>
+                              )}
+                            </ul>
+                          </td>
+                          <td className="py-4 px-4 text-center align-top">
                             <div className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600">
                               <Clock className="h-3.5 w-3.5" />
                               {mHours} Hrs
                             </div>
                           </td>
-                          <td className="py-4 px-4 text-center">
+                          <td className="py-4 px-4 text-center align-top">
                             <div className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600">
                               <Calendar className="h-3.5 w-3.5" />
                               {Number(m.duration) || 0} Days
                             </div>
                           </td>
-                          <td className="py-4 px-4 text-right">
+                          <td className="py-4 px-4 text-right align-top">
                             <span className="text-sm font-bold text-gray-900">
                               ₹ {mCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
