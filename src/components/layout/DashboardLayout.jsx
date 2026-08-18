@@ -31,8 +31,8 @@ export default function DashboardLayout({ children, currentView, setCurrentView,
         setCurrentView={(view) => {
           if (setCurrentView) setCurrentView(view);
           setIsMobileMenuOpen(false); // Auto close on mobile navigation
-        }} 
-        setToken={setToken} 
+        }}
+        setToken={setToken}
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />
