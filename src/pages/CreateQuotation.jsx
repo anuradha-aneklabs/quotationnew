@@ -10,6 +10,7 @@ import PreviewStep from '../components/quotations/form/steps/PreviewStep';
 import { validateStep1, validateStep2, validateStep3 } from '../utils/quotationValidation';
 import * as quotationService from '../services/quotationService';
 import { useToast } from '../contexts/ToastContext';
+import saveNextIcon from '../assets/clientInformation/save & next button icon.svg';
 
 export default function CreateQuotation({ setCurrentView, editId = null }) {
   const { showToast } = useToast();
@@ -470,27 +471,33 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
           {renderStep()}
         </div>
 
-        <div className="p-3 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
-          <button
-            onClick={handlePrev}
-            disabled={currentStep === 1 || isSaving}
-            className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors flex items-center
-              ${currentStep === 1 || isSaving
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}`}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Previous
-          </button>
+        <div className="p-3 border-t border-gray-100 flex items-center justify-between bg-white rounded-b-xl">
+          {currentStep === 1 ? (
+            <button
+              onClick={() => setCurrentView('Quotations')}
+              className="px-6 py-2 text-[13px] font-medium rounded-lg transition-colors flex items-center bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100"
+            >
+              Cancel
+            </button>
+          ) : (
+            <button
+              onClick={handlePrev}
+              disabled={isSaving}
+              className="px-6 py-2 text-[13px] font-medium rounded-lg transition-colors flex items-center bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Previous
+            </button>
+          )}
 
           {currentStep < 6 ? (
             <button
               onClick={handleNext}
               disabled={isSaving}
-              className={`px-4 py-1.5 text-sm font-medium text-white rounded-lg transition-colors flex items-center ${isSaving ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+              className={`px-6 py-2 text-[13px] font-medium text-white rounded-lg transition-colors flex items-center ${isSaving ? 'bg-[#00bda5]/70 cursor-not-allowed' : 'bg-[#00bda5] hover:bg-[#00a38f]'}`}
             >
               {isSaving ? <><Loader2 className="animate-spin h-4 w-4 mr-2" /> Saving...</> : 'Save & Next'}
-              {!isSaving && <ArrowLeft className="h-4 w-4 ml-2 rotate-180" />}
+              {!isSaving && <img src={saveNextIcon} alt="Next" className="h-4 w-4 ml-2" />}
             </button>
           ) : null}
         </div>
