@@ -345,7 +345,7 @@ export default function TimelineStep({ formData }) {
               onClick={() => setViewMode('Gantt View')}
               className={`px-4 py-1.5 text-[11px] font-bold rounded-md transition-colors ${viewMode === 'Gantt View' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'text-gray-500 hover:text-indigo-600 border border-transparent'}`}
             >
-              Gantt View
+              Grant View
             </button>
             <button
               onClick={() => setViewMode('Table View')}

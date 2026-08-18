@@ -279,6 +279,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
     billing_address: formData.billingAddress,
     shipping_address: formData.shippingAddress,
     pincode: formData.pincode,
+    logo: formData.logo || null,
     wizard_step: 1
   });
 
@@ -321,6 +322,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
             contact_person: formData.contactPerson,
             phone: formData.phone,
             email: formData.email,
+            website: formData.website,
             address: formData.billingAddress,
             pan_number: formData.panNumber,
             gst_number: formData.gstNumber,

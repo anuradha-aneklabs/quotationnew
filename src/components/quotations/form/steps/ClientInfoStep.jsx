@@ -72,7 +72,15 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
       const img = new Image();
       img.onload = () => {
         if (img.width <= 512 && img.height <= 512) {
-          setFormData(prev => ({ ...prev, logo: file }));
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setFormData(prev => ({ 
+              ...prev, 
+              logo: reader.result,
+              logoName: file.name
+            }));
+          };
+          reader.readAsDataURL(file);
         } else {
           setLogoError(`Image must be 512x512 pixels or smaller (Current: ${img.width}x${img.height})`);
           e.target.value = ''; // clear input
@@ -250,10 +258,13 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
           {/* Logo Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Logo</label>
-            <div className={`flex items-center justify-between px-4 py-2.5 border rounded-lg ${logoError ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}>
+            <div className={`flex items-center justify-between px-3 border rounded-lg ${logoError ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}>
               <span className="text-sm text-gray-500 flex items-center flex-1 truncate mr-2">
                 {formData.logo ? (
+                  <div className='flex items-center'>
+                  <img src={formData.logo} alt="Client Logo" className="h-12 w-12 object-contain rounded" />
                   <span className="text-indigo-600 font-medium truncate">{formData.logo.name}</span>
+                  </div>
                 ) : (
                   <>
                     <Upload className="h-4 w-4 mr-2 flex-shrink-0" />
