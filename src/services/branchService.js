@@ -10,7 +10,7 @@ export const fetchBranchesByCompany = async (companyId) => {
     });
     if (!response.ok) throw new Error(`Error fetching branches: ${response.statusText}`);
     const json = await response.json();
-    return Array.isArray(json.data) ? json.data : (json.data?.branches || []);
+    return Array.isArray(json.data) ? json.data : (json.data?.branches || json.branches || (Array.isArray(json) ? json : []));
   } catch (error) {
     console.error('Failed to fetch branches:', error);
     throw error;
@@ -24,7 +24,7 @@ export const fetchAllBranches = async () => {
     });
     if (!response.ok) throw new Error(`Error fetching branches: ${response.statusText}`);
     const json = await response.json();
-    return Array.isArray(json.data) ? json.data : (json.data?.branches || []);
+    return Array.isArray(json.data) ? json.data : (json.data?.branches || json.branches || (Array.isArray(json) ? json : []));
   } catch (error) {
     console.error('Failed to fetch all branches:', error);
     throw error;

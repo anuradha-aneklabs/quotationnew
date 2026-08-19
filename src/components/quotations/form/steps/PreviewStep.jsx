@@ -1,5 +1,12 @@
 import React from 'react';
-import { Edit2, Download, Hexagon, FileText, Calendar, Percent, Tag, IndianRupee } from 'lucide-react';
+import { Calendar } from 'lucide-react';
+import logo from '../../../../assets/peoplexlogo.svg';
+import editIcon from '../../../../assets/Preview/EditIcon.svg';
+import downloadIcon from '../../../../assets/Preview/DownloadIcon.svg';
+import scopeIcon from '../../../../assets/Preview/Scope.svg';
+import outstandingIcon from '../../../../assets/Preview/TotalOutstanding.svg';
+import gstIcon from '../../../../assets/Preview/GST.svg';
+import discountIcon from '../../../../assets/Preview/Discount.svg';
 
 function numToWords(num) {
   // simplified for mockup
@@ -41,228 +48,315 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
     : 0;
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 pb-10">
+    <div className="space-y-6 animate-in fade-in duration-300 pb-10 font-Inter">
 
       {/* Header Actions */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-        <div>
-          <h2 className="text-lg font-bold text-gray-900 mb-1">8. Preview</h2>
-          <p className="text-xs text-gray-500">Review your quotation before generating the final proposal.</p>
-        </div>
+      <div>
+        <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-3">
+          <div>
+            <h2 className="text-lg font-bold text-[#040715]">6. Preview</h2>
+          </div>
 
-        <div className="flex items-center gap-3">
-          <button onClick={onEdit} className="flex items-center px-4 py-1.5 border border-gray-200 text-[11px] font-bold rounded-lg text-gray-700 hover:bg-gray-50 transition-colors bg-white shadow-sm">
-            <Edit2 className="h-3.5 w-3.5 mr-1.5" />
-            Edit Quotation
-          </button>
-          <button className="flex items-center px-4 py-1.5 border border-indigo-200 text-[11px] font-bold rounded-lg text-indigo-700 hover:bg-indigo-50 transition-colors bg-white shadow-sm">
-            <Download className="h-3.5 w-3.5 mr-1.5" />
-            Download PDF
-          </button>
+          <div className="flex items-center gap-3">
+            <button onClick={onEdit} className="flex items-center px-4 py-1.5 border border-[#E9ECEF] text-[11px] font-bold rounded-[8px] text-[#46505F] hover:bg-gray-100 transition-colors bg-[#FAFAFA] shadow-sm h-8">
+              <img src={editIcon} alt="Edit" className="h-3.5 w-3.5 mr-2" />
+              Edit Quotation
+            </button>
+            <button className="flex items-center px-4 py-1.5 border border-[#1A9F9A] text-[11px] font-bold rounded-[8px] text-[#1A9F9A] hover:bg-teal-50 transition-colors bg-white shadow-sm h-8">
+              <img src={downloadIcon} alt="Download" className="h-3.5 w-3.5 mr-2" />
+              Download PDF
+            </button>
+          </div>
         </div>
+        <hr className="border-t border-[#E9ECEF]" />
       </div>
 
       {/* A4 Document Wrapper */}
-      <div className="bg-white border border-gray-200 shadow-sm mx-auto overflow-hidden text-gray-800 p-4 sm:p-8 md:p-[50px] max-w-[1000px] min-h-screen">
+      <div className="bg-white border border-gray-200 shadow-sm mx-auto overflow-hidden text-gray-800 p-6 sm:p-10 w-full max-w-[1300px] rounded-[10px]">
 
         {/* Document Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-6 mb-12">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center transform rotate-12 shrink-0">
-              <Hexagon className="h-8 w-8 text-white -rotate-12" fill="currentColor" />
+        <div className="mb-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-6 mb-6">
+            <div className="flex items-center gap-3">
+              <img src={logo} alt="Aneka QuotePro" className="h-14 object-contain" />
             </div>
-            <div>
-              <h1 className="text-xl font-black text-gray-900 tracking-tight">Aneka Labs</h1>
-              <p className="text-[10px] text-gray-500 font-medium">Building Digital Excellence</p>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10">
+              <div className="flex flex-col sm:items-end text-[10px] space-y-1 text-left sm:text-right mt-1 sm:mt-0">
+                <p><span className="font-medium text-[#46505F]">Date :</span> <span className="font-medium text-[#040715]">{formData.proposalDate || '10 Jun 2026'}</span></p>
+                <p><span className="font-medium text-[#46505F]">Valid Till :</span> <span className="font-medium text-[#040715]">{formData.validTill || '15 Jun 2026'}</span></p>
+              </div>
+              <div className="text-left sm:text-right">
+                <h2 className="text-[22px] font-semibold text-[#1A9F9A] uppercase mb-1 leading-none tracking-tight">QUOTATION</h2>
+                <p className="text-[13px] font-semibold text-[#040715]">{formData.quotationNumber || 'QTN-202608-0006'}</p>
+              </div>
             </div>
           </div>
-          <div className="text-left sm:text-right">
-            <h2 className="text-2xl font-black text-gray-900 tracking-widest uppercase mb-2">Quotation</h2>
-            <p className="text-xs font-bold text-gray-700 break-all">{formData.quotationNumber}</p>
-            <p className="text-[10px] text-gray-500 mt-1">Date: {formData.proposalDate || '12 Aug 2026'}</p>
-            <p className="text-[10px] text-gray-500">Valid Till: {formData.validTill || '14 Aug 2026'}</p>
-          </div>
+          <hr className="border-t border-[#E9ECEF]" />
         </div>
 
         {/* Address Blocks */}
-        <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-8 mb-8 text-[11px]">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-4 mb-6 text-[11px]">
           <div className="w-full sm:w-1/2 sm:pr-4">
-            <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">From,</p>
-            <p className="font-bold text-gray-900 mb-1">
-              {formData.companyDetails?.companyName || 'Aneka Labs Pvt. Ltd.'}
+            <p className="text-[10px] font-semibold text-[#46505F] uppercase mb-1">FROM,</p>
+            <p className="font-bold text-[#040715] mb-1 text-[12px]">
+              {formData.companyDetails?.companyName || 'American Chase - Headquarters'}
               {formData.companyDetails?.branchName && ` - ${formData.companyDetails.branchName}`}
             </p>
-            <p className="text-gray-500 mb-2">
-              {formData.companyDetails?.branchAddress1 || 'Office No. 202, 2nd Floor, Baner Road'},<br />
-              {formData.companyDetails?.branchCity || 'Pune'} - {formData.companyDetails?.branchPincode || '411045'}, {formData.companyDetails?.branchState || 'Maharashtra'}, {formData.companyDetails?.branchCountry || 'India'}
+            <p className="text-[#46505F] mb-2 leading-relaxed">
+              {formData.companyDetails?.branchAddress1 || '123 Tech Lane,'}<br />
+              {formData.companyDetails?.branchCity || 'Mumbai'} - {formData.companyDetails?.branchPincode || '400001'}, {formData.companyDetails?.branchState || 'Maharashtra'}, {formData.companyDetails?.branchCountry || 'India'}
             </p>
-            <p className="text-gray-500 mb-1">
-              <span className="text-gray-400">PAN:</span> {formData.companyDetails?.pan || 'N/A'} | <span className="text-gray-400">GSTIN:</span> {formData.companyDetails?.gstin || 'N/A'}
+            <p className="text-[#040715] font-semibold mb-1">
+              PAN: <span className="text-[#46505F] font-medium">{formData.companyDetails?.pan || 'ABCDE1234F'}</span> | GSTIN: <span className="text-[#46505F] font-medium">{formData.companyDetails?.gstin || '27ABCDE1234F1Z5'}</span>
             </p>
-            <p className="text-gray-500 break-all">
-              <span className="text-gray-400">Email:</span> {formData.companyDetails?.email || formData.companyDetails?.branchEmail || 'hello@anekalabs.com'} <span className="hidden sm:inline">|</span><br className="sm:hidden" /> <span className="text-gray-400">Website:</span> {formData.companyDetails?.website || 'www.anekalabs.com'}
+            <p className="text-[#040715] font-semibold break-all">
+              Email: <span className="text-[#46505F] font-medium">{formData.companyDetails?.email || formData.companyDetails?.branchEmail || 'contact@techcorp.com'}</span> <span className="hidden sm:inline font-medium text-[#E9ECEF] mx-1">|</span><br className="sm:hidden" /> Website: <span className="text-[#46505F] font-medium">{formData.companyDetails?.website || 'https://techcorp.com'}</span>
             </p>
           </div>
-          <div className="w-full sm:w-1/2 sm:pl-4">
-            <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">To,</p>
-            <p className="font-bold text-gray-900 mb-1">{formData.clientName || 'New Company'}</p>
-            <p className="text-gray-500 mb-2">{formData.billingAddress || 'vijay nagar'}</p>
-            <p className="text-gray-500 mb-1 break-all"><span className="text-gray-400">PAN:</span> {formData.panNumber || 'ADHFJ8378E'} | <span className="text-gray-400">GSTIN:</span> {formData.gstNumber || '22ASDFR0986A2Z2'}</p>
-            <p className="text-gray-500 break-all"><span className="text-gray-400">Email:</span> {formData.email || 'client@example.com'} <span className="hidden sm:inline">|</span><br className="sm:hidden" /> <span className="text-gray-400">Phone:</span> {formData.phone || '9876543210'}</p>
+          <div className="w-full sm:w-[40%] sm:pl-28">
+            <p className="text-[10px] font-semibold text-[#46505F] uppercase mb-1">TO,</p>
+            <p className="font-bold text-[#040715] mb-1 text-[12px]">{formData.clientName || 'TechCorp Solutions'}</p>
+            <p className="text-[#46505F] mb-2 leading-relaxed">{formData.billingAddress || '52 Royal Plaza,\nIndore -400001, Madhya Pradesh, India'}</p>
+            <p className="text-[#040715] font-semibold mb-1 break-all">
+              PAN: <span className="text-[#46505F] font-medium">{formData.panNumber || 'ABCDE1234F'}</span> | GSTIN: <span className="text-[#46505F] font-medium">{formData.gstNumber || '27ABCDE1234F1Z5'}</span>
+            </p>
+            <p className="text-[#040715] font-semibold break-all">
+              Email: <span className="text-[#46505F] font-medium">{formData.email || 'rahul@techcorp.in'}</span> <span className="hidden sm:inline font-medium text-[#E9ECEF] mx-1">|</span><br className="sm:hidden" /> Phone: <span className="text-[#46505F] font-medium">{formData.phone || '9876543210'}</span>
+            </p>
           </div>
         </div>
 
         {/* Subject & Scope */}
-        <div className="bg-indigo-50/50 rounded-lg p-5 mb-10 text-[11px]">
-          <div className="flex mb-3">
-            <span className="font-bold text-indigo-700 w-20 shrink-0">Subject:</span>
-            <span className="font-bold text-gray-900">{formData.proposalTitle || 'crm'}</span>
+        <div className="bg-[#F0F7F7] rounded-lg p-4 mb-6 text-[11px]">
+          <div className="flex mb-1.5">
+            <span className="font-bold text-[#1A9F9A] w-20 shrink-0">Subject :</span>
+            <span className="font-bold text-[#040715]">{formData.proposalTitle || 'Cloud Infrastructure Setup'}</span>
           </div>
           <div className="flex">
-            <span className="font-bold text-indigo-700 w-20 shrink-0">Scope:</span>
-            <span className="text-gray-700 font-medium">{formData.projectSummary || 'Design, development, testing and deployment as per the agreed scope.'}</span>
+            <span className="font-bold text-[#1A9F9A] w-20 shrink-0">Scope :</span>
+            <span className="text-[#040715] font-medium">{formData.projectSummary || 'Cloud set up master'}</span>
           </div>
         </div>
 
         {/* 1. Scope of Work & Commercial Summary */}
-        <div className="bg-white rounded-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 p-6 mb-6">
+        <div className="bg-white rounded-xl border border-[#E9ECEF] py-6 mb-6 overflow-hidden">
           {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="text-indigo-600">
-              <FileText className="h-5 w-5" />
-            </div>
-            <h3 className="text-[15px] font-bold text-gray-900">1. Scope of Work & Commercial Summary</h3>
+          <div className="flex items-center gap-3 mb-4 px-6">
+            <img src={scopeIcon} alt="Scope" className="h-5 w-5" />
+            <h3 className="text-[14px] font-bold text-[#040715]">1. Scope of Work & Commercial Summary</h3>
           </div>
 
           {/* Table */}
-          <div className="border border-gray-100 rounded-lg overflow-x-auto mb-6">
-            <table className="w-full text-left text-sm min-w-[800px]">
+          <div className="overflow-x-auto mb-6">
+            <table className="w-full text-left text-[11px] min-w-[800px]">
               <thead>
-                <tr className="bg-gray-50/70 border-b border-gray-100 text-gray-700">
-                  <th className="py-3.5 px-4 font-bold text-center w-12 border-r border-gray-100 text-xs">#</th>
-                  <th className="py-3.5 px-4 font-bold border-r border-gray-100 w-1/4 text-xs">Module / Feature</th>
-                  <th className="py-3.5 px-4 font-bold border-r border-gray-100 text-xs">Description</th>
-                  <th className="py-3.5 px-4 font-bold text-center border-r border-gray-100 w-32 text-xs">Total Effort</th>
-                  <th className="py-3.5 px-4 font-bold text-center w-56 text-xs">Timeline</th>
+                <tr className="bg-[#ECF2F2] border-y border-[#E9ECEF] text-[#040715]">
+                  <th className="py-3 pl-6 pr-3 font-semibold text-center w-12 text-[11px]">#</th>
+                  <th className="py-3 px-3 font-semibold w-1/4 text-[11px]">Module/Feature</th>
+                  <th className="py-3 px-3 font-semibold text-[11px]">Description</th>
+                  <th className="py-3 px-3 font-semibold text-center w-32 text-[11px]">Total Effort</th>
+                  <th className="py-3 pl-3 pr-6 font-semibold text-center w-48 text-[11px]">Timeline</th>
                 </tr>
               </thead>
               <tbody>
                 {formData.modules.map((m, idx) => {
                   const effort = m.functionalities.reduce((s, f) => s + (Number(f.effort) || 0), 0);
                   return (
-                    <tr key={idx} className="border-b border-gray-100 last:border-0">
-                      <td className="py-4 px-4 text-center text-gray-600 border-r border-gray-100 text-xs">{idx + 1}</td>
-                      <td className="py-4 px-4 font-bold text-gray-900 border-r border-gray-100 text-xs">{m.name}</td>
-                      <td className="py-4 px-4 text-gray-600 border-r border-gray-100 text-xs">{m.description}</td>
-                      <td className="py-4 px-4 text-center font-bold text-gray-900 border-r border-gray-100 text-xs">{effort} Hrs</td>
-                      <td className="py-4 px-4 text-center text-indigo-600 font-medium text-xs">
-                        {formData.projectStartDate || '2026-08-01'} - {formData.projectEndDate || '2026-08-31'}
+                  <React.Fragment key={idx}>
+                    <tr className="hover:bg-gray-50/50">
+                      <td className="py-4 pl-6 pr-3 text-center font-medium text-[#040715] text-[11px] align-top">
+                        {String(idx + 1).padStart(2, '0')}
+                      </td>
+                      <td className="py-4 px-3 font-semibold text-[#040715] text-[11px] align-top">{m.name}</td>
+                      <td className="py-4 px-3 text-[#46505F] text-[11px] align-top">{m.description}</td>
+                      <td className="py-4 px-3 text-center font-semibold text-[#46505F] text-[11px] align-top">{effort} Hrs</td>
+                      <td className="py-4 pl-3 pr-6 text-center text-[#1A9F9A] font-medium text-[11px] align-top">
+                        {formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jun 2026'} • {formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '03 Jun 2026'}
                       </td>
                     </tr>
+                    {idx < formData.modules.length - 1 && (
+                      <tr>
+                        <td colSpan={5} className="p-0">
+                          <div className="mx-6 border-b border-[#E9ECEF]"></div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                   );
                 })}
               </tbody>
               <tfoot>
-                <tr className="bg-gray-50/70 border-t border-gray-100">
-                  <td colSpan={3} className="py-3.5 px-4 text-right font-bold text-gray-900 border-r border-gray-100 text-xs">Total Effort</td>
-                  <td className="py-3.5 px-4 text-center font-bold text-gray-900 border-r border-gray-100 text-xs">{totalEffort} Hrs</td>
-                  <td></td>
+                <tr>
+                  <td colSpan={5} className="p-0">
+                    <div className="mx-6 border-b border-[#E9ECEF] mb-4"></div>
+                  </td>
+                </tr>
+                <tr className="text-[#1A9F9A]">
+                  <td colSpan={5} className="p-0 pb-4">
+                    <div className="mx-6 bg-[#F6F9F9]  flex items-center py-3">
+                       <div className="flex-1 text-right font-semibold text-[11px] pr-3">Total Effort</div>
+                       <div className="w-32 text-center font-bold text-[11px]">{totalEffort} Hrs</div>
+                       <div className="w-[168px]"></div>
+                    </div>
+                  </td>
                 </tr>
               </tfoot>
             </table>
           </div>
 
           {/* Commercial Summary Row */}
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 px-6 bg-white">
 
             {/* Base Cost */}
-            <div className="flex-1 flex flex-col justify-center gap-1.5 py-2 px-1">
-              <div className="flex items-center gap-3">
-                <div className="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl shrink-0">
-                  <IndianRupee className="h-4 w-4" />
-                </div>
-                <p className="text-[11px] text-gray-500 font-medium leading-tight">Total Outstanding Pricing<br />(Excl. GST)</p>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 flex items-center justify-center bg-[#EBFCF2] rounded-[8px] shrink-0">
+                <img src={outstandingIcon} alt="Total Outstanding" className="h-5 w-5" />
               </div>
-              <p className="text-lg font-bold text-gray-900 pl-[46px]">₹ {baseCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+              <div className="flex flex-col">
+                <p className="text-[11px] text-[#46505F] font-medium leading-tight mb-0.5">Total Outstanding Amount (Excl. GST)</p>
+                <p className="text-[14px] font-semibold text-[#040715]">₹ {baseCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+              </div>
             </div>
-
-            {/* Vertical Divider */}
-            <div className="hidden lg:block w-px bg-gray-100 shrink-0 my-2"></div>
 
             {/* GST */}
-            <div className="flex-1 flex flex-col justify-center gap-1.5 py-2 px-1">
-              <div className="flex items-center gap-3">
-                <div className="bg-indigo-50 text-indigo-600 p-2.5 rounded-xl shrink-0">
-                  <Percent className="h-4 w-4" />
-                </div>
-                <p className="text-[11px] text-gray-500 font-medium">GST @ 18%</p>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 flex items-center justify-center bg-[#EBF9FF] rounded-[8px] shrink-0">
+                <img src={gstIcon} alt="GST" className="h-5 w-5" />
               </div>
-              <p className="text-lg font-bold text-gray-900 pl-[46px]">₹ {gstAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+              <div className="flex flex-col">
+                <p className="text-[11px] text-[#46505F] font-medium leading-tight mb-0.5">GST 18%</p>
+                <p className="text-[14px] font-semibold text-[#040715]">₹ {gstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+              </div>
             </div>
 
-            {/* Vertical Divider */}
-            <div className="hidden lg:block w-px bg-gray-100 shrink-0 my-2"></div>
-
             {/* Discount */}
-            <div className="flex-1 flex flex-col justify-center gap-1.5 py-2 px-1">
-              <div className="flex items-center gap-3">
-                <div className="bg-red-50 text-red-500 p-2.5 rounded-xl shrink-0">
-                  <Tag className="h-4 w-4" />
-                </div>
-                <p className="text-[11px] text-gray-500 font-medium">Discount</p>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 flex items-center justify-center bg-[#FFF1F1] rounded-[8px] shrink-0">
+                <img src={discountIcon} alt="Discount" className="h-5 w-5" />
               </div>
-              <p className="text-lg font-bold text-red-500 pl-[46px]">- ₹ {discountAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+              <div className="flex flex-col">
+                <p className="text-[11px] text-[#46505F] font-medium leading-tight mb-0.5">Discount</p>
+                <p className="text-[14px] font-semibold text-[#E53935]">- ₹ {discountAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+              </div>
             </div>
 
             {/* Final Amount */}
-            <div className="flex-[1.2] bg-[#f8f9fe] rounded-xl p-4 flex flex-col justify-center items-center text-center">
-              <p className="text-[13px] font-bold text-indigo-600 mb-0.5">Final Outstanding Amount</p>
-              <p className="text-2xl font-black text-indigo-700 mb-0.5">
-                ₹ {finalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <div className="justify-self-end flex flex-col justify-center items-center text-center gap-1 py-2 px-6 bg-[#F6FFFA] rounded-[8px] border border-[#CEECEB] w-max shadow-[0_2px_15px_rgba(26,159,154,0.15)]">
+              <p className="text-[11px] text-[#1A9F9A] font-medium">Final Outstanding Amount</p>
+              <p className="text-[16px] font-bold text-[#1A9F9A]">
+                ₹ {finalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
-              <p className="text-[10px] text-gray-500 italic font-medium">({numToWords(finalAmount)})</p>
             </div>
 
           </div>
         </div>
 
         {/* 2. Timeline Overview */}
-        <div className="bg-white rounded-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 p-6 mb-10">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="text-indigo-600">
-              <Calendar className="h-5 w-5" />
-            </div>
-            <h3 className="text-[15px] font-bold text-gray-900">2. Timeline Overview</h3>
+        <div className="bg-white rounded-xl border border-gray-100 p-6 mb-8">
+          <div className="flex items-center gap-2 mb-1">
+            <Calendar className="h-4 w-4 text-[#1A9F9A]" />
+            <h3 className="text-[14px] font-bold text-[#040715]">2. Timeline Overview</h3>
           </div>
-          <p className="text-[11px] text-gray-500 mb-10 ml-8">{formData.projectStartDate || '2026-08-01'} - {formData.projectEndDate || '2026-08-31'}</p>
+          <p className="text-[11px] text-[#46505F] mb-6 ml-6 font-medium">
+            {formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jun 2026'} - {formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jul 2026'}
+          </p>
 
-          <div className="relative mt-8 pt-6 pb-6">
-            <div className="absolute top-0 left-[60%] text-[10px] text-gray-500 -translate-x-1/2 bg-white px-2 -mt-2">Aug 2026</div>
-            <div className="absolute top-0 bottom-0 left-[60%] w-px border-l border-dashed border-red-300 -translate-x-1/2 z-0"></div>
-            <div className="absolute bottom-0 left-[60%] -translate-x-1/2 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full z-10 translate-y-1/2">Today</div>
-
-            <div className="space-y-6 relative z-10 px-4">
-              {formData.modules.map((m, idx) => {
-                const left = 20 + (idx * 5);
-                const right = 20 + ((formData.modules.length - idx) * 5);
-                return (
-                  <div key={idx} className="flex items-center gap-6">
-                    <div className="w-24 text-[13px] text-gray-700 truncate">{m.name}</div>
-                    <div className="flex-1 bg-gray-50/50 h-2 rounded-full relative">
-                      <div className="absolute h-2 bg-[#4f46e5] rounded-full shadow-sm" style={{ left: `${left}%`, right: `${right}%` }}></div>
+          <div className="border border-gray-100 rounded-[8px] overflow-x-auto">
+            <table className="w-full text-left min-w-[800px] border-collapse">
+              <thead>
+                <tr className="border-b border-gray-100">
+                  <th className="py-3 px-4 font-bold text-[11px] text-[#46505F] border-r border-gray-100 w-[200px] align-bottom">Milestone / Phase</th>
+                  <th className="py-2 px-1 text-center font-bold text-[11px] text-[#46505F] border-r border-gray-100 relative">
+                    Aug 2026
+                    <div className="flex justify-between w-full mt-2 font-normal text-[10px] text-gray-400">
+                      <span className="flex-1 text-center">01</span>
+                      <span className="flex-1 text-center">08</span>
+                      <span className="flex-1 text-center">15</span>
+                      <span className="flex-1 text-center">22</span>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  </th>
+                  <th className="py-2 px-1 text-center font-bold text-[11px] text-[#46505F] border-r border-gray-100">
+                    Sep 2026
+                    <div className="flex justify-between w-full mt-2 font-normal text-[10px] text-gray-400">
+                      <span className="flex-1 text-center">01</span>
+                      <span className="flex-1 text-center">08</span>
+                      <span className="flex-1 text-center">15</span>
+                      <span className="flex-1 text-center">22</span>
+                    </div>
+                  </th>
+                  <th className="py-2 px-1 text-center font-bold text-[11px] text-[#46505F]">
+                    Oct 2026
+                    <div className="flex justify-between w-full mt-2 font-normal text-[10px] text-gray-400">
+                      <span className="flex-1 text-center">01</span>
+                      <span className="flex-1 text-center">08</span>
+                      <span className="flex-1 text-center">15</span>
+                      <span className="flex-1 text-center">22</span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="relative">
+                {/* Vertical line for today */}
+                <div className="absolute top-0 bottom-0 left-[35%] w-px bg-red-200 z-0"></div>
+                <div className="absolute top-[-10px] left-[35%] bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-[4px] -translate-x-1/2 z-10">Today</div>
+
+                {formData.modules.map((m, idx) => {
+                  // Mock positions for the gantt bars based on index
+                  const barColors = ['bg-[#1A9F9A]', 'bg-[#2970FF]'];
+                  const barColor = barColors[idx % barColors.length];
+                  const left = 35 + (idx * 5);
+                  const width = 10;
+                  const days = Math.ceil((Math.random() * 5) + 3);
+
+                  return (
+                    <tr key={idx} className="border-b border-gray-100 last:border-0 relative z-10">
+                      <td className="py-3 px-4 border-r border-gray-100 w-[200px] bg-white">
+                        <div className="flex items-start gap-2">
+                          <span className="text-[11px] font-bold text-[#040715] border border-gray-200 rounded-[4px] px-1.5 py-0.5 mt-0.5">{String(idx + 1).padStart(2, '0')}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[12px] font-bold text-[#040715] truncate">{m.name}</p>
+                            <p className="text-[10px] text-gray-500">{days} Days</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td colSpan={3} className="p-0 relative h-[50px] align-middle">
+                        {/* Grid lines */}
+                        <div className="absolute inset-0 flex w-full pointer-events-none">
+                           <div className="flex-1 border-r border-gray-50"></div>
+                           <div className="flex-1 border-r border-gray-50"></div>
+                           <div className="flex-1 border-r border-gray-50"></div>
+                           <div className="flex-1 border-r border-gray-100"></div>
+                           <div className="flex-1 border-r border-gray-50"></div>
+                           <div className="flex-1 border-r border-gray-50"></div>
+                           <div className="flex-1 border-r border-gray-50"></div>
+                           <div className="flex-1 border-r border-gray-100"></div>
+                           <div className="flex-1 border-r border-gray-50"></div>
+                           <div className="flex-1 border-r border-gray-50"></div>
+                           <div className="flex-1 border-r border-gray-50"></div>
+                           <div className="flex-1"></div>
+                        </div>
+
+                        {/* Bar */}
+                        <div 
+                          className={`absolute top-1/2 -translate-y-1/2 h-[16px] rounded-full text-white text-[8px] font-bold flex items-center px-2 ${barColor} shadow-sm z-20`}
+                          style={{ left: `${left}%`, width: `${width}%` }}
+                        >
+                          {days}D
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
 
         {/* Important Notes */}
-        <div className="bg-gray-50/50 border border-gray-200 rounded-lg p-5 text-[10px] text-gray-600">
-          <h3 className="text-xs font-bold text-indigo-700 mb-3">Important Notes</h3>
+        <div className="bg-white border border-[#E9ECEF] rounded-[8px] p-5 text-[11px] text-[#46505F] shadow-sm mb-6">
+          <h3 className="text-[13px] font-bold text-[#1A9F9A] mb-3">Important Notes</h3>
           <ul className="list-disc pl-4 space-y-2">
-            <li>This quotation is valid till {formData.validTill || '14 Aug 2026'}.</li>
+            <li>This quotation is valid till {formData.validTill || '2026-08-31'}.</li>
             <li>All payments to be made as per agreed payment terms mentioned in the proposal.</li>
             <li>Taxes will be charged as applicable at the time of invoicing.</li>
             <li>Any additional scope of work will be charged extra.</li>
@@ -271,14 +365,7 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
 
       </div>
 
-      <div className="flex justify-end pt-4">
-        <button
-          onClick={onSave}
-          className="px-6 py-2.5 text-sm font-bold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
-        >
-          Finish
-        </button>
-      </div>
+      {/* Buttons are handled by the parent container */}
     </div>
   );
 }
