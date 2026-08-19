@@ -10,7 +10,7 @@ export const fetchCompanies = async () => {
     });
     if (!response.ok) throw new Error(`Error fetching companies: ${response.statusText}`);
     const json = await response.json();
-    return json.data?.companies || [];
+    return Array.isArray(json.data) ? json.data : (json.data?.companies || []);
   } catch (error) {
     console.error('Failed to fetch companies:', error);
     throw error;

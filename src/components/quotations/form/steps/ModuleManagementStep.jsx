@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Trash2, Calendar, Layers, Activity, Clock, IndianRupee, ChevronDown, ChevronUp } from 'lucide-react';
-import { fetchEmployees } from '../../../../services/employeeService'; // Reusing service for team members!
-
+import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { fetchEmployees } from '../../../../services/employeeService';
+import calendarIcon from '../../../../assets/proposal detail/calendar.svg';
+import totalModuleIcon from '../../../../assets/module management/total-module.svg';
+import totalFuncIcon from '../../../../assets/module management/total-functionalities.svg';
+import totalEffortIcon from '../../../../assets/module management/total-effort.svg';
+import totalDurationIcon from '../../../../assets/module management/total-duration.svg';
+import totalCostIcon from '../../../../assets/module management/total-cost.svg';
+import deleteIcon from '../../../../assets/module management/delete.svg';
 const AutoResizeTextarea = ({ value, onChange, placeholder, className }) => {
   const textareaRef = useRef(null);
 
@@ -260,107 +266,117 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
   const projectDurationDays = calculateTotalDuration();
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-300 pb-10">
+    <div className="space-y-6 animate-in fade-in duration-300 pb-10">
+      
+      <div>
+        <h2 className="text-lg font-bold text-gray-900 mb-4 border-b-1 border-[#DEDEDE] pb-2">3. Module Management</h2>
+      </div>
 
       {/* Top Section */}
-      <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+      <div className="bg-white rounded-xl shadow-sm p-3">
         <p className="text-xs text-gray-500 mb-5">Define modules, functionalities and estimate effort. Add team members and allocate hours with rate.</p>
         
-        <div className="flex flex-wrap items-end gap-6">
-          <div>
-            <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1.5">Project Start Date</label>
-            <div className="relative">
-              <input
-                type="date"
-                value={formData.projectStartDate}
-                onChange={(e) => setFormData(prev => ({ ...prev, projectStartDate: e.target.value }))}
-                className={`pl-8 pr-3 py-1.5 border rounded-lg text-xs focus:outline-none focus:ring-2 ${errors.projectStartDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:ring-indigo-100 focus:border-indigo-500'}`}
-              />
-              <Calendar className="absolute left-2.5 top-2 h-3.5 w-3.5 text-gray-400" />
+        <div className="flex flex-wrap items-end gap-6 justify-between">
+          <div className="flex gap-6">
+            <div>
+              <label className="block text-[12px] font-normal text-black mb-2">Project Start Date</label>
+              <div className="relative">
+                <input
+                  type="date"
+                  value={formData.projectStartDate}
+                  onChange={(e) => setFormData(prev => ({ ...prev, projectStartDate: e.target.value }))}
+                  className={`w-48 pl-3 pr-10 py-2 border bg-[#FAFAFA] rounded-lg text-sm focus:outline-none focus:ring-2 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-10 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:z-10 ${errors.projectStartDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:ring-purple-100 focus:border-purple-500'}`}
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <img src={calendarIcon} alt="calendar" className="w-5 h-5 opacity-70" />
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className="block text-[12px] font-normal text-black mb-2">Project End Date</label>
+              <div className="relative">
+                <input
+                  type="date"
+                  value={formData.projectEndDate}
+                  onChange={(e) => setFormData(prev => ({ ...prev, projectEndDate: e.target.value }))}
+                  className={`w-48 pl-3 pr-10 py-2 border bg-[#FAFAFA] rounded-lg text-sm focus:outline-none focus:ring-2 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-10 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:z-10 ${errors.projectEndDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:ring-purple-100 focus:border-purple-500'}`}
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <img src={calendarIcon} alt="calendar" className="w-5 h-5 opacity-70" />
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className="block text-[12px] font-normal text-black mb-2">Total Duration</label>
+              <div className="bg-[#FAFAFA] px-4 py-1.5 rounded-lg border border-gray-200 min-w-[100px]">
+                <span className="text-sm font-medium text-gray-900">{projectDurationDays} Days</span>
+              </div>
             </div>
           </div>
-          <div>
-            <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1.5">Project End Date</label>
-            <div className="relative">
-              <input
-                type="date"
-                value={formData.projectEndDate}
-                onChange={(e) => setFormData(prev => ({ ...prev, projectEndDate: e.target.value }))}
-                className={`pl-8 pr-3 py-1.5 border rounded-lg text-xs focus:outline-none focus:ring-2 ${errors.projectEndDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:ring-indigo-100 focus:border-indigo-500'}`}
-              />
-              <Calendar className="absolute left-2.5 top-2 h-3.5 w-3.5 text-gray-400" />
-            </div>
-          </div>
-          <div>
-            <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1.5">Total Duration</label>
-            <div className="bg-gray-50 px-2 py-0.5 rounded-lg border border-gray-200 min-w-[80px] text-center">
-              <span className="text-xs font-bold text-gray-900">{projectDurationDays} Days</span>
-            </div>
-          </div>
-          <div className="flex-1"></div>
           <button
             onClick={handleAddModule}
-            className="flex items-center text-xs font-bold text-gray-700 hover:text-indigo-600 transition-colors mb-2"
+            className="flex items-center text-xs font-medium text-[#1A9F9A] border border-[#1A9F9A] rounded-lg px-4 py-2 hover:bg-[#1A9F9A]/10 transition-colors"
           >
             <Plus className="h-4 w-4 mr-1" /> Add Module
           </button>
         </div>
-      </div>
 
-      {errors.modules && (
-        <div className="p-2 bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg text-center">
-          {errors.modules}
+        {errors.modules && (
+          <div className="p-2 mb-6 bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg text-center">
+            {errors.modules}
+          </div>
+        )}
         </div>
-      )}
 
-      {/* Summary Metric Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-indigo-50/80 text-indigo-600 rounded-xl shrink-0">
-            <Layers className="h-5 w-5" />
+        {/* Summary Metric Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#EEE2FF] rounded-lg flex items-center justify-center p-2">
+              <img src={totalModuleIcon} alt="Modules" className="w-full h-full object-contain" />
+            </div>
+            <div className="ml-[46px]">
+              <p className="text-[11px] text-gray-500 font-medium">Total Modules</p>
+              <p className="text-[15px] font-bold text-gray-900 leading-tight">{totals.modules < 10 ? `0${totals.modules}` : totals.modules}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Modules</p>
-            <p className="text-lg font-bold text-gray-900 leading-tight">{totals.modules}</p>
+          <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#E2FDFF] rounded-lg flex items-center justify-center p-2">
+              <img src={totalFuncIcon} alt="Functionalities" className="w-full h-full object-contain" />
+            </div>
+            <div className="ml-[46px]">
+              <p className="text-[11px] text-gray-500 font-medium">Total Functionalities</p>
+              <p className="text-[15px] font-bold text-gray-900 leading-tight">{totals.functionalities}</p>
+            </div>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#FAECFF] rounded-lg flex items-center justify-center p-2">
+              <img src={totalEffortIcon} alt="Effort" className="w-full h-full object-contain" />
+            </div>
+            <div className="ml-[46px]">
+              <p className="text-[11px] text-gray-500 font-medium">Total Effort (Hours)</p>
+              <p className="text-[15px] font-bold text-gray-900 leading-tight">{totals.effort} Hrs</p>
+            </div>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#E2EEFF] rounded-lg flex items-center justify-center p-2">
+              <img src={totalDurationIcon} alt="Duration" className="w-full h-full object-contain" />
+            </div>
+            <div className="ml-[46px]">
+              <p className="text-[11px] text-gray-500 font-medium">Total Duration (Days)</p>
+              <p className="text-[15px] font-bold text-gray-900 leading-tight">{projectDurationDays} Days</p>
+            </div>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#E2FFEF] rounded-lg flex items-center justify-center p-1.5">
+              <img src={totalCostIcon} alt="Cost" className="w-full h-full object-contain" />
+            </div>
+            <div className="ml-[46px]">
+              <p className="text-[11px] text-gray-500 font-medium">Total Cost (INR)</p>
+              <p className="text-[15px] font-bold text-gray-900 leading-tight">₹ {totals.cost.toLocaleString()}</p>
+            </div>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-cyan-50/80 text-cyan-600 rounded-xl shrink-0">
-            <Activity className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Functionalities</p>
-            <p className="text-lg font-bold text-gray-900 leading-tight">{totals.functionalities}</p>
-          </div>
-        </div>
-        <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-purple-50/80 text-purple-600 rounded-xl shrink-0">
-            <Clock className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Effort (Hours)</p>
-            <p className="text-lg font-bold text-gray-900 leading-tight">{totals.effort} Hrs</p>
-          </div>
-        </div>
-        <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-blue-50/80 text-blue-600 rounded-xl shrink-0">
-            <Calendar className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Duration</p>
-            <p className="text-lg font-bold text-gray-900 leading-tight">{projectDurationDays} Days</p>
-          </div>
-        </div>
-        <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-emerald-50/80 text-emerald-600 rounded-xl shrink-0">
-            <IndianRupee className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Cost (INR)</p>
-            <p className="text-lg font-bold text-gray-900 leading-tight">₹ {totals.cost.toLocaleString()}</p>
-          </div>
-        </div>
-      </div>
+      
 
       {/* Modules List */}
       <div className="space-y-5">
@@ -374,55 +390,50 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
             <div key={module.id} className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
               
               {/* Module Header */}
-              <div className="p-5 border-b border-gray-100 flex flex-col lg:flex-row items-center justify-between gap-6 bg-white">
+              <div className="p-4 border-b border-gray-100 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-white">
                 
-                <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto lg:flex-1">
-                  <div className="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl font-bold text-sm whitespace-nowrap shadow-sm border border-indigo-100/50">
-                    Module {mIdx + 1}
+                <div className="flex flex-col sm:flex-row items-start gap-4 w-full lg:flex-1">
+                  <div className="bg-[#D6FAF8] text-[#1A9F9A] px-3 py-2 rounded-[5px] text-[12px] font-medium whitespace-nowrap mt-1">
+                    Module {mIdx + 1 < 10 ? `0${mIdx + 1}` : mIdx + 1}
                   </div>
-                  <div className='flex-1 flex flex-col items-center sm:items-start w-full'>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Module Name</p>
+                  <div className='flex-1 flex flex-col items-start w-full gap-1'>
                     <AutoResizeTextarea
                       value={module.name}
                       onChange={(e) => updateModule(module.id, 'name', e.target.value)}
-                      placeholder="Module Name (e.g. Backend)"
-                      className={`w-full sm:max-w-[400px] text-base font-bold text-gray-900 bg-transparent focus:outline-none border-b-2 py-1 text-center sm:text-left max-h-[84px] overflow-hidden ${errors[`module_${mIdx}_name`] ? 'border-red-500' : 'border-transparent hover:border-gray-200 focus:border-indigo-500 transition-colors'}`}
+                      placeholder="Module Name (e.g. Login and registration)"
+                      className={`w-full text-[13px] font-semibold text-gray-900 bg-transparent focus:outline-none border-b py-0.5 max-h-[60px] overflow-hidden ${errors[`module_${mIdx}_name`] ? 'border-red-500' : 'border-transparent hover:border-gray-200 focus:border-[#1A9F9A] transition-colors'}`}
+                    />
+                    <AutoResizeTextarea
+                      value={module.description}
+                      onChange={(e) => updateModule(module.id, 'description', e.target.value)}
+                      placeholder="Module Description"
+                      className="w-full text-[11px] text-gray-500 bg-transparent focus:outline-none border-b border-transparent hover:border-gray-200 focus:border-[#1A9F9A] py-0.5 transition-colors max-h-[60px] overflow-hidden"
                     />
                   </div>
                 </div>
 
-                <div className="w-full lg:w-auto lg:flex-[1.5] flex flex-col items-center lg:items-start">
-                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Module Description</p>
-                   <AutoResizeTextarea
-                     value={module.description}
-                     onChange={(e) => updateModule(module.id, 'description', e.target.value)}
-                     placeholder="e.g. Core API Services"
-                     className="w-full text-sm text-gray-600 bg-transparent focus:outline-none border-b-2 border-transparent hover:border-gray-200 focus:border-indigo-500 py-1 text-center lg:text-left transition-colors max-h-[80px] overflow-hidden"
-                   />
-                </div>
-
-                <div className="flex flex-wrap items-center justify-center lg:justify-end gap-4 sm:gap-6 lg:gap-8 w-full lg:w-auto flex-shrink-0">
+                <div className="flex items-center justify-between lg:justify-end gap-6 w-full lg:w-auto flex-shrink-0 mt-2 lg:mt-0">
                   <div className="text-center">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Duration</p>
-                    <p className="text-sm font-bold text-gray-900">{moduleDuration} Days</p>
+                    <p className="text-[10px] font-bold text-gray-900 mb-0.5">Duration</p>
+                    <p className="text-[12px] font-bold text-[#1A9F9A]">{moduleDuration} Days</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Effort</p>
-                    <p className="text-sm font-bold text-gray-900">{moduleEffort} Hrs</p>
+                    <p className="text-[10px] font-bold text-gray-900 mb-0.5">Efforts</p>
+                    <p className="text-[12px] font-bold text-[#1A9F9A]">{moduleEffort} Hrs</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Cost</p>
-                    <p className="text-sm font-bold text-gray-900">₹ {moduleCost.toLocaleString()}</p>
+                    <p className="text-[10px] font-bold text-gray-900 mb-0.5">Cost</p>
+                    <p className="text-[12px] font-bold text-[#1A9F9A]">₹ {moduleCost.toLocaleString()}</p>
                   </div>
-                  <div className="flex items-center gap-2 w-full sm:w-auto justify-center mt-2 sm:mt-0 lg:ml-4">
+                  <div className="flex items-center gap-2 ml-2">
+                    <button onClick={() => deleteModule(module.id)} className="p-1.5 text-red-500 hover:text-red-600 transition-colors rounded hover:bg-red-50  flex items-center justify-center">
+                      <img src={deleteIcon} alt="delete" className="" />
+                    </button>
                     <button 
                       onClick={() => toggleCollapse(module.id)} 
-                      className="p-1.5 text-gray-400 hover:text-indigo-600 transition-colors rounded-lg hover:bg-indigo-50 border border-transparent hover:border-indigo-100"
+                      className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded hover:bg-gray-50 border border-gray-200 flex items-center justify-center"
                     >
-                      {collapsedModules[module.id] ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
-                    </button>
-                    <button onClick={() => deleteModule(module.id)} className="p-1.5 text-red-400 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50 border border-transparent hover:border-red-100">
-                      <Trash2 className="h-5 w-5" />
+                      {collapsedModules[module.id] ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
                     </button>
                   </div>
                 </div>
@@ -430,94 +441,94 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
 
               {/* Functionalities & Team Allocation Split */}
               {!collapsedModules[module.id] && (
-              <div className="flex flex-col xl:flex-row gap-6 p-6 bg-white">
+              <div className="flex flex-col xl:flex-row gap-6 p-4 bg-[#FAFAFA]">
                 
                 {/* Left: Functionalities */}
-                <div className="flex-[1.2] p-5 flex flex-col min-w-0 bg-white border border-gray-100 rounded-2xl shadow-[0_2px_10px_-4px_rgba(0,0,0,0.1)]">
-                  <div className="flex justify-between items-center mb-4 px-1">
+                <div className="flex-[1.2] bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col min-w-0">
+                  <div className="flex justify-between items-center p-4 border-b border-gray-100">
                     <h3 className="text-sm font-bold text-gray-900">Functionalities</h3>
                     <button
                       onClick={() => handleAddFunctionality(module.id)}
-                      className="text-xs text-indigo-600 hover:text-indigo-700 font-bold flex items-center transition-colors"
+                      className="text-[11px] text-[#1A9F9A] hover:text-[#13807c] font-bold flex items-center transition-colors"
                     >
-                      <Plus className="h-4 w-4 mr-1" /> Add Functionality
+                      + Add Functionality
                     </button>
                   </div>
                   
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs mb-2">
+                  <div className="overflow-x-auto p-4 pt-0">
+                    <table className="w-full text-left text-[11px] mb-2">
                       <thead>
-                        <tr className="border-b border-gray-200 text-gray-700">
-                          <th className="pb-2 font-bold w-6">#</th>
-                          <th className="pb-2 font-bold min-w-[120px]">Functionality</th>
-                          <th className="pb-2 font-bold min-w-[150px]">Description</th>
-                          <th className="pb-2 font-bold text-center w-20">Effort (Hours)</th>
-                          <th className="pb-2 font-bold text-center w-24">Duration (Days)</th>
-                          <th className="pb-2 font-bold text-center w-10">Action</th>
+                        <tr className="border-b border-gray-100 text-gray-900">
+                          <th className="py-3 font-bold w-6">#</th>
+                          <th className="py-3 font-bold min-w-[120px]">Functionality</th>
+                          <th className="py-3 font-bold min-w-[150px]">Description</th>
+                          <th className="py-3 font-bold text-center w-20">Effort<br/>(Hrs)</th>
+                          <th className="py-3 font-bold text-center w-20">Duration<br/>(Days)</th>
+                          <th className="py-3 font-bold text-center w-10">Action</th>
                         </tr>
                       </thead>
                       <tbody>
                         {module.functionalities.map((func, fIdx) => (
                           <tr key={func.id} className="border-b border-gray-100 last:border-0 group">
-                            <td className="py-2 text-gray-500 align-top">{fIdx + 1}</td>
-                            <td className="py-2 pr-5 align-top">
+                            <td className="py-3 text-gray-900 font-medium align-top">{fIdx + 1 < 10 ? `0${fIdx + 1}` : fIdx + 1}</td>
+                            <td className="py-3 pr-4 align-top">
                               <AutoResizeTextarea
                                 value={func.name}
                                 onChange={(e) => updateFunctionality(module.id, func.id, 'name', e.target.value)}
                                 placeholder="Name"
-                                className={`w-full bg-transparent focus:outline-none border-b py-0.5 ${errors[`module_${mIdx}_func_${fIdx}_name`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-indigo-500'}`}
+                                className={`w-full text-gray-900 bg-transparent focus:outline-none py-1 ${errors[`module_${mIdx}_func_${fIdx}_name`] ? 'border-b border-red-500' : 'border-b border-transparent group-hover:border-gray-200 focus:border-[#1A9F9A]'}`}
                               />
                             </td>
-                            <td className="py-2 pr-2 align-top">
+                            <td className="py-3 pr-2 align-top">
                               <AutoResizeTextarea
                                 value={func.description}
                                 onChange={(e) => updateFunctionality(module.id, func.id, 'description', e.target.value)}
                                 placeholder="Description"
-                                className="w-full text-gray-500 bg-transparent focus:outline-none border-b border-transparent group-hover:border-gray-200 focus:border-indigo-500 py-0.5"
+                                className="w-full text-gray-500 bg-transparent focus:outline-none py-1 border-b border-transparent group-hover:border-gray-200 focus:border-[#1A9F9A]"
                               />
                             </td>
-                            <td className="py-2 px-1 align-top">
+                            <td className="py-3 px-1 align-top">
                               <input
                                 type="number"
                                 min="0" step="any"
                                 value={func.effort}
                                 onChange={(e) => updateFunctionality(module.id, func.id, 'effort', e.target.value)}
-                                className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_effort`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-indigo-500'}`}
+                                className={`w-full text-center bg-transparent focus:outline-none border-b py-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_effort`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-[#1A9F9A]'}`}
                               />
                             </td>
-                            <td className="py-2 px-1 align-top">
+                            <td className="py-3 px-1 align-top">
                               <input
                                 type="number"
                                 min="0" step="any"
                                 value={func.duration}
                                 onChange={(e) => updateFunctionality(module.id, func.id, 'duration', e.target.value)}
-                                className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_duration`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-indigo-500'}`}
+                                className={`w-full text-center bg-transparent focus:outline-none border-b py-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_duration`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-[#1A9F9A]'}`}
                               />
                             </td>
-                            <td className="py-2 align-top text-center pt-2.5">
-                              <button onClick={() => deleteFunctionality(module.id, func.id)} className="text-gray-400 hover:text-red-500">
-                                <Trash2 className="h-3.5 w-3.5 mx-auto" />
+                            <td className=" align-center text-center">
+                              <button onClick={() => deleteFunctionality(module.id, func.id)} className="">
+                                <img src={deleteIcon} alt="delete" className=" mx-auto" />
                               </button>
                             </td>
                           </tr>
                         ))}
                       </tbody>
                       <tfoot>
-                        <tr className="bg-indigo-50/30">
-                          <td colSpan={3} className="py-2 text-right font-bold text-indigo-600 pr-4">Total</td>
-                          <td className="py-2 text-center font-bold text-indigo-600">{moduleEffort}</td>
-                          <td className="py-2 text-center font-bold text-indigo-600">{functionalitiesDurationTotal}</td>
+                        <tr>
+                          <td colSpan={3} className="pt-4 text-center font-bold text-[#1A9F9A] pr-4">Total</td>
+                          <td className="pt-4 text-center font-bold text-[#1A9F9A]">{moduleEffort}</td>
+                          <td className="pt-4 text-center font-bold text-[#1A9F9A]">{functionalitiesDurationTotal < 10 ? `0${functionalitiesDurationTotal}` : functionalitiesDurationTotal}</td>
                           <td></td>
                         </tr>
                       </tfoot>
                     </table>
                   </div>
-                  {errors[`module_${mIdx}_func`] && <p className="text-xs text-red-500 mt-1">{errors[`module_${mIdx}_func`]}</p>}
+                  {errors[`module_${mIdx}_func`] && <p className="text-xs text-red-500 mt-1 px-4 pb-2">{errors[`module_${mIdx}_func`]}</p>}
                 </div>
-
+                
                 {/* Right: Team Effort Allocation */}
-                <div className="flex-[1.3] p-5 flex flex-col min-w-0 bg-white border border-gray-100 rounded-2xl shadow-[0_2px_10px_-4px_rgba(0,0,0,0.1)]">
-                  <div className="flex justify-between items-center mb-4 px-1">
+                <div className="flex-[1.3] bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col min-w-0">
+                  <div className="flex justify-between items-center p-4 border-b border-gray-100">
                     <h3 className="text-sm font-bold text-gray-900">Team Effort Allocation</h3>
                     <button
                       onClick={() => {
@@ -531,38 +542,38 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                           }
                         }, 0);
                       }}
-                      className="text-xs text-indigo-600 hover:text-indigo-700 font-bold flex items-center transition-colors"
+                      className="text-[11px] text-[#1A9F9A] hover:text-[#13807c] font-bold flex items-center transition-colors"
                     >
-                      <Plus className="h-4 w-4 mr-1" /> Add Team Member
+                      + Add Team Member
                     </button>
                   </div>
                   
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs mb-2">
+                  <div className="overflow-x-auto p-4 pt-0">
+                    <table className="w-full text-left text-[11px] mb-2">
                       <thead>
-                        <tr className="border-b border-gray-200 text-gray-700">
-                          <th className="pb-2 font-bold min-w-[120px]">Team Member</th>
-                          <th className="pb-2 font-bold min-w-[100px]">Role</th>
-                          <th className="pb-2 font-bold text-center w-20">Effort (Hours)</th>
-                          <th className="pb-2 font-bold text-center w-24">Rate / Hour</th>
-                          <th className="pb-2 font-bold text-center w-24">Total Cost </th>
-                          <th className="pb-2 font-bold text-center w-10">Action</th>
+                        <tr className="border-b border-gray-100 text-gray-900">
+                          <th className="py-3 font-bold min-w-[120px]">Team Member</th>
+                          <th className="py-3 font-bold min-w-[100px]">Role</th>
+                          <th className="py-3 font-bold text-center w-20">Effort (Hrs)</th>
+                          <th className="py-3 font-bold text-center w-24">Rate / Hour</th>
+                          <th className="py-3 font-bold text-center w-24">Total Cost</th>
+                          <th className="py-3 font-bold text-center w-10">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-100">
+                      <tbody>
                         {module.functionalities.map((func, fIdx) => 
                           func.teamAllocations.map((tm, tIdx) => (
                             <React.Fragment key={tm.id}>
-                              <tr className="group hover:bg-gray-50">
-                                <td className="py-2 pr-2">
+                              <tr className="group hover:bg-gray-50 border-b border-gray-100 last:border-0">
+                                <td className="py-3 pr-2">
                                   <div className="flex items-center gap-1.5">
-                                    <div className="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-[8px] font-bold uppercase shrink-0">
-                                      {employees.find(e => String(e.id) === String(tm.memberId))?.name?.substring(0, 2) || 'UN'}
+                                    <div className="w-7 h-7 rounded-full overflow-hidden shrink-0">
+                                      <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(employees.find(e => String(e.id) === String(tm.memberId))?.name || 'UN')}&background=random&color=fff`} alt="avatar" className="w-full h-full object-cover" />
                                     </div>
                                     <select
                                       value={String(tm.memberId || '')}
                                       onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'memberId', e.target.value)}
-                                      className="w-full bg-transparent border-0 focus:ring-0 text-xs text-gray-700 p-0 cursor-pointer focus:outline-none"
+                                      className="w-full bg-transparent border-0 focus:ring-0 text-[11px] text-gray-900 font-medium p-0 cursor-pointer focus:outline-none"
                                     >
                                       <option value="">Select...</option>
                                       {employees.map(emp => (
@@ -571,22 +582,22 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                     </select>
                                   </div>
                                 </td>
-                                <td className="py-2 pr-2 text-gray-500 truncate">{tm.role || '-'}</td>
-                                <td className="py-2 px-1">
+                                <td className="py-3 pr-2 text-gray-500 truncate">{tm.role || '-'}</td>
+                                <td className="py-3 px-1">
                                 <input
                                   type="number"
                                   min="0" step="any"
                                   value={tm.effort}
                                   onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'effort', e.target.value)}
-                                  className={`w-full text-center bg-transparent focus:outline-none border-b py-0.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_team`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-300 focus:border-indigo-500'}`}
+                                  className={`w-full text-center bg-transparent focus:outline-none border-b py-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_team`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-[#1A9F9A]'}`}
                                   placeholder="0"
                                 />
                                 </td>
-                                <td className="py-2 text-center text-gray-500">₹ {tm.rate || '0'}</td>
-                                <td className="py-2 text-center font-medium">₹ {(Number(tm.cost) || 0).toLocaleString()}</td>
-                                <td className="py-2 text-center">
-                                  <button onClick={() => deleteTeamMember(module.id, func.id, tm.id)} className="text-gray-400 hover:text-red-500">
-                                    <Trash2 className="h-3.5 w-3.5 mx-auto" />
+                                <td className="py-3 text-center text-gray-500">₹ {tm.rate || '0'}</td>
+                                <td className="py-3 text-center font-medium">₹ {(Number(tm.cost) || 0).toLocaleString()}</td>
+                                <td className="py-3 text-center">
+                                  <button onClick={() => deleteTeamMember(module.id, func.id, tm.id)} className=" hover:border-red-200">
+                                    <img src={deleteIcon} alt="delete" className=" mx-auto" />
                                   </button>
                                 </td>
                               </tr>
@@ -604,11 +615,11 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                         )}
                       </tbody>
                       <tfoot>
-                        <tr className="bg-indigo-50/30">
-                          <td colSpan={2} className="py-2 pl-3 font-bold text-indigo-600">Total</td>
-                          <td className="py-2 text-center font-bold text-indigo-600">{moduleEffort} Hrs</td>
+                        <tr>
+                          <td colSpan={2} className="pt-4 text-center font-bold text-[#1A9F9A]">Total</td>
+                          <td className="pt-4 text-center font-bold text-[#1A9F9A]">{moduleEffort} Hrs</td>
                           <td></td>
-                          <td className="py-2 text-center font-bold text-indigo-600">₹ {moduleCost.toLocaleString()}</td>
+                          <td className="pt-4 text-center font-bold text-[#1A9F9A]">₹ {moduleCost.toLocaleString()}</td>
                           <td></td>
                         </tr>
                       </tfoot>
@@ -624,64 +635,72 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
 
       {/* Grand Total Footer */}
       {formData.modules.length > 0 && (
-        <div className="mt-6 bg-indigo-50/50 border border-indigo-100 rounded-2xl p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-8 shadow-sm">
+        <div className="mt-6 bg-[#FAFAFA] border border-gray-200 rounded-xl p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6 shadow-sm">
           
-          {/* Left Group */}
-          <div className="flex flex-wrap items-center gap-6 lg:gap-10">
-            <div className="flex-shrink-0 min-w-[120px] mr-2">
-              <h3 className="text-lg font-bold text-gray-900">Grand Total</h3>
-              <p className="text-sm font-medium text-indigo-600">{totals.modules} Modules</p>
-            </div>
-
-            <div className="flex items-center gap-3">
-               <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
-               <div>
-                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Project Start Date</p>
-                 <p className="text-sm font-bold text-gray-900">{formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB') : '-'}</p>
-               </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-               <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
-               <div>
-                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Project End Date</p>
-                 <p className="text-sm font-bold text-gray-900">{formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB') : '-'}</p>
-               </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-               <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
-               <div>
-                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Days</p>
-                 <p className="text-sm font-bold text-gray-900">{projectDurationDays} Days</p>
-               </div>
-            </div>
+          <div className="flex-shrink-0 mr-2">
+            <h3 className="text-sm font-bold text-gray-900 mb-1">Grand Total</h3>
+            <p className="text-[12px] font-bold text-[#1A9F9A]">{totals.modules} Modules</p>
           </div>
 
-          {/* Right Group */}
-          <div className="flex flex-wrap items-center gap-6 lg:gap-10">
-            <div className="flex items-center gap-3">
-               <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Clock className="h-5 w-5" /></div>
-               <div>
-                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Effort (Hours)</p>
-                 <p className="text-sm font-bold text-gray-900">{totals.effort} Hrs</p>
-               </div>
+          <div className="flex flex-wrap items-center gap-6 justify-end w-full">
+            <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm flex items-center gap-3 min-w-[140px]">
+              <div className="w-8 h-8 shrink-0">
+                <img src={calendarIcon} alt="calendar" className="w-full h-full opacity-60" />
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-500 font-medium">Project Start Date</p>
+                <p className="text-[13px] font-bold text-gray-900">{formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}</p>
+              </div>
             </div>
 
-            <div className="flex items-center gap-3">
-               <div className="p-2.5 bg-white rounded-xl text-indigo-500 shadow-sm border border-indigo-50/50"><Calendar className="h-5 w-5" /></div>
-               <div>
-                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Estimated Days</p>
-                 <p className="text-sm font-bold text-gray-900">{totals.estimatedDays} Days</p>
-               </div>
+            <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm flex items-center gap-3 min-w-[140px]">
+              <div className="w-8 h-8 shrink-0">
+                <img src={calendarIcon} alt="calendar" className="w-full h-full opacity-60" />
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-500 font-medium">Project End Date</p>
+                <p className="text-[13px] font-bold text-gray-900">{formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}</p>
+              </div>
             </div>
 
-            <div className="flex items-center gap-4 flex-shrink-0 xl:pl-8 xl:border-l border-indigo-200/60 pt-4 xl:pt-0">
-               <div className="p-3 bg-white rounded-xl text-indigo-600 shadow-sm border border-indigo-50/50"><IndianRupee className="h-6 w-6" /></div>
-               <div className="text-left xl:text-right">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Total Cost (INR)</p>
-                  <p className="text-xl font-bold text-indigo-600">₹ {totals.cost.toLocaleString()}</p>
-               </div>
+            <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm flex items-center gap-3 min-w-[140px]">
+              <div className="w-8 h-8 shrink-0">
+                <img src={totalDurationIcon} alt="duration" className="w-full h-full" />
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-500 font-medium">Total Days</p>
+                <p className="text-[13px] font-bold text-gray-900">{projectDurationDays} Days</p>
+              </div>
+            </div>
+
+            <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm flex items-center gap-3 min-w-[140px]">
+              <div className="w-8 h-8 shrink-0">
+                <img src={totalEffortIcon} alt="effort" className="w-full h-full" />
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-500 font-medium">Total Effort ( Hrs )</p>
+                <p className="text-[13px] font-bold text-gray-900">{totals.effort} Hrs</p>
+              </div>
+            </div>
+
+            <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm flex items-center gap-3 min-w-[140px]">
+              <div className="w-8 h-8 shrink-0">
+                <img src={totalDurationIcon} alt="duration" className="w-full h-full" />
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-500 font-medium">Estimated Duration</p>
+                <p className="text-[13px] font-bold text-gray-900">{totals.estimatedDays} Days</p>
+              </div>
+            </div>
+
+            <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm flex items-center gap-3 min-w-[160px]">
+              <div className="w-8 h-8 shrink-0">
+                <img src={totalCostIcon} alt="cost" className="w-full h-full" />
+              </div>
+              <div>
+                <p className="text-[10px] text-gray-500 font-medium">Total Cost (INR)</p>
+                <p className="text-[13px] font-bold text-gray-900">₹ {totals.cost.toLocaleString()}</p>
+              </div>
             </div>
           </div>
 
