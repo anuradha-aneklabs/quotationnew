@@ -62,47 +62,49 @@ export default function CommercialStep({ formData, handleChange }) {
 
                       return (
                         <tr key={m.id || idx} className="hover:bg-gray-50/30 transition-colors bg-white">
-                          <td className="py-2.5 px-3 text-center align-top">
-                            <span className="text-[11px] font-semibold text-[#040715]">
-                              {String(idx + 1).padStart(2, '0')}
-                            </span>
+                          <td className="py-1.5 px-3 align-top">
+                            <div className="w-6 h-6 mx-auto rounded-[4px] bg-white border border-[#E9ECEF] flex items-center justify-center">
+                              <span className="text-[11px] font-semibold text-[#040715]">
+                                {String(idx + 1).padStart(2, '0')}
+                              </span>
+                            </div>
                           </td>
-                          <td className="py-2.5 px-3 align-top">
+                          <td className="py-1.5 px-3 align-top">
                             <div className="flex items-start gap-2">
                               <div className="w-5 h-5 flex items-center justify-center shrink-0">
                                 <img src={ModulesIcon} alt="Module Icon" className="w-full h-full object-contain" />
                               </div>
                               <div>
-                                <p className="text-[11px] font-bold text-[#040715] leading-snug">{m.name || `Module ${idx + 1}`}</p>
-                                <p className="text-[9px] text-gray-500 mt-0.5 leading-snug">{m.description || 'No description provided'}</p>
+                                <p className="text-[13px] font-semibold text-[#040715] leading-snug">{m.name || `Module ${idx + 1}`}</p>
+                                <p className="text-[12px] text-gray-500 mt-0.5 leading-snug">{m.description || 'No description provided'}</p>
                               </div>
                             </div>
                           </td>
-                          <td className="py-2.5 px-3 align-top">
+                          <td className="py-1.5 px-3 align-top">
                             <ul className="space-y-0.5">
                               {m.functionalities && m.functionalities.length > 0 ? (
                                 m.functionalities.map((func, fIdx) => (
-                                  <li key={func.id || fIdx} className="text-[10px] text-[#46505F] flex items-start gap-1 leading-tight">
+                                  <li key={func.id || fIdx} className="text-[12px] text-[#46505F] flex items-start gap-1 leading-tight">
                                     <span className="shrink-0">{fIdx + 1}.</span> 
                                     <span>{func.name || 'Unnamed Functionality'}</span>
                                   </li>
                                 ))
                               ) : (
-                                <span className="text-[10px] text-gray-400 italic">No functionalities</span>
+                                <span className="text-[12px] text-gray-400 italic">No functionalities</span>
                               )}
                             </ul>
                           </td>
-                          <td className="py-2.5 px-3 text-center align-top whitespace-nowrap">
+                          <td className="py-1.5 px-3 text-center align-top whitespace-nowrap">
                             <span className="text-[11px] font-semibold text-[#1A9F9A]">
                               {String(mHours).padStart(2, '0')} Hrs
                             </span>
                           </td>
-                          <td className="py-2.5 px-3 text-center align-top whitespace-nowrap">
+                          <td className="py-1.5 px-3 text-center align-top whitespace-nowrap">
                             <span className="text-[11px] font-semibold text-[#1A9F9A]">
                               {String(Number(m.duration) || 0).padStart(2, '0')} Days
                             </span>
                           </td>
-                          <td className="py-2.5 px-3 text-right align-top whitespace-nowrap">
+                          <td className="py-1.5 px-3 text-right align-top whitespace-nowrap">
                             <span className="text-[11px] font-bold text-[#040715]">
                               ₹ {mCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
