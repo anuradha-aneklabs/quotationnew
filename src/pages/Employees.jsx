@@ -8,7 +8,7 @@ import EmployeeViewModal from '../components/employees/EmployeeViewModal';
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import ConfirmModal from '../components/common/ConfirmModal';
-import { fetchEmployees, createEmployee, updateEmployee, deleteEmployee } from '../services/employeeService';
+import { fetchEmployees, createEmployee, updateEmployee, deleteEmployee, fetchEmployeeRoles } from '../services/employeeService';
 import { useToast } from '../contexts/ToastContext';
 import useItemsPerPage from '../hooks/useItemsPerPage';
 
@@ -19,6 +19,9 @@ export default function Employees() {
   const [error, setError] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
+  const [roles, setRoles] = useState([]);
+  const [rolesLoading, setRolesLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
   
@@ -46,18 +49,27 @@ export default function Employees() {
     }
   };
 
+  const loadRoles = async () => {
+    setRolesLoading(true);
+    const data = await fetchEmployeeRoles();
+    setRoles(data);
+    setRolesLoading(false);
+  };
+
   useEffect(() => {
     loadEmployees();
+    loadRoles();
   }, []);
 
   const filteredEmployees = employees.filter(emp => {
     const term = searchTerm.toLowerCase();
-    // Use snake_case properties from API response
-    return (
+    const matchesSearch = (
       (emp.name || '').toLowerCase().includes(term) ||
       (emp.role || '').toLowerCase().includes(term) ||
       (emp.assigned_project || '').toLowerCase().includes(term)
     );
+    const matchesRole = selectedRole === '' || (emp.role || emp.designation || '') === selectedRole;
+    return matchesSearch && matchesRole;
   });
 
   const handleAddClick = () => {
@@ -127,9 +139,19 @@ export default function Employees() {
         placeholder="Search by name, role or project..."
       >
         <div className="flex items-center gap-3">
+          {/* Role Filter Dropdown */}
           <div className="relative border border-gray-200 rounded-md bg-white hover:border-gray-300 transition-colors">
-            <select className="appearance-none bg-transparent pl-3 pr-8 py-2 text-sm font-medium text-[#46505F] focus:outline-none cursor-pointer">
-              <option>All Role</option>
+            <select
+              value={selectedRole}
+              onChange={(e) => { setSelectedRole(e.target.value); setCurrentPage(1); }}
+              disabled={rolesLoading}
+              className="appearance-none bg-transparent pl-3 pr-8 py-2 text-sm font-medium text-[#46505F] focus:outline-none cursor-pointer disabled:opacity-60"
+            >
+              <option value="">All Role</option>
+              {roles.map((role, idx) => {
+                const roleLabel = typeof role === 'string' ? role : role.role || role.name || role;
+                return <option key={idx} value={roleLabel}>{roleLabel}</option>;
+              })}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#46505F]">
               <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
