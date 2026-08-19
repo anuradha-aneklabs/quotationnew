@@ -357,6 +357,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
             <p className="text-[11px] text-gray-500 font-medium">Total Modules</p>
             <p className="text-[15px] font-bold text-gray-900 leading-tight">{totals.modules < 10 ? `0${totals.modules}` : totals.modules}</p>
           </div>
+        )}
         </div>
         <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#E2FDFF] rounded-lg flex items-center justify-center p-2">
@@ -394,7 +395,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
             <p className="text-[15px] font-bold text-gray-900 leading-tight">₹ {totals.cost.toLocaleString()}</p>
           </div>
         </div>
-      </div>
+      
 
 
       {/* Modules List */}
@@ -695,7 +696,6 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                 </div>
               </div>
             </div>
-          </div>
 
           <div className="flex flex-wrap items-center gap-4 justify-start xl:justify-end w-full xl:w-auto">
             <div className=" p-2 flex items-center gap-3 min-w-[130px]">

@@ -499,7 +499,15 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
             {isSaving ? <><Loader2 className="animate-spin h-4 w-4 mr-2" /> Saving...</> : 'Save & Next'}
             {!isSaving && <img src={saveNextIcon} alt="Next" className="h-4 w-4 ml-2" />}
           </button>
-        ) : null}
+        ) : (
+          <button
+            onClick={handleSaveQuotation}
+            disabled={isSaving}
+            className={`px-8 py-2 text-[13px] font-bold text-white rounded-lg transition-colors flex items-center shadow-sm ${isSaving ? 'bg-[#1A9F9A]/70 cursor-not-allowed' : 'bg-[#1A9F9A] hover:bg-[#00a38f]'}`}
+          >
+            {isSaving ? <><Loader2 className="animate-spin h-4 w-4 mr-2" /> Saving...</> : 'Finish'}
+          </button>
+        )}
       </div>
     </div>
   );

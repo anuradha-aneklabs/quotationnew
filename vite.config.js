@@ -9,7 +9,7 @@ export default defineConfig({
     tailwindcss(),
     
   ],
-   server: {
-    allowedHosts: true, // Allow all hosts so Cloudflare tunnel works automatically on restart
-  },
+  server: {
+    allowedHosts: true
+  }
 })
