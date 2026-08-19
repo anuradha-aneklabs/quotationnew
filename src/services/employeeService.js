@@ -13,6 +13,23 @@ export const fetchEmployees = async () => {
   }
 };
 
+export const fetchEmployeeRoles = async () => {
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const response = await fetch(`${apiUrl}/api/v1/employees/roles`);
+    if (!response.ok) {
+      throw new Error(`Error fetching roles: ${response.statusText}`);
+    }
+    const json = await response.json();
+    // Handle both array of strings and array of objects
+    const roles = json.data?.roles || json.data || json.roles || [];
+    return Array.isArray(roles) ? roles : [];
+  } catch (error) {
+    console.error('Failed to fetch employee roles:', error);
+    return []; // Return empty array on error — don't break the page
+  }
+};
+
 export const createEmployee = async (employeeData) => {
   try {
     const apiUrl = import.meta.env.VITE_API_URL;

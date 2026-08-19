@@ -465,8 +465,8 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
       </div> */}
 
       <QuotationStepper currentStep={currentStep} />
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col shrink min-h-0 overflow-hidden mb-4">
-        <div className="overflow-y-auto p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col shrink min-h-0 overflow-hidden mb-4 flex-1">
+        <div className="overflow-y-auto p-6 flex flex-col flex-1 min-h-0 scrollbar-hide">
           {renderStep()}
         </div>
       </div>
