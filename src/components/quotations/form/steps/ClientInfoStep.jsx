@@ -3,6 +3,11 @@ import { Search, Upload } from 'lucide-react';
 import * as clientService from '../../../../services/clientService';
 import logoUploadIcon from '../../../../assets/clientInformation/logo icon.svg';
 import flagIcon from '../../../../assets/clientInformation/Flag.svg';
+import arrowDownIcon from '../../../../assets/clientInformation/arrow-down.svg';
+import FormInput from '../../../common/FormInput';
+import FormSelect from '../../../common/FormSelect';
+import FormTextarea from '../../../common/FormTextarea';
+
 export default function ClientInfoStep({ formData, handleChange, errors, setFormData }) {
   const [logoError, setLogoError] = useState('');
   const [clients, setClients] = useState([]);
@@ -35,7 +40,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
   const filteredClients = clients.filter(c => {
     // If user just clicks the dropdown and the search exactly matches the selected client, show all
     if (clientSearch && clientSearch === formData.clientName) return true;
-    
+
     const term = clientSearch.toLowerCase();
     return (c.company_name?.toLowerCase().includes(term) || c.contact_person?.toLowerCase().includes(term));
   });
@@ -44,7 +49,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
     const name = client.company_name;
     setClientSearch(name);
     setIsClientDropdownOpen(false);
-    
+
     // Auto populate other fields mapping from Client API fields to Quotation fields
     setFormData(prev => ({
       ...prev,
@@ -75,8 +80,8 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
         if (img.width <= 512 && img.height <= 512) {
           const reader = new FileReader();
           reader.onloadend = () => {
-            setFormData(prev => ({ 
-              ...prev, 
+            setFormData(prev => ({
+              ...prev,
               logo: reader.result,
               logoName: file.name
             }));
@@ -100,11 +105,11 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
       <h2 className="text-lg font-bold border-b-[#DEDEDE] text-[#040715] border-b-[1px] pb-2">1. Client Information</h2>
 
       <div className="flex flex-col lg:flex-row gap-6">
-        
+
         {/* Left Column: Logo Upload */}
-        <div className="w-full lg:w-[18%] shrink-0 border border-gray-200 rounded-xl p-4">
+        <div className="w-full lg:w-[18%] shrink-0 border border-gray-200 rounded-xl p-4 flex flex-col">
           <label className="block text-[14px] font-normal text-black mb-3">Logo</label>
-          <div className={`relative flex flex-col items-center justify-center p-4 border rounded-xl h-[150px] transition-colors ${logoError ? 'border-red-500 bg-red-50' : 'border-gray-100 bg-[#FAFAFA] hover:bg-gray-50'}`}>
+          <div className={`relative flex flex-col items-center justify-center p-4 border rounded-xl h-[160px] transition-colors ${logoError ? 'border-red-500 bg-red-50' : 'border-gray-100 bg-[#FAFAFA] hover:bg-gray-50'}`}>
             <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onChange={handleLogoUpload} />
             {formData.logo ? (
               <div className="flex flex-col items-center">
@@ -126,7 +131,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
 
         {/* Right Column: Grid Fields */}
         <div className="w-full lg:w-[82%]">
-          
+
           {/* Top Row: 2 Columns */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3.5 mb-4.5">
             {/* Client Name (Searchable Dropdown) */}
@@ -176,19 +181,15 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
             </div>
 
             {/* Contact Person */}
-            <div>
-              <label className="block text-[14px] font-normal text-black mb-2">
-                Contact Person <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="contactPerson"
-                value={formData.contactPerson}
-                onChange={handleChange}
-                placeholder="Rahul Sharma"
-                className="w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors"
-              />
-            </div>
+            <FormInput
+              label="Contact Person"
+              required
+              name="contactPerson"
+              value={formData.contactPerson}
+              onChange={handleChange}
+              placeholder="Rahul Sharma"
+              error={errors.contactPerson}
+            />
           </div>
 
           {/* Next Rows: 3 Columns */}
@@ -200,9 +201,32 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
               </label>
               <div className={`flex items-center bg-[#FAFAFA] w-full px-3 py-2 rounded-lg border  focus-within:ring-2 transition-colors
                 ${errors.phone ? 'border-red-500 focus-within:ring-red-200' : 'border-gray-200 focus-within:border-purple-500 focus-within:ring-purple-100'}`}>
-                <div className="flex items-center gap-1.5 pr-3 border-r border-gray-300">
-                  <img src={flagIcon} alt="IN" className="w-5 h-4 object-cover" />
-                  <span className="text-[13px] flex items-center gap-1 text-gray-700 font-medium">+91 <span className="text-gray-300 ml-1">v</span></span>
+                <div className="relative flex items-center gap-1.5 pr-3 border-r border-gray-300">
+                  {(!formData.countryCode || formData.countryCode === '+91') ? (
+                    <img src={flagIcon} alt="IN" className="w-5 h-4 object-cover" />
+                  ) : (
+                    <span className="text-sm leading-none">
+                      {formData.countryCode === '+1' && '🇺🇸'}
+                      {formData.countryCode === '+44' && '🇬🇧'}
+                      {formData.countryCode === '+61' && '🇦🇺'}
+                      {formData.countryCode === '+971' && '🇦🇪'}
+                    </span>
+                  )}
+                  <span className="text-[13px] flex items-center gap-1 text-gray-700 font-medium">
+                    {formData.countryCode || '+91'} <img src={arrowDownIcon} alt="down" className="ml-1 w-3 h-3 opacity-60" />
+                  </span>
+                  <select
+                    name="countryCode"
+                    value={formData.countryCode || '+91'}
+                    onChange={handleChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  >
+                    <option value="+91">+91</option>
+                    <option value="+1">+1</option>
+                    <option value="+44">+44</option>
+                    <option value="+61">+61</option>
+                    <option value="+971">+971</option>
+                  </select>
                 </div>
                 <input
                   type="text"
@@ -217,82 +241,61 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
             </div>
 
             {/* Email */}
-            <div>
-              <label className="block text-[14px] font-normal text-black mb-2">
-                Email <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="rahul@techcorp.in"
-                className={`w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors
-                  ${errors.email ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-              />
-              {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
-            </div>
+            <FormInput
+              label="Email"
+              required
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="rahul@techcorp.in"
+              error={errors.email}
+            />
 
             {/* Website */}
-            <div>
-              <label className="block text-[14px] font-normal text-black mb-1">Website</label>
-              <input
-                type="text"
-                name="website"
-                value={formData.website}
-                onChange={handleChange}
-                placeholder="www.techcorp.com"
-                className="w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors"
-              />
-            </div>
+            <FormInput
+              label="Website"
+              name="website"
+              value={formData.website}
+              onChange={handleChange}
+              placeholder="www.techcorp.com"
+            />
 
             {/* Currency */}
-            <div>
-              <label className="block text-[14px] font-normal text-black mb-1">
-                Currency <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="currency"
-                value={formData.currency}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border text-[14px] focus:outline-none focus:ring-2 transition-colors
-                  ${errors.currency ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-              >
-                <option value="INR - Indian Rupee (₹)">INR - Indian Rupee (₹)</option>
-                <option value="USD - US Dollar ($)">USD - US Dollar ($)</option>
-              </select>
-              {errors.currency && <p className="mt-1 text-xs text-red-500">{errors.currency}</p>}
-            </div>
+            <FormSelect
+              label="Currency"
+              required
+              name="currency"
+              value={formData.currency}
+              onChange={handleChange}
+              error={errors.currency}
+              options={[
+                { value: "INR - Indian Rupee (₹)", label: "INR - Indian Rupee (₹)" },
+                { value: "USD - US Dollar ($)", label: "USD - US Dollar ($)" }
+              ]}
+            />
 
             {/* GST Number */}
-            <div>
-              <label className="block text-[14px]  font-normal text-black mb-1">GST Number</label>
-              <input
-                type="text"
-                name="gstNumber"
-                value={formData.gstNumber}
-                onChange={handleChange}
-                placeholder="09AABCT1234Q1Z5"
-                className={`w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors uppercase
-                  ${errors.gstNumber ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-              />
-              {errors.gstNumber && <p className="mt-1 text-xs text-red-500">{errors.gstNumber}</p>}
-            </div>
+            <FormInput
+              label="GST Number"
+              name="gstNumber"
+              value={formData.gstNumber}
+              onChange={handleChange}
+              placeholder="09AABCT1234Q1Z5"
+              error={errors.gstNumber}
+              className="uppercase"
+            />
 
             {/* PAN Number */}
-            <div>
-              <label className="block text-[14px] font-normal text-black mb-1">PAN Number</label>
-              <input
-                type="text"
-                name="panNumber"
-                value={formData.panNumber}
-                onChange={handleChange}
-                placeholder="AABCT1234Q"
-                className={`w-full px-3 py-2 bg-[#FAFAFA] rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors uppercase
-                  ${errors.panNumber ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-              />
-              {errors.panNumber && <p className="mt-1 text-xs text-red-500">{errors.panNumber}</p>}
-            </div>
+            <FormInput
+              label="PAN Number"
+              name="panNumber"
+              value={formData.panNumber}
+              onChange={handleChange}
+              placeholder="AABCT1234Q"
+              error={errors.panNumber}
+              className="uppercase"
+            />
           </div>
         </div>
       </div>
@@ -301,120 +304,99 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
 
           {/* Billing Address */}
-          <div>
-            <label className="block text-[14px] font-normal text-black mb-1">
-              Billing Address <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              name="billingAddress"
-              value={formData.billingAddress}
-              onChange={handleChange}
-              rows={2}
-              placeholder="Enter billing address"
-              className={`w-full px-3 py-3 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors resize-none bg-[#FAFAFA]
-                ${errors.billingAddress ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-            />
-            {errors.billingAddress && <p className="mt-1 text-xs text-red-500">{errors.billingAddress}</p>}
-          </div>
+          <FormTextarea
+            label="Billing Address"
+            required
+            name="billingAddress"
+            value={formData.billingAddress}
+            onChange={handleChange}
+            rows={2}
+            placeholder="Enter billing address"
+            error={errors.billingAddress}
+          />
 
           {/* Shipping Address */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-[14px] font-normal text-black">
-                Shipping Address <span className="text-red-500">*</span>
-              </label>
-              <label className="flex items-center text-[11px] text-gray-600 font-medium cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="isShippingSameAsBilling"
-                  checked={formData.isShippingSameAsBilling}
-                  onChange={handleChange}
-                  className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mr-2 h-3.5 w-3.5"
-                />
-                Same as billing address
-              </label>
-            </div>
-            <textarea
-              name="shippingAddress"
-              value={formData.shippingAddress}
-              onChange={handleChange}
-              rows={2}
-              disabled={formData.isShippingSameAsBilling}
-              placeholder="Enter shipping address"
-              className={`w-full px-3 py-3 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors resize-none disabled:text-gray-500 bg-[#FAFAFA]
-                ${errors.shippingAddress ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-            />
-            {errors.shippingAddress && <p className="mt-1 text-xs text-red-500">{errors.shippingAddress}</p>}
-          </div>
+          <FormTextarea
+            labelClassName="w-full mb-1.5"
+            label={
+              <div className="flex items-center justify-between mb-2.5">
+                <span className="block text-[14px] font-normal text-black">Shipping Address <span className="text-red-500">*</span></span>
+                <label className="flex items-center text-[11px] text-gray-600 font-medium cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="isShippingSameAsBilling"
+                    checked={formData.isShippingSameAsBilling}
+                    onChange={handleChange}
+                    className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mr-2 h-3.5 w-3.5"
+                  />
+                  Same as billing address
+                </label>
+              </div>
+            }
+            name="shippingAddress"
+            value={formData.shippingAddress}
+            onChange={handleChange}
+            rows={2}
+            disabled={formData.isShippingSameAsBilling}
+            placeholder="Enter shipping address"
+            error={errors.shippingAddress}
+            className={formData.isShippingSameAsBilling ? "disabled:text-gray-500" : ""}
+          />
 
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
 
           {/* Pincode */}
-          <div>
-            <label className="block text-[14px] font-normal text-black mb-2">
-              Pincode <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="pincode"
-              value={formData.pincode}
-              onChange={handleChange}
-              placeholder="e.g. 201301"
-              className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors bg-[#FAFAFA]
-                ${errors.pincode ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-            />
-            {errors.pincode && <p className="mt-1 text-xs text-red-500">{errors.pincode}</p>}
-          </div>
+          <FormInput
+            label="Pincode"
+            required
+            name="pincode"
+            value={formData.pincode}
+            onChange={handleChange}
+            placeholder="e.g. 201301"
+            error={errors.pincode}
+          />
 
           {/* Country */}
-          <div>
-            <label className="block text-[14px] font-normal text-black mb-2">
-              Country <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors bg-[#FAFAFA] appearance-none
-                ${errors.country ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-            >
-              <option value="">Select Country</option>
-              <option value="India">India</option>
-            </select>
-            {errors.country && <p className="mt-1 text-xs text-red-500">{errors.country}</p>}
-          </div>
+          <FormSelect
+            label="Country"
+            required
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+            error={errors.country}
+            options={[
+              { value: "", label: "Select Country" },
+              { value: "India", label: "India" }
+            ]}
+          />
 
           {/* State */}
-          <div>
-            <label className="block text-[14px] font-normal text-black mb-2">State</label>
-            <select
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors bg-[#FAFAFA] appearance-none"
-            >
-              <option value="">Select State</option>
-              <option value="Madhya Pradesh">Madhya Pradesh</option>
-              <option value="Uttar Pradesh">Uttar Pradesh</option>
-            </select>
-          </div>
+          <FormSelect
+            label="State"
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            options={[
+              { value: "", label: "Select State" },
+              { value: "Madhya Pradesh", label: "Madhya Pradesh" },
+              { value: "Uttar Pradesh", label: "Uttar Pradesh" }
+            ]}
+          />
 
           {/* City */}
-          <div>
-            <label className="block text-[14px] font-normal text-black mb-2">City</label>
-            <select
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors bg-[#FAFAFA] appearance-none"
-            >
-              <option value="">Select City</option>
-              <option value="Indore">Indore</option>
-              <option value="Noida">Noida</option>
-            </select>
-          </div>
+          <FormSelect
+            label="City"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            options={[
+              { value: "", label: "Select City" },
+              { value: "Indore", label: "Indore" },
+              { value: "Noida", label: "Noida" }
+            ]}
+          />
 
         </div>
       </div>

@@ -5,7 +5,8 @@ import moduleIcon from '../../../assets/addQuotationSteper/module management.svg
 import commercialIcon from '../../../assets/addQuotationSteper/commercial.svg';
 import timelineIcon from '../../../assets/addQuotationSteper/timeline.svg';
 import previewIcon from '../../../assets/addQuotationSteper/preview.svg';
-import zigzagLineIcon from '../../../assets/addQuotationSteper/steper zic zac line.svg';
+import zigzagLineIcon from '../../../assets/addQuotationSteper/steper-zic-zac-line.svg';
+import tickIcon from '../../../assets/addQuotationSteper/tick-circle.svg';
 
 const steps = [
   { id: 1, label: 'Client Details', icon: clientIcon },
@@ -22,10 +23,10 @@ export default function QuotationStepper({ currentStep }) {
       <div className="flex items-center justify-between w-[85%] max-w-[850px] mx-auto relative">
         {/* Connector Line Background (Wavy for upcoming) */}
         <div 
-          className="absolute right-0 top-1/2 -translate-y-1/2 h-[12px] -z-10" 
+          className="absolute right-0 top-1/2 -translate-y-1/2 h-[12px] z-0" 
           style={{ 
             left: `${Math.min(((currentStep - 1) / (steps.length - 1)) * 100, 100)}%`,
-            backgroundImage: `url(${zigzagLineIcon})`,
+            backgroundImage: `url("${zigzagLineIcon}")`,
             backgroundRepeat: 'repeat-x',
             backgroundPosition: 'left center',
           }}
@@ -33,7 +34,7 @@ export default function QuotationStepper({ currentStep }) {
         
         {/* Active Connector Line */}
         <div 
-          className="absolute left-0 top-1/2 -translate-y-1/2 h-[2px] bg-[#1A9F9A] -z-10 transition-all duration-300"
+          className="absolute left-0 top-1/2 -translate-y-1/2 h-[2px] bg-[#1A9F9A] z-0 transition-all duration-300"
           style={{ width: `${Math.min(((currentStep - 1) / (steps.length - 1)) * 100, 100)}%` }}
         />
 
@@ -42,10 +43,10 @@ export default function QuotationStepper({ currentStep }) {
           const isActive = step.id === currentStep;
 
           return (
-            <div key={step.id} className="flex flex-col items-center relative">
+            <div key={step.id} className="flex flex-col items-center relative z-10">
               <div 
-                className={`w-[42px] h-[42px] rounded-full flex items-center justify-center relative bg-white transition-all duration-300
-                  ${isActive ? 'border-2 border-[#1A9F9A] shadow-[0_0_10px_rgba(26,159,154,0.2)]' : 'border border-gray-200 shadow-sm'}
+                className={`w-[42px] h-[42px] rounded-full flex items-center justify-center relative transition-all duration-300
+                  ${isCompleted ? 'border-2 border-[#1A9F9A] bg-[#E6F5F4]' : isActive ? 'border-2 border-[#1A9F9A] bg-white shadow-[0_0_10px_rgba(26,159,154,0.2)]' : 'border border-gray-200 bg-white shadow-sm'}
                 `}
               >
                 {isActive && (
@@ -55,21 +56,39 @@ export default function QuotationStepper({ currentStep }) {
                     </svg>
                   </div>
                 )}
-                <img 
-                  src={step.icon} 
-                  alt={step.label}
-                  className={`w-5 h-5 object-contain transition-all duration-300 ${isCompleted ? 'opacity-70 grayscale-[50%]' : isActive ? 'opacity-100' : 'opacity-40 grayscale'}`}
-                />
+                {isCompleted ? (
+                  <img src={tickIcon} alt="completed" className="w-5 h-5 object-contain transition-all duration-300" />
+                ) : isActive ? (
+                  <div 
+                    className="w-5 h-5 transition-all duration-300 bg-[#1A9F9A]"
+                    style={{
+                      WebkitMaskImage: `url("${step.icon}")`,
+                      WebkitMaskSize: 'contain',
+                      WebkitMaskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      maskImage: `url("${step.icon}")`,
+                      maskSize: 'contain',
+                      maskRepeat: 'no-repeat',
+                      maskPosition: 'center',
+                    }}
+                  />
+                ) : (
+                  <img 
+                    src={step.icon} 
+                    alt={step.label}
+                    className="w-5 h-5 object-contain transition-all duration-300 opacity-40 grayscale"
+                  />
+                )}
               </div>
               
               <div className="absolute top-[50px] flex flex-col items-center">
                 <span
-                  className={`text-[12px] font-medium whitespace-nowrap text-center ${isActive ? 'text-[#040715]' : 'text-[#040715]'}`}
+                  className={`text-[12px] font-medium whitespace-nowrap text-center ${isActive ? 'text-[#040715] font-bold' : isCompleted ? 'text-gray-400' : 'text-[#040715]'}`}
                 >
                   {step.label}
                 </span>
                 {isActive && (
-                  <div className="w-1/2 h-[2px] bg-[#1A9F9A] mt-[3px] rounded-full" />
+                  <div className="w-[18px] h-[2px] bg-[#1A9F9A] mt-[4px] rounded-full" />
                 )}
               </div>
             </div>
