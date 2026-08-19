@@ -178,13 +178,13 @@ export default function TimelineStep({ formData }) {
               const color = COLORS[idx % COLORS.length];
               return (
                 <div key={mod.id} className="flex group hover:bg-gray-50/50 transition-colors" style={{ minHeight: 48 }}>
-                  <div className="w-[180px] shrink-0 px-4 py-2 border-r border-[#E9ECEF] flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-[4px] border border-[#E9ECEF] bg-white text-[#5F6A80] flex items-center justify-center text-[10px] font-medium shrink-0 shadow-sm">
+                  <div className="w-[180px] shrink-0 px-4 py-3 border-r border-[#E9ECEF] flex items-start gap-2">
+                    <div className="w-5 h-5 rounded-[4px] border border-[#E9ECEF] bg-white text-[#5F6A80] flex items-center justify-center text-[10px] font-medium shrink-0 shadow-sm mt-[1px]">
                       {String(idx + 1).padStart(2, '0')}
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <p className="text-[11px] font-medium text-[#040715] line-clamp-1 leading-tight">{mod.name || `Module ${idx + 1}`}</p>
-                      <p className="text-[9px] text-[#46505F] leading-tight">{durDays} Days</p>
+                      <p className="text-[11px] font-medium text-[#040715] line-clamp-2 leading-tight">{mod.name || `Module ${idx + 1}`}</p>
+                      <p className="text-[9px] text-[#46505F] leading-tight mt-0.5">{durDays} Days</p>
                     </div>
                   </div>
                   <div className="flex-1 relative flex items-center border-b border-[#E9ECEF] group-last:border-0">
@@ -215,7 +215,7 @@ export default function TimelineStep({ formData }) {
                     {/* Gantt Bar */}
                     {barStyle && (
                       <div
-                        className={`absolute h-4 ${color} rounded-full z-10 flex items-center px-1.5 shadow-sm`}
+                        className={`absolute h-4 ${color} rounded-full z-10 flex items-center px-1.5 shadow-sm ml-1`}
                         style={{ ...barStyle, minWidth: '20px' }}
                         title={`${mod.name}: ${start?.toLocaleDateString()} - ${end?.toLocaleDateString()}`}
                       >
@@ -254,14 +254,14 @@ export default function TimelineStep({ formData }) {
           ) : moduleTimelines.map(({ mod, idx, start, end, durDays, effort, cost }) => {
             const color = COLORS[idx % COLORS.length];
             return (
-              <tr key={mod.id} className="border-b border-[#E9ECEF] last:border-0 hover:bg-gray-50/50 transition-colors bg-white">
+              <tr key={mod.id} className="border-b border-[#E9ECEF] last:border-0 hover:bg-gray-50/50 transition-colors bg-white align-top">
                 <td className="px-4 py-3">
-                  <span className="text-[12px] font-semibold text-[#040715]">
+                  <span className="text-[12px] font-semibold text-[#040715] leading-tight block">
                     {String(idx + 1).padStart(2, '0')}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <p className="text-[12px] font-semibold text-[#040715]">{mod.name || `Module ${idx + 1}`}</p>
+                  <p className="text-[12px] font-semibold text-[#040715] leading-tight">{mod.name || `Module ${idx + 1}`}</p>
                   {mod.description && <p className="text-[10px] text-gray-500 mt-1 line-clamp-2">{mod.description}</p>}
                 </td>
                 <td className="px-4 py-3 text-[12px] font-medium text-[#040715]">
@@ -280,20 +280,34 @@ export default function TimelineStep({ formData }) {
           })}
         </tbody>
         {formData.modules.length > 0 && (
-          <tfoot className="border-t border-[#E9ECEF]">
-            <tr className="bg-[#F5F8F8]">
-              <td colSpan={4} className="px-4 py-3 text-[14px] font-Inter font-semibold leading-[1.4] text-[#1A9F9A]">Grand Total</td>
-              <td className="px-4 py-3 text-[14px] font-Inter font-semibold leading-[1.4] text-[#1A9F9A] text-center">{totalDays} Days</td>
-              <td className="px-4 py-3 text-[14px] font-Inter font-semibold leading-[1.4] text-[#1A9F9A] text-center">
-                {formData.modules.reduce((s, m) => s + m.functionalities.reduce((fs, f) => fs + (Number(f.effort) || 0), 0), 0)} Hrs
+          <tfoot className="bg-white">
+            <tr><td colSpan={7} className="h-4 border-t border-[#E9ECEF]"></td></tr>
+            <tr className="">
+              <td colSpan={4} className="py-0 pl-4">
+                <div className="bg-[#F5F8F8] py-3 px-4 text-[14px] font-Inter font-semibold leading-[1.4] text-[#1A9F9A]">
+                  Grand Total
+                </div>
               </td>
-              <td className="px-4 py-3 text-[14px] font-Inter font-semibold leading-[1.4] text-[#1A9F9A] text-right">
-                ₹ {formData.modules.reduce((s, m) =>
-                  s + m.functionalities.reduce((fs, f) =>
-                    fs + f.teamAllocations.reduce((ts, tm) => ts + (Number(tm.cost) || 0), 0), 0), 0
-                ).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+              <td className="py-0">
+                <div className="bg-[#F5F8F8] py-3 px-4 text-[14px] font-Inter font-semibold leading-[1.4] text-[#1A9F9A] text-center">
+                  {totalDays} Days
+                </div>
+              </td>
+              <td className="py-0">
+                <div className="bg-[#F5F8F8] py-3 px-4 text-[14px] font-Inter font-semibold leading-[1.4] text-[#1A9F9A] text-center">
+                  {formData.modules.reduce((s, m) => s + m.functionalities.reduce((fs, f) => fs + (Number(f.effort) || 0), 0), 0)} Hrs
+                </div>
+              </td>
+              <td className="py-0 pr-4">
+                <div className="bg-[#F5F8F8] py-3 px-4 text-[14px] font-Inter font-semibold leading-[1.4] text-[#1A9F9A] text-right">
+                  ₹ {formData.modules.reduce((s, m) =>
+                    s + m.functionalities.reduce((fs, f) =>
+                      fs + f.teamAllocations.reduce((ts, tm) => ts + (Number(tm.cost) || 0), 0), 0), 0
+                  ).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                </div>
               </td>
             </tr>
+            <tr><td colSpan={7} className="h-4"></td></tr>
           </tfoot>
         )}
       </table>
@@ -311,7 +325,7 @@ export default function TimelineStep({ formData }) {
 
       {/* Top Dates Card + View Toggle */}
       <div className="flex flex-wrap items-center gap-4 justify-between">
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
           {/* Project Start Date Card */}
           <div className="flex items-center gap-2 border border-[#E9ECEF] rounded-md py-1.5 px-3 bg-white min-w-max">
             <div className="w-7 h-7 flex items-center justify-center shrink-0 bg-[#EFFAF8] rounded-md">
@@ -350,17 +364,17 @@ export default function TimelineStep({ formData }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex bg-white border border-[#E9ECEF] rounded-[8px] p-1">
+        <div className="flex items-center gap-2 ">
+          <div className="flex bg-white border border-[#E9ECEF] rounded-[8px] p-1.5 gap-2.5">
             <button
               onClick={() => setViewMode('Gantt View')}
-              className={`px-3 py-1.5 text-[12px] font-medium rounded-[6px] transition-colors ${viewMode === 'Gantt View' ? 'bg-[#1A9F9A] text-white' : 'text-[#46505F] hover:bg-gray-50'}`}
+              className={`px-3 py-1.5 text-[12px] font-medium rounded-[6px] transition-colors ${viewMode === 'Gantt View' ? 'bg-[#1A9F9A] text-white border border-[#1A9F9A]' : 'bg-white text-[#46505F] border border-[#E9ECEF] hover:bg-gray-50'}`}
             >
               Gantt View
             </button>
             <button
               onClick={() => setViewMode('Table View')}
-              className={`px-3 py-1.5 text-[12px] font-medium rounded-[6px] transition-colors ${viewMode === 'Table View' ? 'bg-[#1A9F9A] text-white' : 'text-[#46505F] hover:bg-gray-50'}`}
+              className={`px-3 py-1.5 text-[12px] font-medium rounded-[6px] transition-colors ${viewMode === 'Table View' ? 'bg-[#1A9F9A] text-white border border-[#1A9F9A]' : 'bg-white text-[#46505F] border border-[#E9ECEF] hover:bg-gray-50'}`}
             >
               Table View
             </button>

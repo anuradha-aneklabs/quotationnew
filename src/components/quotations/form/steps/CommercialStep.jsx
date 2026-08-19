@@ -35,22 +35,22 @@ export default function CommercialStep({ formData, handleChange }) {
 
           {/* Modules Breakdown Table */}
           {formData.modules && formData.modules.length > 0 && (
-            <div className="p-0 border-b border-[#E9ECEF]">
-              <h3 className="text-[13px] font-bold text-[#040715] p-3 pb-0">Modules Breakdown</h3>
+            <div className="p-0">
+              <h3 className="text-[13px] font-bold text-[#040715] px-4 pt-4 pb-2">Modules Breakdown</h3>
 
-              <div className="overflow-x-auto p-3 pt-2">
-                <table className="w-full text-left border-b border-[#E9ECEF]">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
                   <thead className="bg-[#F6F9F9]">
                     <tr className="border-b border-[#E9ECEF]">
-                      <th className="py-2 px-3 text-[11px] font-bold text-[#040715] w-12 text-center">#</th>
-                      <th className="py-2 px-3 text-[11px] font-bold text-[#040715]">Module Name</th>
-                      <th className="py-2 px-3 text-[11px] font-bold text-[#040715] w-[40%]">Functionalities</th>
-                      <th className="py-2 px-3 text-[11px] font-bold text-[#040715] text-center whitespace-nowrap">Total Hrs</th>
-                      <th className="py-2 px-3 text-[11px] font-bold text-[#040715] text-center whitespace-nowrap">Total Days</th>
-                      <th className="py-2 px-3 text-[11px] font-bold text-[#040715] text-right whitespace-nowrap">Total Cost</th>
+                      <th className="py-2.5 pl-4 pr-0 text-[11px] font-bold text-[#040715] w-[40px] text-left">#</th>
+                      <th className="py-2.5 pl-2 pr-3 text-[11px] font-bold text-[#040715] w-[36%] text-left">Module Name</th>
+                      <th className="py-2.5 px-3 text-[11px] font-bold text-[#040715] w-[36%] text-left">Functionalities</th>
+                      <th className="py-2.5 px-3 text-[11px] font-bold text-[#040715] w-[90px] text-center whitespace-nowrap">Total Hrs</th>
+                      <th className="py-2.5 px-3 text-[11px] font-bold text-[#040715] w-[90px] text-center whitespace-nowrap">Total Days</th>
+                      <th className="py-2.5 px-3 pr-8 text-[11px] font-bold text-[#040715] w-[110px] text-right whitespace-nowrap">Total Cost</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#E9ECEF]">
+                  <tbody>
                     {formData.modules.map((m, idx) => {
                       const mCost = m.functionalities.reduce((fs, f) => {
                         return fs + f.teamAllocations.reduce((ts, tm) => ts + (Number(tm.cost) || 0), 0);
@@ -61,30 +61,31 @@ export default function CommercialStep({ formData, handleChange }) {
                       }, 0);
 
                       return (
-                        <tr key={m.id || idx} className="hover:bg-gray-50/30 transition-colors bg-white">
-                          <td className="py-1.5 px-3 align-top">
-                            <div className="w-6 h-6 mx-auto rounded-[4px] bg-white border border-[#E9ECEF] flex items-center justify-center">
+                        <React.Fragment key={m.id || idx}>
+                          <tr className="hover:bg-gray-50/30 transition-colors bg-white">
+                          <td className="py-2.5 pl-4 pr-0 align-top w-[40px]">
+                            <div className="w-[26px] h-[26px] rounded-[4px] bg-white border border-[#E9ECEF] flex items-center justify-center shrink-0 mt-0.5">
                               <span className="text-[11px] font-semibold text-[#040715]">
                                 {String(idx + 1).padStart(2, '0')}
                               </span>
                             </div>
                           </td>
-                          <td className="py-1.5 px-3 align-top">
-                            <div className="flex items-start gap-2">
-                              <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                          <td className="py-2.5 pl-2 pr-3 align-top w-[26%]">
+                            <div className="flex items-start gap-2.5">
+                              <div className="w-[26px] h-[26px] flex items-center justify-center shrink-0 bg-[#E8F8F7] rounded-[4px] p-1.5 mt-0.5">
                                 <img src={ModulesIcon} alt="Module Icon" className="w-full h-full object-contain" />
                               </div>
                               <div>
                                 <p className="text-[13px] font-semibold text-[#040715] leading-snug">{m.name || `Module ${idx + 1}`}</p>
-                                <p className="text-[12px] text-gray-500 mt-0.5 leading-snug">{m.description || 'No description provided'}</p>
+                                <p className="text-[12px] text-#46505F-500 mt-0.5 leading-snug">{m.description || 'No description provided'}</p>
                               </div>
                             </div>
                           </td>
-                          <td className="py-1.5 px-3 align-top">
+                          <td className="py-2.5 px-3 align-top w-[22%]">
                             <ul className="space-y-0.5">
                               {m.functionalities && m.functionalities.length > 0 ? (
                                 m.functionalities.map((func, fIdx) => (
-                                  <li key={func.id || fIdx} className="text-[12px] text-[#46505F] flex items-start gap-1 leading-tight">
+                                  <li key={func.id || fIdx} className="text-[12px] text-#46505F flex items-start gap-1 leading-tight">
                                     <span className="shrink-0">{fIdx + 1}.</span> 
                                     <span>{func.name || 'Unnamed Functionality'}</span>
                                   </li>
@@ -94,92 +95,109 @@ export default function CommercialStep({ formData, handleChange }) {
                               )}
                             </ul>
                           </td>
-                          <td className="py-1.5 px-3 text-center align-top whitespace-nowrap">
-                            <span className="text-[11px] font-semibold text-[#1A9F9A]">
+                          <td className="py-2.5 px-3 text-center align-top whitespace-nowrap w-[90px]">
+                            <span className="text-[12px] font-medium text-[#1A9F9A] mt-0.5 block">
                               {String(mHours).padStart(2, '0')} Hrs
                             </span>
                           </td>
-                          <td className="py-1.5 px-3 text-center align-top whitespace-nowrap">
-                            <span className="text-[11px] font-semibold text-[#1A9F9A]">
+                          <td className="py-2.5 px-3 text-center align-top whitespace-nowrap w-[90px]">
+                            <span className="text-[12px] font-medium text-[#1A9F9A] mt-0.5 block">
                               {String(Number(m.duration) || 0).padStart(2, '0')} Days
                             </span>
                           </td>
-                          <td className="py-1.5 px-3 text-right align-top whitespace-nowrap">
-                            <span className="text-[11px] font-bold text-[#040715]">
+                          <td className="py-2.5 px-3 pr-8 text-right align-top whitespace-nowrap w-[110px]">
+                            <span className="text-[11px] font-bold text-[#040715] mt-0.5 block">
                               ₹ {mCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
                           </td>
                         </tr>
+                        {idx !== formData.modules.length - 1 && (
+                          <tr>
+                            <td colSpan="6" className="p-0">
+                              <div className="mx-4 border-b border-[#E9ECEF]"></div>
+                            </td>
+                          </tr>
+                        )}
+                        </React.Fragment>
                       );
                     })}
                   </tbody>
                 </table>
               </div>
+              <div className="mx-4 border-b border-[#E9ECEF]"></div>
             </div>
           )}
 
           {/* Total Outstanding Pricing */}
-          <div className="px-4 py-2 sm:px-4 sm:py-3 border-b border-[#E9ECEF] flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 bg-white">
-            <div>
-              <h3 className="text-[13px] font-bold text-[#040715]">Total Outstanding Amount (Excl. GST)</h3>
-              <p className="text-[11px] text-gray-500 mt-0">Total cost of the application</p>
-            </div>
-            <div className="text-[13px] font-bold text-[#040715] self-start sm:self-auto">
-              ₹ {baseCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          <div className="bg-white px-4">
+            <div className="py-2 sm:py-3 border-b border-[#E9ECEF] flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
+              <div>
+                <h3 className="text-[13px] font-semibold text-[#040715]">Total Outstanding Amount (Excl. GST)</h3>
+                <p className="text-[11px] text-gray-500 mt-0">Total cost of the application</p>
+              </div>
+              <div className="text-[13px] font-bold text-[#040715] self-start sm:self-auto min-w-[100px] text-right pr-4">
+                ₹ {baseCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </div>
             </div>
           </div>
 
           {/* Discount */}
-          <div className="px-4 py-2 sm:px-4 sm:py-3 border-b border-[#E9ECEF] flex flex-col lg:flex-row lg:items-center justify-between bg-white gap-2">
-            <div className="w-full lg:w-1/3">
-              <h3 className="text-[13px] font-bold text-[#040715]">Discount</h3>
-              <p className="text-[11px] text-gray-500 mt-0">Discount on total amount</p>
-            </div>
-            <div className="flex flex-wrap items-center justify-end gap-2 w-full lg:w-auto flex-1">
-              <select
-                name="discountType"
-                value={formData.discountType}
-                onChange={handleChange}
-                className="px-2 py-1 border border-[#E9ECEF] rounded-[4px] text-[11px] text-[#46505F] focus:outline-none focus:ring-1 focus:ring-[#1A9F9A] focus:border-[#1A9F9A] bg-white w-[120px]"
-              >
-                <option value="Percentage (%)">Percentage (%)</option>
-                <option value="Flat Amount">Flat Amount</option>
-              </select>
-              <input
-                type="number"
-                name="discountValue"
-                value={formData.discountValue}
-                onChange={handleChange}
-                min="0"
-                step="any"
-                placeholder="0"
-                className="w-16 px-2 py-1 border border-[#E9ECEF] rounded-[4px] text-[11px] text-center focus:outline-none focus:ring-1 focus:ring-[#1A9F9A] focus:border-[#1A9F9A]"
-              />
-            </div>
-            <div className="text-[#E74C3C] text-[13px] font-bold self-start lg:self-auto whitespace-nowrap min-w-[100px] text-right">
-              - ₹ {discountAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          <div className="bg-white px-4">
+            <div className="py-2 sm:py-3 border-b border-[#E9ECEF] flex flex-col lg:flex-row lg:items-center justify-between gap-2">
+              <div className="w-full lg:w-1/3">
+                <h3 className="text-[13px] font-semibold text-[#040715]">Discount</h3>
+                <p className="text-[11px] text-gray-500 mt-0">Discount on total amount</p>
+              </div>
+              <div className="flex flex-wrap items-center justify-end gap-2 w-full lg:w-auto flex-1">
+                <select
+                  name="discountType"
+                  value={formData.discountType}
+                  onChange={handleChange}
+                  className="px-2 py-1 border border-[#E9ECEF] rounded-[8px] text-[11px] text-[#46505F] focus:outline-none focus:ring-1 focus:ring-[#1A9F9A] focus:border-[#1A9F9A] bg-[#FAFAFA] w-[120px]"
+                >
+                  <option value="Percentage (%)">Percentage (%)</option>
+                  <option value="Flat Amount">Flat Amount</option>
+                </select>
+                <input
+                  type="number"
+                  name="discountValue"
+                  value={formData.discountValue}
+                  onChange={handleChange}
+                  min="0"
+                  step="any"
+                  placeholder="0"
+                  className="w-16 px-2 py-1 border border-[#E9ECEF] rounded-[8px] text-[11px] text-center focus:outline-none focus:ring-1 focus:ring-[#1A9F9A] focus:border-[#1A9F9A] bg-[#FAFAFA]"
+                />
+              </div>
+              <div className="text-[#E74C3C] text-[13px] font-bold self-start lg:self-auto whitespace-nowrap min-w-[100px] text-right pr-4">
+                - ₹ {discountAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </div>
             </div>
           </div>
 
           {/* GST */}
-          <div className="px-4 py-2 sm:px-4 sm:py-3 border-b border-[#E9ECEF] flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 bg-white">
-            <div>
-              <h3 className="text-[13px] font-bold text-[#040715]">GST</h3>
-              <p className="text-[11px] text-gray-500 mt-0">18% of Total Outstanding amount</p>
-            </div>
-            <div className="text-[13px] font-bold text-[#040715] self-start sm:self-auto min-w-[100px] text-right">
-              ₹ {gstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          <div className="bg-white px-4">
+            <div className="py-2 sm:py-3 border-b border-[#E9ECEF] flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
+              <div>
+                <h3 className="text-[13px] font-semibold text-[#040715]">GST</h3>
+                <p className="text-[11px] text-gray-500 mt-0">18% of Total Outstanding amount</p>
+              </div>
+              <div className="text-[13px] font-bold text-[#040715] self-start sm:self-auto min-w-[100px] text-right pr-4">
+                ₹ {gstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </div>
             </div>
           </div>
 
           {/* Final Amount */}
-          <div className="px-4 py-3 sm:px-4 sm:py-4 bg-[#EFFAF8] flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 rounded-b-xl">
-            <div>
-              <h3 className="text-[14px] font-bold text-[#040715]">Final Outstanding Amount</h3>
-              <p className="text-[11px] text-gray-500 mt-0">Total amount to be paid</p>
-            </div>
-            <div className="text-[16px] font-bold text-[#1A9F9A] self-start sm:self-auto">
-              ₹ {finalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          <div className="bg-[#EFFAF8] rounded-b-xl">
+            <div className="px-4 py-3 sm:px-4 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
+              <div>
+                <h3 className="text-[14px] font-bold text-[#040715]">Final Outstanding Amount</h3>
+                <p className="text-[11px] text-gray-500 mt-0">Total amount to be paid</p>
+              </div>
+              <div className="text-[16px] font-bold text-[#1A9F9A] self-start sm:self-auto min-w-[100px] text-right pr-4">
+                ₹ {finalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </div>
             </div>
           </div>
 
