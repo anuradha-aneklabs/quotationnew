@@ -52,6 +52,34 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
     loadBranches();
   }, [formData.companyId]);
 
+  // Auto-fill company based on clientName
+  useEffect(() => {
+    if (companies.length > 0 && !formData.companyId && formData.clientName) {
+      const matchedComp = companies.find(c => 
+        (c.company_name || c.companyName || c.name)?.toLowerCase() === formData.clientName.toLowerCase()
+      );
+      if (matchedComp) {
+        handleChange({ target: { name: 'companyId', value: String(matchedComp.id || matchedComp.companyId) } });
+      }
+    }
+  }, [companies, formData.clientName, formData.companyId, handleChange]);
+
+  // Auto-fill branch if there's only one branch or if it matches client's city
+  useEffect(() => {
+    if (branches.length > 0 && !formData.branchId) {
+      if (branches.length === 1) {
+        handleChange({ target: { name: 'branchId', value: String(branches[0].id || branches[0].branchId) } });
+      } else if (formData.city) {
+        const matchedBranch = branches.find(b => 
+          (b.city || b.branch_name || b.name)?.toLowerCase() === formData.city.toLowerCase()
+        );
+        if (matchedBranch) {
+          handleChange({ target: { name: 'branchId', value: String(matchedBranch.id || matchedBranch.branchId) } });
+        }
+      }
+    }
+  }, [branches, formData.branchId, formData.city, handleChange]);
+
   const engagementTypes = [
     {
       id: 'Fixed Price',
@@ -80,7 +108,7 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
       <div>
         <h2 className="text-lg font-bold text-gray-900 mb-4 border-b-1 border-[#DEDEDE]">2. Proposal Details</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
           
           {/* Company Name */}
           <div className="md:col-span-6 lg:col-span-4">
@@ -261,35 +289,33 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
             maxLength={1000}
             placeholder="using this website user can test their website and according to the result user can start treatment..."
           />
-          <div className="absolute -bottom-1 right-1 text-[10px] text-gray-500">
-            {formData.projectSummary.length} / 1000
-          </div>
+         
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="">
         {/* Engagement Type */}
-        <div className="mb-3">
-          <label className="block text-[14px] font-normal text-black mb-3">
+        <div className="mb-2">
+          <label className="block text-[12px] font-normal text-black mb-2">
             Engagement Type
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {engagementTypes.map((type) => (
               <label 
                 key={type.id}
-                className={`flex items-start p-1 rounded-lg border cursor-pointer transition-colors
+                className={`flex items-center p-1 rounded-lg border cursor-pointer transition-colors
                   ${formData.engagementType === type.id 
                     ? 'border-[#1A9F9A] bg-[#1A9F9A]/[0.02]' 
                     : 'border-gray-200 bg-[#FAFAFA] hover:bg-gray-50'}`}
               >
-                <div className="flex items-center h-4 mt-1">
+                <div className="flex items-center pl-1">
                   <input
                     type="radio"
                     name="engagementType"
                     value={type.id}
                     checked={formData.engagementType === type.id}
                     onChange={handleChange}
-                    className="w-4 h-4 text-[#1A9F9A] border-gray-300 focus:ring-[#1A9F9A]"
+                    className="w-4 h-4 text-[#1A9F9A] border-gray-300 focus:ring-[#1A9F9A] accent-[#1A9F9A]"
                   />
                 </div>
                 <div className="ml-3">
@@ -306,10 +332,10 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
 
         {/* Currency */}
         <div>
-          <label className="block text-[14px] font-normal text-black mb-2">
+          <label className="block text-[12px] font-normal text-black mb-2">
             Currency
           </label>
-          <div className="p-4 border border-gray-200 rounded-xl bg-white flex flex-col space-y-4">
+          <div className="p-2 border border-gray-200 rounded-xl bg-white flex flex-col space-y-1">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormSelect
                 label="Pricing Currency"
@@ -333,7 +359,7 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
                 placeholder="e.g. 1 USD = 83.0000 INR"
               />
             </div>
-            <p className="text-[12px] text-gray-500">
+            <p className="text-[12px] text-[#5F6A80]">
               <span className="font-medium text-black">Note:</span> All internal calculations are in INR. The proposal will be generated in the selected currency.
             </p>
           </div>

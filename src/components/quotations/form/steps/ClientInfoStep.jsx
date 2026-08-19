@@ -66,8 +66,9 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
       shippingAddress: client.address || prev.shippingAddress,
       pincode: client.pincode || prev.pincode,
       country: client.country || prev.country,
-      state: client.state || prev.state,
-      city: client.city || prev.city
+      city: client.city || prev.city,
+      companyId: client.company_id || client.companyId || prev.companyId,
+      branchId: client.branch_id || client.branchId || prev.branchId
     }));
   };
 
@@ -108,7 +109,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
 
         {/* Left Column: Logo Upload */}
         <div className="w-full lg:w-[18%] shrink-0 border border-gray-200 rounded-xl p-4 flex flex-col">
-          <label className="block text-[14px] font-normal text-black mb-3">Logo</label>
+          <label className="block text-[12px] font-normal text-black mb-3">Logo</label>
           <div className={`relative flex flex-col items-center justify-center p-4 border rounded-xl h-[160px] transition-colors ${logoError ? 'border-red-500 bg-red-50' : 'border-gray-100 bg-[#FAFAFA] hover:bg-gray-50'}`}>
             <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onChange={handleLogoUpload} />
             {formData.logo ? (
@@ -136,7 +137,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3.5 mb-4.5">
             {/* Client Name (Searchable Dropdown) */}
             <div className="relative" ref={wrapperRef}>
-              <label className="block text-[14px] font-normal text-black mb-2">
+              <label className="block text-[12px] font-normal text-black mb-2">
                 Client Name <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -196,7 +197,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
           <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3.5">
             {/* Phone */}
             <div>
-              <label className="block text-[14px] font-normal text-black mb-2">
+              <label className="block text-[12px] font-normal text-black mb-2">
                 Phone/Mobile <span className="text-red-500">*</span>
               </label>
               <div className={`flex items-center bg-[#FAFAFA] w-full px-3 py-2 rounded-lg border  focus-within:ring-2 transition-colors
@@ -320,7 +321,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
             labelClassName="w-full mb-1.5"
             label={
               <div className="flex items-center justify-between mb-2.5">
-                <span className="block text-[14px] font-normal text-black">Shipping Address <span className="text-red-500">*</span></span>
+                <span className="block text-[12px] font-normal text-black">Shipping Address <span className="text-red-500">*</span></span>
                 <label className="flex items-center text-[11px] text-gray-600 font-medium cursor-pointer">
                   <input
                     type="checkbox"
