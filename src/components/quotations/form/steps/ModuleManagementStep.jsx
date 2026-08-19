@@ -11,6 +11,8 @@ import deleteIcon from '../../../../assets/module management/delete.svg';
 import grandCalendarIcon from '../../../../assets/module management/grand-calendar.svg';
 import grandRupeeIcon from '../../../../assets/module management/grand-rupee.svg';
 import grandTimeIcon from '../../../../assets/module management/grand-time.svg';
+import arrowDownIcon from '../../../../assets/clientInformation/arrow-down.svg';
+
 const AutoResizeTextarea = ({ value, onChange, placeholder, className, showTooltip }) => {
   const textareaRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -349,7 +351,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
 
       {/* Summary Metric Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
+        <div className="bg-white border border-gray-200 rounded-xl py-2 px-4 shadow-sm flex flex-col justify-center gap-1 h-[64px] relative">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#EEE2FF] rounded-lg flex items-center justify-center p-2">
             <img src={totalModuleIcon} alt="Modules" className="w-full h-full object-contain" />
           </div>
@@ -358,7 +360,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
             <p className="text-[15px] font-bold text-gray-900 leading-tight">{totals.modules < 10 ? `0${totals.modules}` : totals.modules}</p>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
+        <div className="bg-white border border-gray-200 rounded-xl py-2 px-4 shadow-sm flex flex-col justify-center gap-1 h-[64px] relative">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#E2FDFF] rounded-lg flex items-center justify-center p-2">
             <img src={totalFuncIcon} alt="Functionalities" className="w-full h-full object-contain" />
           </div>
@@ -367,7 +369,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
             <p className="text-[15px] font-bold text-gray-900 leading-tight">{totals.functionalities}</p>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
+        <div className="bg-white border border-gray-200 rounded-xl py-2 px-4 shadow-sm flex flex-col justify-center gap-1 h-[64px] relative">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#FAECFF] rounded-lg flex items-center justify-center p-2">
             <img src={totalEffortIcon} alt="Effort" className="w-full h-full object-contain" />
           </div>
@@ -376,7 +378,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
             <p className="text-[15px] font-bold text-gray-900 leading-tight">{totals.effort} Hrs</p>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
+        <div className="bg-white border border-gray-200 rounded-xl py-2 px-4 shadow-sm flex flex-col justify-center gap-1 h-[64px] relative">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#E2EEFF] rounded-lg flex items-center justify-center p-2">
             <img src={totalDurationIcon} alt="Duration" className="w-full h-full object-contain" />
           </div>
@@ -385,7 +387,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
             <p className="text-[15px] font-bold text-gray-900 leading-tight">{projectDurationDays} Days</p>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex flex-col justify-center gap-1.5 h-[76px] relative">
+        <div className="bg-white border border-gray-200 rounded-xl py-2 px-4 shadow-sm flex flex-col justify-center gap-1 h-[64px] relative">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#E2FFEF] rounded-lg flex items-center justify-center p-1.5">
             <img src={totalCostIcon} alt="Cost" className="w-full h-full object-contain" />
           </div>
@@ -409,24 +411,24 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
             <div key={module.id} className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
 
               {/* Module Header */}
-              <div className="p-4 border-b border-[#D0D0D0] flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-white">
+              <div className="p-4 relative after:absolute after:bottom-0 after:left-4 after:right-4 after:h-[1px] after:bg-[#D0D0D0] flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-white">
 
                 <div className="flex flex-col sm:flex-row items-start gap-4 w-full lg:flex-1">
-                  <div className="bg-[#D6FAF8] text-[#1A9F9A] px-3 py-2 rounded-[5px] text-[12px] font-medium whitespace-nowrap mt-1">
+                  <div className="bg-[#D6FAF8] text-[#1A9F9A] px-3 py-[.55rem] rounded-[5px] text-[14px] font-medium whitespace-nowrap mt-1">
                     Module {mIdx + 1 < 10 ? `0${mIdx + 1}` : mIdx + 1}
                   </div>
-                  <div className='flex-1 flex flex-col items-start w-full gap-1'>
+                  <div className='flex-1 flex flex-col items-start w-full'>
                     <AutoResizeTextarea
                       value={module.name}
                       onChange={(e) => updateModule(module.id, 'name', e.target.value)}
                       placeholder="Module Name (e.g. Login and registration)"
-                      className={`w-full text-[14px] font-semibold text-[#040715] bg-transparent focus:outline-none border-b py-0.5 max-h-[60px] overflow-hidden ${errors[`module_${mIdx}_name`] ? 'border-red-500' : 'border-transparent hover:border-gray-200 focus:border-[#1A9F9A] transition-colors'}`}
+                      className={`w-full text-[14px] font-semibold text-[#040715] bg-transparent focus:outline-none border-b py-0 max-h-[60px] overflow-hidden ${errors[`module_${mIdx}_name`] ? 'border-red-500' : 'border-transparent hover:border-gray-200 focus:border-[#1A9F9A] transition-colors'}`}
                     />
                     <AutoResizeTextarea
                       value={module.description}
                       onChange={(e) => updateModule(module.id, 'description', e.target.value)}
                       placeholder="Module Description"
-                      className="w-full text-[11px] text-gray-500 bg-transparent focus:outline-none border-b border-transparent hover:border-gray-200 focus:border-[#1A9F9A] py-0.5 transition-colors max-h-[60px] overflow-hidden"
+                      className="w-full text-[11px] text-gray-500 bg-transparent focus:outline-none border-b border-transparent hover:border-gray-200 focus:border-[#1A9F9A]  transition-colors max-h-[60px] overflow-hidden"
                     />
                   </div>
                 </div>
@@ -436,10 +438,12 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                     <p className="text-[12px] font-bold text-gray-900 mb-0.5">Duration</p>
                     <p className="text-[12px] font-bold text-[#1A9F9A]">{moduleDuration} Days</p>
                   </div>
+                  <div className="w-[1px] h-8 bg-gray-200"></div>
                   <div className="text-center">
                     <p className="text-[12px] font-bold text-gray-900 mb-0.5">Efforts</p>
                     <p className="text-[12px] font-bold text-[#1A9F9A]">{moduleEffort} Hrs</p>
                   </div>
+                  <div className="w-[1px] h-8 bg-gray-200"></div>
                   <div className="text-center">
                     <p className="text-[12px] font-bold text-gray-900 mb-0.5">Cost</p>
                     <p className="text-[12px] font-bold text-[#1A9F9A]">₹ {moduleCost.toLocaleString()}</p>
@@ -488,7 +492,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                         </thead>
                         <tbody>
                           {module.functionalities.map((func, fIdx) => (
-                            <tr key={func.id} className="border-b border-gray-100 last:border-0 group">
+                            <tr key={func.id} className="relative after:absolute after:bottom-0 after:left-2 after:right-2 after:h-[1px] after:bg-gray-100 last:after:hidden group">
                               <td className="pb-3 pt-[16px] pl-2 text-[#040715] font-medium align-top">{fIdx + 1 < 10 ? `0${fIdx + 1}` : fIdx + 1}</td>
                               <td className="pt-[16px] pb-3 pr-4 align-top">
                                 <AutoResizeTextarea
@@ -505,7 +509,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                   onChange={(e) => updateFunctionality(module.id, func.id, 'description', e.target.value)}
                                   placeholder="Description"
                                   showTooltip={true}
-                                  className="w-full text-[#46505F] text-[14px] leading-[22px] bg-transparent focus:outline-none pb-1 border-b border-transparent group-hover:border-gray-200 focus:border-[#1A9F9A] line-clamp-3 max-h-[70px] overflow-hidden"
+                                  className="w-full text-[#46505F] text-[14px] font-meduim leading-[22px] bg-transparent focus:outline-none pb-1 border-b border-transparent group-hover:border-gray-200 focus:border-[#1A9F9A] line-clamp-3 max-h-[70px] overflow-hidden"
                                 />
                               </td>
                               <td className="py-3 pr-4 align-top">
@@ -573,11 +577,11 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                       <table className="w-full text-left text-[11px] mb-2">
                         <thead>
                           <tr className="border-b border-gray-100 text-[#040715] text-[14px] bg-[#ECF2F2]">
-                            <th className="py-3 font-semibold min-w-[120px] pl-6">Team Member</th>
+                            <th className="py-3 font-semibold w-[220px] pl-6">Team Member</th>
                             <th className="py-3 font-semibold min-w-[100px]">Role</th>
                             <th className="py-3 font-semibold text-center w-20">Effort (Hrs)</th>
-                            <th className="py-3 font-semibold text-center w-24">Rate / Hour</th>
-                            <th className="py-3 font-semibold text-center w-24">Total Cost</th>
+                            <th className="py-3 font-semibold text-center w-28">Rate / Hour</th>
+                            <th className="py-3 font-semibold text-center w-28">Total Cost</th>
                             <th className="py-3 font-semibold text-center w-12 pr-6">Action</th>
                           </tr>
                         </thead>
@@ -585,22 +589,27 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                           {module.functionalities.map((func, fIdx) =>
                             func.teamAllocations.map((tm, tIdx) => (
                               <React.Fragment key={tm.id}>
-                                <tr className="group hover:bg-gray-50 border-b border-gray-100 last:border-0">
+                                <tr className="relative after:absolute after:bottom-0 after:left-6 after:right-6 after:h-[1px] after:bg-gray-100 last:after:hidden group hover:bg-gray-50">
                                   <td className="py-3 pr-2 pl-6">
                                     <div className="flex items-center gap-1.5">
                                       <div className="w-7 h-7 rounded-full overflow-hidden shrink-0">
                                         <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(employees.find(e => String(e.id) === String(tm.memberId))?.name || 'UN')}&background=random&color=fff`} alt="avatar" className="w-full h-full object-cover" />
                                       </div>
-                                      <select
-                                        value={String(tm.memberId || '')}
-                                        onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'memberId', e.target.value)}
-                                        className="w-full text-[14px] text-[#46505F] bg-transparent border-0 focus:ring-0 text-[11px] text-gray-900 font-medium p-0 cursor-pointer focus:outline-none"
-                                      >
-                                        <option value="">Select...</option>
-                                        {employees.map(emp => (
-                                          <option key={emp.id} value={String(emp.id)}>{emp.name}</option>
-                                        ))}
-                                      </select>
+                                      <div className="relative flex items-center">
+                                        <select
+                                          value={String(tm.memberId || '')}
+                                          onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'memberId', e.target.value)}
+                                          className="w-auto min-w-[150px] text-[14px] text-[#46505F] bg-transparent border-0 focus:ring-0 text-[11px] text-gray-900 font-medium p-0 pr-6 cursor-pointer focus:outline-none appearance-none relative z-10"
+                                        >
+                                          <option value="">Select...</option>
+                                          {employees.map(emp => (
+                                            <option key={emp.id} value={String(emp.id)}>{emp.name}</option>
+                                          ))}
+                                        </select>
+                                        <div className="absolute right-2 pointer-events-none z-0">
+                                          <img src={arrowDownIcon} alt="down" className="w-3 h-3 opacity-60" />
+                                        </div>
+                                      </div>
                                     </div>
                                   </td>
                                   <td className="py-3 pr-2 text-[14px] text-[#46505F] truncate">{tm.role || '-'}</td>
@@ -610,12 +619,12 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                       min="0" step="any"
                                       value={tm.effort}
                                       onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'effort', e.target.value)}
-                                      className={`w-full text-[12px] text-[#46505F] text-center bg-transparent focus:outline-none border-b py-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_team`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-[#1A9F9A]'}`}
+                                      className={`w-full text-[12px] font-medium text-[#46505F] text-center bg-transparent focus:outline-none border-b py-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${errors[`module_${mIdx}_func_${fIdx}_team`] ? 'border-red-500' : 'border-transparent group-hover:border-gray-200 focus:border-[#1A9F9A]'}`}
                                       placeholder="0"
                                     />
                                   </td>
                                   <td className="py-3 text-center text-[12px] text-[#46505F]">₹ {tm.rate || '0'}</td>
-                                  <td className="py-3 text-center font-medium text-[#46505F]">₹ {(Number(tm.cost) || 0).toLocaleString()}</td>
+                                  <td className="py-3 text-center font-medium text-[12px] text-[#46505F]">₹ {(Number(tm.cost) || 0).toLocaleString()}</td>
                                   <td className="py-3 text-center">
                                     <button onClick={() => deleteTeamMember(module.id, func.id, tm.id)} className=" hover:border-red-200">
                                       <img src={deleteIcon} alt="delete" className=" mx-auto" />
@@ -718,7 +727,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
               </div>
             </div>
 
-            <div className="bg-white border border-gray-100 rounded-xl p-2 shadow-sm flex items-center gap-3 min-w-[150px]">
+            <div className="bg-white border border-gray-100 rounded-md p-2 shadow-sm flex items-center gap-3 min-w-[150px]">
               <div className="w-8 h-8 shrink-0 flex items-center justify-center">
                 <img src={grandRupeeIcon} alt="cost" className="w-5 h-5" />
               </div>
