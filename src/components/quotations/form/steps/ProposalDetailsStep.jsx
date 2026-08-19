@@ -3,6 +3,9 @@ import { Calendar } from 'lucide-react';
 import * as employeeService from '../../../../services/employeeService';
 import * as companyService from '../../../../services/companyService';
 import * as branchService from '../../../../services/branchService';
+import FormInput from '../../../common/FormInput';
+import FormSelect from '../../../common/FormSelect';
+import FormTextarea from '../../../common/FormTextarea';
 
 export default function ProposalDetailsStep({ formData, handleChange, errors }) {
   const [employees, setEmployees] = useState([]);
@@ -75,159 +78,132 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
   return (
     <div className="space-y-5 animate-in fade-in duration-300">
       <div>
-        <h2 className="text-lg font-bold text-gray-900 mb-4">2. Proposal Details</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4 border-b-1 border-[#DEDEDE]">2. Proposal Details</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           
           {/* Company Name */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Company Name <span className="text-red-500">*</span>
-            </label>
-            <select
+          <div className="md:col-span-6 lg:col-span-4">
+            <FormSelect
+              label="Company Name"
+              required
               name="companyId"
               value={formData.companyId || ''}
               onChange={(e) => {
                 handleChange(e);
                 handleChange({ target: { name: 'branchId', value: '' } });
               }}
-              className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors bg-white text-sm
-                ${errors.companyId ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
+              error={errors.companyId}
             >
               <option value="">Select Company</option>
               {companies.map(comp => (
                 <option key={comp.id || comp.companyId} value={comp.id || comp.companyId}>{comp.company_name || comp.companyName || comp.name}</option>
               ))}
-            </select>
-            {errors.companyId && <p className="mt-0.5 text-[10px] text-red-500">{errors.companyId}</p>}
+            </FormSelect>
           </div>
 
           {/* Branch Name */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Branch Name <span className="text-red-500">*</span>
-            </label>
-            <select
+          <div className="md:col-span-6 lg:col-span-4">
+            <FormSelect
+              label="Branch Name"
+              required
               name="branchId"
               value={formData.branchId || ''}
               onChange={handleChange}
               disabled={!formData.companyId}
-              className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-sm
-                ${!formData.companyId ? 'bg-gray-50 border-gray-200 text-gray-400' : errors.branchId ? 'border-red-500 focus:ring-red-200 bg-white' : 'bg-white border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
+              error={formData.companyId ? errors.branchId : null}
             >
               <option value="">Select Branch</option>
               {branches.map(branch => (
                 <option key={branch.id || branch.branchId} value={branch.id || branch.branchId}>{branch.branch_name || branch.branchName || branch.name}</option>
               ))}
-            </select>
-            {errors.branchId && <p className="mt-0.5 text-[10px] text-red-500">{errors.branchId}</p>}
+            </FormSelect>
           </div>
 
           {/* Subject / Proposal Title */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Subject / Proposal Title <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
+          <div className="md:col-span-12 lg:col-span-4">
+            <FormInput
+              label="Subject / Proposal Title"
+              required
               name="proposalTitle"
               value={formData.proposalTitle}
               onChange={handleChange}
               placeholder="Enter title here..."
-              className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-sm
-                ${errors.proposalTitle ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
+              error={errors.proposalTitle}
             />
-            {errors.proposalTitle && <p className="mt-0.5 text-[10px] text-red-500">{errors.proposalTitle}</p>}
           </div>
 
           {/* Sector / Domain Name */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Sector / Domain Name</label>
-            <input
-              type="text"
+          <div className="md:col-span-6 lg:col-span-3">
+            <FormInput
+              label="Sector / Domain Name"
               name="sector"
               value={formData.sector}
               onChange={handleChange}
               placeholder="Enter sector name here..."
-              className="w-full px-3 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors text-sm"
             />
           </div>
 
           {/* Quotation Number */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Quotation Number <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
+          <div className="md:col-span-6 lg:col-span-3">
+            <FormInput
+              label="Quotation Number"
+              required
               name="quotationNumber"
               value={formData.quotationNumber}
               onChange={handleChange}
               disabled
-              className="w-full px-3 py-1.5 rounded-lg border border-gray-200 bg-gray-50 text-gray-500 focus:outline-none transition-colors text-sm"
+              error={errors.quotationNumber}
             />
-            {errors.quotationNumber && <p className="mt-0.5 text-[10px] text-red-500">{errors.quotationNumber}</p>}
           </div>
 
           {/* Proposal Date */}
-          <div className="relative">
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Proposal Date <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <input
-                type="date"
-                name="proposalDate"
-                value={formData.proposalDate}
-                min={today}
-                onChange={handleChange}
-                className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-sm
-                  ${errors.proposalDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-              />
-            </div>
-            {errors.proposalDate && <p className="mt-0.5 text-[10px] text-red-500">{errors.proposalDate}</p>}
+          <div className="md:col-span-6 lg:col-span-3">
+            <FormInput
+              label="Proposal Date"
+              required
+              type="date"
+              name="proposalDate"
+              value={formData.proposalDate}
+              min={today}
+              onChange={handleChange}
+              error={errors.proposalDate}
+            />
           </div>
 
           {/* Valid Till */}
-          <div className="relative">
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Valid Till <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <input
-                type="date"
-                name="validTill"
-                value={formData.validTill}
-                min={formData.proposalDate || today}
-                onChange={handleChange}
-                className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-sm
-                  ${errors.validTill ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-              />
-            </div>
-            {errors.validTill && <p className="mt-0.5 text-[10px] text-red-500">{errors.validTill}</p>}
+          <div className="md:col-span-6 lg:col-span-3">
+            <FormInput
+              label="Valid Till"
+              required
+              type="date"
+              name="validTill"
+              value={formData.validTill}
+              min={formData.proposalDate || today}
+              onChange={handleChange}
+              error={errors.validTill}
+            />
           </div>
 
           {/* Revision / Version */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Revision / Version</label>
-            <select
+          <div className="md:col-span-6 lg:col-span-3">
+            <FormSelect
+              label="Revision / Version"
               name="revision"
               value={formData.revision}
               onChange={handleChange}
-              className="w-full px-3 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors bg-white text-sm"
             >
               <option value="1.0">1.0</option>
               <option value="1.1">1.1</option>
               <option value="2.0">2.0</option>
-            </select>
+            </FormSelect>
           </div>
 
           {/* Prepared By */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Prepared By <span className="text-red-500">*</span>
-            </label>
-            <select
+          <div className="md:col-span-6 lg:col-span-3">
+            <FormSelect
+              label="Prepared By"
+              required
               name="preparedBy"
               value={formData.preparedBy}
               onChange={(e) => {
@@ -241,40 +217,34 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
                   handleChange({ target: { name: 'department', value: '' }});
                 }
               }}
-              className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors bg-white text-sm
-                ${errors.preparedBy ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
+              error={errors.preparedBy}
             >
               <option value="">Select Employee</option>
               {employees.map(emp => (
                 <option key={emp.id} value={emp.id}>{emp.name}</option>
               ))}
-            </select>
-            {errors.preparedBy && <p className="mt-0.5 text-[10px] text-red-500">{errors.preparedBy}</p>}
+            </FormSelect>
           </div>
 
           {/* Designation */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Designation</label>
-            <input
-              type="text"
+          <div className="md:col-span-6 lg:col-span-3">
+            <FormInput
+              label="Designation"
               name="designation"
               value={formData.designation}
               onChange={handleChange}
               placeholder="e.g. developer"
-              className="w-full px-3 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors text-sm"
             />
           </div>
 
           {/* Department */}
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Department</label>
-            <input
-              type="text"
+          <div className="md:col-span-6 lg:col-span-3">
+            <FormInput
+              label="Department"
               name="department"
               value={formData.department}
               onChange={handleChange}
               placeholder="e.g. Engineering"
-              className="w-full px-3 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors text-sm"
             />
           </div>
 
@@ -282,91 +252,90 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
 
         {/* Project Summary */}
         <div className="mt-4 relative">
-          <label className="block text-xs font-medium text-gray-700 mb-1">Project Summary / Understanding</label>
-          <textarea
+          <FormTextarea
+            label="Project Summary / Understanding"
             name="projectSummary"
             value={formData.projectSummary}
             onChange={handleChange}
             rows={3}
             maxLength={1000}
             placeholder="using this website user can test their website and according to the result user can start treatment..."
-            className="w-full px-3 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors resize-none text-sm"
           />
-          <div className="absolute -bottom-3 right-0 text-[10px] text-gray-500">
+          <div className="absolute -bottom-1 right-1 text-[10px] text-gray-500">
             {formData.projectSummary.length} / 1000
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 ">
+      <div className="mt-6">
         {/* Engagement Type */}
-        <div className="p-2 border border-gray-200 rounded-xl bg-white shadow-sm">
-          <label className="block text-xs font-medium text-gray-700 mb-2">
-            Engagement Type <span className="text-red-500">*</span>
+        <div className="mb-3">
+          <label className="block text-[14px] font-normal text-black mb-3">
+            Engagement Type
           </label>
-          <div className="space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {engagementTypes.map((type) => (
               <label 
                 key={type.id}
-                className={`flex items-start p-2 rounded-lg border cursor-pointer transition-colors
+                className={`flex items-start p-1 rounded-lg border cursor-pointer transition-colors
                   ${formData.engagementType === type.id 
-                    ? 'border-purple-500 bg-purple-50' 
-                    : 'border-gray-200 hover:bg-gray-50'}`}
+                    ? 'border-[#1A9F9A] bg-[#1A9F9A]/[0.02]' 
+                    : 'border-gray-200 bg-[#FAFAFA] hover:bg-gray-50'}`}
               >
-                <div className="flex items-center h-4">
+                <div className="flex items-center h-4 mt-1">
                   <input
                     type="radio"
                     name="engagementType"
                     value={type.id}
                     checked={formData.engagementType === type.id}
                     onChange={handleChange}
-                    className="w-3.5 h-3.5 text-purple-600 border-gray-300 focus:ring-purple-500"
+                    className="w-4 h-4 text-[#1A9F9A] border-gray-300 focus:ring-[#1A9F9A]"
                   />
                 </div>
-                <div className="ml-2.5">
-                  <span className={`block text-xs font-medium ${formData.engagementType === type.id ? 'text-purple-900' : 'text-gray-900'}`}>
+                <div className="ml-3">
+                  <span className={`block text-[13px] font-medium ${formData.engagementType === type.id ? 'text-black' : 'text-gray-700'}`}>
                     {type.title}
                   </span>
-                  <span className="block text-[10px] text-gray-500 mt-0.5">{type.desc}</span>
+                  <span className="block text-[10px] text-gray-500 mt-1 leading-snug">{type.desc}</span>
                 </div>
               </label>
             ))}
           </div>
-          {errors.engagementType && <p className="mt-1.5 text-[10px] text-red-500">{errors.engagementType}</p>}
+          {errors.engagementType && <p className="mt-1.5 text-xs text-red-500">{errors.engagementType}</p>}
         </div>
 
-        {/* Pricing & Currency */}
-        <div className="p-2 border border-gray-200 rounded-xl bg-white shadow-sm flex flex-col space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-2">
-              Pricing Currency <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="pricingCurrency"
-              value={formData.pricingCurrency}
-              onChange={handleChange}
-              className={`w-full px-3 py-1.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors bg-white text-sm
-                ${errors.pricingCurrency ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100'}`}
-            >
-              <option value="USD - US Dollar ($)">USD - US Dollar ($)</option>
-              <option value="INR - Indian Rupee (₹)">INR - Indian Rupee (₹)</option>
-              <option value="EUR - Euro (€)">EUR - Euro (€)</option>
-              <option value="GBP - British Pound (£)">GBP - British Pound (£)</option>
-            </select>
-            {errors.pricingCurrency && <p className="mt-0.5 text-[10px] text-red-500">{errors.pricingCurrency}</p>}
-          </div>
+        {/* Currency */}
+        <div>
+          <label className="block text-[14px] font-normal text-black mb-2">
+            Currency
+          </label>
+          <div className="p-4 border border-gray-200 rounded-xl bg-white flex flex-col space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormSelect
+                label="Pricing Currency"
+                required
+                name="pricingCurrency"
+                value={formData.pricingCurrency}
+                onChange={handleChange}
+                error={errors.pricingCurrency}
+              >
+                <option value="USD - US Dollar ($)">USD - US Dollar ($)</option>
+                <option value="INR - Indian Rupee (₹)">INR - Indian Rupee (₹)</option>
+                <option value="EUR - Euro (€)">EUR - Euro (€)</option>
+                <option value="GBP - British Pound (£)">GBP - British Pound (£)</option>
+              </FormSelect>
 
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Exchange Rate (for reference)</label>
-            <input
-              type="text"
-              name="exchangeRate"
-              value={formData.exchangeRate}
-              onChange={handleChange}
-              placeholder="e.g. 1 USD = 83.0000 INR"
-              className="w-full px-3 py-1.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-500 transition-colors text-sm"
-            />
-            <p className="mt-1.5 text-[10px] text-gray-500">Note: All internal calculations are in INR. The proposal will be generated in the selected currency.</p>
+              <FormInput
+                label="Exchange Rate (for reference)"
+                name="exchangeRate"
+                value={formData.exchangeRate}
+                onChange={handleChange}
+                placeholder="e.g. 1 USD = 83.0000 INR"
+              />
+            </div>
+            <p className="text-[12px] text-gray-500">
+              <span className="font-medium text-black">Note:</span> All internal calculations are in INR. The proposal will be generated in the selected currency.
+            </p>
           </div>
         </div>
       </div>

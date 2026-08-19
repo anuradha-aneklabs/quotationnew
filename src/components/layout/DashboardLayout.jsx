@@ -50,7 +50,7 @@ export default function DashboardLayout({ children, currentView, setCurrentView,
           <Header title={headerProps.title} breadcrumbs={headerProps.breadcrumbs} description={headerProps.description} />
         </div>
 
-        <main className="flex-1 flex flex-col overflow-hidden bg-white pt-6 px-4 md:px-6 min-h-0">
+        <main className="flex-1 flex flex-col overflow-hidden bg-white  px-4 md:px-6 min-h-0">
           <div className="mx-auto w-full flex-1 flex flex-col min-h-0 overflow-hidden">
             {children}
           </div>
