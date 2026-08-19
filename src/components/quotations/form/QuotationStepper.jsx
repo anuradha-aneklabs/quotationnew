@@ -88,7 +88,7 @@ export default function QuotationStepper({ currentStep }) {
                   {step.label}
                 </span>
                 {isActive && (
-                  <div className="w-[18px] h-[2px] bg-[#1A9F9A] mt-[4px] rounded-full" />
+                  <div className="w-[25px] h-[2px] bg-[#1A9F9A] mt-[4px] rounded-full" />
                 )}
               </div>
             </div>
