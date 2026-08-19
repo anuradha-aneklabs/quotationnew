@@ -8,11 +8,11 @@ export default function Header({ title, breadcrumbs = [], description }) {
     <header className="bg-white shadow border-b border-gray-100 px-6 py-3 flex items-center justify-between shrink-0 z-10 relative">
       {/* Left side: Title and Breadcrumbs/Description */}
       <div>
-        <h1 className="font-['Inter',sans-serif] font-semibold text-[22px] leading-[140%] text-[#46505F]">{title}</h1>
+        <h1 className="font-Inter font-semibold text-[22px] leading-[140%] text-[#040715]">{title}</h1>
         {description ? (
-          <p className="font-['Inter',sans-serif] font-normal text-[14px] leading-[140%] text-[#46505F] mt-0.5">{description}</p>
+          <p className="font-Inter font-normal text-[14px] leading-[140%] text-[#46505F] mt-0.5">{description}</p>
         ) : breadcrumbs.length > 0 ? (
-          <nav className="flex font-['Inter',sans-serif] font-normal text-[14px] leading-[140%] text-[#46505F] mt-0.5">
+          <nav className="flex font-Inter font-normal text-[14px] leading-[140%] text-[#46505F] mt-0.5">
             {breadcrumbs.map((crumb, index) => (
               <span key={index} className="flex items-center">
                 {index > 0 && <span className="mx-2 text-gray-400">&gt;</span>}
@@ -37,7 +37,7 @@ export default function Header({ title, breadcrumbs = [], description }) {
           <input
             type="text"
             placeholder="Search here..."
-            className="flex-1 pl-2 pr-4 py-2 bg-transparent text-sm focus:outline-none font-['Inter',sans-serif] text-gray-700 placeholder-gray-400"
+            className="flex-1 pl-2 pr-4 py-2 bg-transparent text-sm focus:outline-none font-Inter text-gray-700 placeholder-gray-400"
           />
         </div>
 
