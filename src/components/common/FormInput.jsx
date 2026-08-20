@@ -5,7 +5,7 @@ export default function FormInput({
   label,
   required,
   error,
-  labelClassName = "block text-[12px] font-normal text-black mb-2",
+  labelClassName = "block text-[14px] font-normal text-black mb-2",
   className = "",
   type = "text",
   ...props

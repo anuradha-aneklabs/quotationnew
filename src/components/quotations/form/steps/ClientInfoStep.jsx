@@ -177,7 +177,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3.5 mb-4.5">
             {/* Client Name (Searchable Dropdown) */}
             <div className="relative" ref={wrapperRef}>
-              <label className="block text-[12px] font-normal text-black mb-2">
+              <label className="block text-[14px] font-normal text-black mb-2">
                 Client Name <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -237,7 +237,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
           <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3.5">
             {/* Phone */}
             <div>
-              <label className="block text-[12px] font-normal text-black mb-2">
+              <label className="block text-[14px] font-normal text-black mb-2">
                 Phone/Mobile <span className="text-red-500">*</span>
               </label>
               <div className={`flex items-center bg-[#FAFAFA] w-full px-3 py-2 rounded-lg border  focus-within:ring-2 transition-colors

@@ -300,7 +300,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
         <div className="flex flex-wrap items-end gap-6 justify-between">
           <div className="flex flex-wrap gap-6 w-full lg:w-auto">
             <div className="w-full sm:w-auto">
-              <label className="block text-[12px] font-normal text-black mb-2">Project Start Date</label>
+              <label className="block text-[14px] font-normal text-black mb-2">Project Start Date</label>
               <div className="relative">
                 <input
                   type="date"
@@ -314,7 +314,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
               </div>
             </div>
             <div className="w-full sm:w-auto">
-              <label className="block text-[12px] font-normal text-black mb-2">Project End Date</label>
+              <label className="block text-[14px] font-normal text-black mb-2">Project End Date</label>
               <div className="relative">
                 <input
                   type="date"
@@ -328,7 +328,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
               </div>
             </div>
             <div className="w-full sm:w-auto">
-              <label className="block text-[12px] font-normal text-black mb-2">Total Duration</label>
+              <label className="block text-[14px] font-normal text-black mb-2">Total Duration</label>
               <div className="bg-[#FAFAFA] px-4 py-1.5 rounded-lg border border-gray-200 min-w-[100px] w-full sm:w-auto flex items-center h-[38px]">
                 <span className="text-sm font-medium text-gray-900">{projectDurationDays} Days</span>
               </div>
