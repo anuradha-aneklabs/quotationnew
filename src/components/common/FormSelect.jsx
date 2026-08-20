@@ -6,7 +6,7 @@ export default function FormSelect({
   required,
   error,
   options,
-  labelClassName = "block text-[12px] font-normal text-black mb-2",
+  labelClassName = "block text-[14px] font-normal text-black mb-2",
   className = "",
   children,
   ...props

@@ -104,9 +104,9 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
   ];
 
   return (
-    <div className="space-y-5 animate-in fade-in duration-300">
+    <div className="animate-in fade-in duration-300">
       <div>
-        <h2 className="text-lg font-bold text-gray-900 mb-4 border-b-1 border-[#DEDEDE] pb-2">2. Proposal Details</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-3 border-b-1 border-[#DEDEDE] pb-2">2. Proposal Details</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
           
@@ -293,10 +293,10 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
         </div>
       </div>
 
-      <div className="">
+      <div className="mt-2">
         {/* Engagement Type */}
         <div className="mb-2">
-          <label className="block text-[12px] font-normal text-black mb-2">
+          <label className="block text-[14px] font-normal text-black mb-2">
             Engagement Type
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -332,10 +332,10 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
 
         {/* Currency */}
         <div>
-          <label className="block text-[12px] font-normal text-black mb-2">
+          <label className="block text-[14px] font-normal text-black mb-2">
             Currency
           </label>
-          <div className="p-2 border border-gray-200 rounded-xl bg-white flex flex-col space-y-1">
+          <div className="py-2 px-4 border border-gray-200 rounded-xl bg-white flex flex-col space-y-1">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormSelect
                 label="Pricing Currency"
@@ -359,7 +359,7 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
                 placeholder="e.g. 1 USD = 83.0000 INR"
               />
             </div>
-            <p className="text-[12px] text-[#5F6A80]">
+            <p className="text-[12px] text-[#5F6A80] mt-1">
               <span className="font-medium text-black">Note:</span> All internal calculations are in INR. The proposal will be generated in the selected currency.
             </p>
           </div>
