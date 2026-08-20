@@ -48,23 +48,6 @@ export default function TimelineStep({ formData }) {
 
   // Build DISPLAY range: always show at least 4 full months from project start month
   const displayStart = projectStart ? new Date(projectStart.getFullYear(), projectStart.getMonth(), 1) : null;
-  const displayEnd = (() => {
-    if (!displayStart) return null;
-    // End at project end or at least 4 months, whichever is greater
-    const minEnd = new Date(displayStart);
-    minEnd.setMonth(minEnd.getMonth() + 4);
-    minEnd.setDate(0); // last day of that month
-    if (projectEnd && projectEnd > minEnd) {
-      // extend to end of project end month
-      const extEnd = new Date(projectEnd.getFullYear(), projectEnd.getMonth() + 1, 0);
-      return extEnd;
-    }
-    return minEnd;
-  })();
-
-  const allDates = (displayStart && displayEnd) ? getDatesInRange(displayStart, displayEnd) : [];
-  const monthGroups = groupByMonth(allDates);
-
   // Calculate module start/end dates based on sequential scheduling
   let cursor = projectStart ? new Date(projectStart) : null;
   const moduleTimelines = formData.modules.map((mod, idx) => {
@@ -84,6 +67,32 @@ export default function TimelineStep({ formData }) {
     return { mod, idx, start, end, durDays, effort, cost };
   });
 
+  const displayEnd = (() => {
+    if (!displayStart) return null;
+    // End at project end or at least 4 months, whichever is greater
+    let maxEnd = new Date(displayStart);
+    maxEnd.setMonth(maxEnd.getMonth() + 4);
+    maxEnd.setDate(0); // last day of that month
+    
+    if (projectEnd && projectEnd > maxEnd) {
+      // extend to end of project end month
+      maxEnd = new Date(projectEnd.getFullYear(), projectEnd.getMonth() + 1, 0);
+    }
+    
+    // Also check if any module extends beyond maxEnd
+    if (moduleTimelines.length > 0) {
+      const lastModule = moduleTimelines[moduleTimelines.length - 1];
+      if (lastModule && lastModule.end && lastModule.end > maxEnd) {
+        maxEnd = new Date(lastModule.end.getFullYear(), lastModule.end.getMonth() + 1, 0);
+      }
+    }
+    
+    return maxEnd;
+  })();
+
+  const allDates = (displayStart && displayEnd) ? getDatesInRange(displayStart, displayEnd) : [];
+  const monthGroups = groupByMonth(allDates);
+
   // Gantt: calculate bar position based on displayStart (not projectStart)
   const getBarStyle = (start, end) => {
     if (!start || !end || !displayStart || allDates.length === 0) return null;
@@ -101,13 +110,15 @@ export default function TimelineStep({ formData }) {
   const todayPct = allDates.length > 0 && todayIdx >= 0 && todayIdx < allDates.length
     ? (todayIdx / allDates.length) * 100 : -1;
 
-  const renderGantt = () => (
-    <div className="border border-gray-200 rounded-xl shadow-sm bg-white overflow-x-auto">
-      <div className="min-w-[800px]">
+  const renderGantt = () => {
+    const minWidth = Math.max(900, 320 + (monthGroups.length * 120));
+    return (
+      <div className="border border-gray-200 rounded-xl shadow-sm bg-white overflow-x-auto">
+        <div style={{ minWidth: `${minWidth}px` }}>
 
         {/* Month Row */}
         <div className="flex border-b border-[#E9ECEF] bg-[#F8F9FA]">
-          <div className="w-[180px] shrink-0 px-4 py-2 border-r border-[#E9ECEF] text-[11px] font-bold text-[#040715] flex items-center">
+          <div className="w-[320px] shrink-0 px-4 py-2 border-r border-[#E9ECEF] text-[11px] font-bold text-[#040715] flex items-center">
             Milestone / Phase
           </div>
           <div className="flex flex-1">
@@ -125,7 +136,7 @@ export default function TimelineStep({ formData }) {
 
         {/* Week/Day markers Row */}
         <div className="flex border-b border-[#E9ECEF] bg-[#F8F9FA]">
-          <div className="w-[180px] shrink-0 border-r border-[#E9ECEF]" />
+          <div className="w-[320px] shrink-0 border-r border-[#E9ECEF]" />
           <div className="flex flex-1 relative h-7">
             {monthGroups.map((mg, mIdx) => {
               const daysInMonth = mg.dates.length;
@@ -178,7 +189,7 @@ export default function TimelineStep({ formData }) {
               const color = COLORS[idx % COLORS.length];
               return (
                 <div key={mod.id} className="flex group hover:bg-gray-50/50 transition-colors" style={{ minHeight: 48 }}>
-                  <div className="w-[180px] shrink-0 px-4 py-3 border-r border-[#E9ECEF] flex items-start gap-2">
+                  <div className="w-[320px] shrink-0 px-4 py-3 border-r border-[#E9ECEF] flex items-start gap-2">
                     <div className="w-5 h-5 rounded-[4px] border border-[#E9ECEF] bg-white text-[#5F6A80] flex items-center justify-center text-[10px] font-medium shrink-0 shadow-sm mt-[1px]">
                       {String(idx + 1).padStart(2, '0')}
                     </div>
@@ -215,13 +226,21 @@ export default function TimelineStep({ formData }) {
                     {/* Gantt Bar */}
                     {barStyle && (
                       <div
-                        className={`absolute h-4 ${color} rounded-full z-10 flex items-center px-1.5 shadow-sm ml-1`}
+                        className={`group absolute h-4 ${color} rounded-full z-10 flex items-center px-1.5 shadow-sm ml-1 cursor-pointer`}
                         style={{ ...barStyle, minWidth: '20px' }}
-                        title={`${mod.name}: ${start?.toLocaleDateString()} - ${end?.toLocaleDateString()}`}
                       >
                         <span className="text-white text-[8px] font-medium whitespace-nowrap overflow-hidden">
                           {durDays}D
                         </span>
+
+                        {/* Custom Tooltip */}
+                        <div className="absolute opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 bottom-full left-1/2 -translate-x-1/2 mb-1.5 bg-[#040715] text-white text-[10px] py-1 px-2.5 rounded shadow-lg whitespace-nowrap z-50 pointer-events-none">
+                          {start?.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} 
+                          <span className="mx-1 text-gray-400">to</span> 
+                          {end?.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                          
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-[#040715]"></div>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -232,7 +251,8 @@ export default function TimelineStep({ formData }) {
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   const renderTable = () => (
     <div className="border border-gray-200 rounded-xl shadow-sm bg-white overflow-x-auto">

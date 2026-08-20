@@ -37,8 +37,21 @@ export const updateQuotation = async (id, quotationData) => {
   return handleResponse(response);
 };
 
-export const getQuotation = async (id) => {
-  const response = await fetch(`${getApiUrl()}/api/v1/quotations/${id}`, {
+export const getQuotation = async (id, filters = {}) => {
+  let url = `${getApiUrl()}/api/v1/quotations/${id}`;
+  
+  if (id === 0) {
+    const params = new URLSearchParams();
+    if (filters.startDate) params.append('startDate', filters.startDate);
+    if (filters.endDate) params.append('endDate', filters.endDate);
+    
+    const queryString = params.toString();
+    if (queryString) {
+      url += `?${queryString}`;
+    }
+  }
+
+  const response = await fetch(url, {
     method: 'GET',
   });
   return handleResponse(response);
