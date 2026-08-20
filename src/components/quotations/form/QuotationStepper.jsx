@@ -19,8 +19,8 @@ const steps = [
 
 export default function QuotationStepper({ currentStep }) {
   return (
-    <div className="w-full pt-5 pb-10 mb-2 relative z-0 overflow-visible">
-      <div className="flex items-center justify-between w-[75%] max-w-[765px] mx-auto relative">
+    <div className="w-full pt-5 pb-20 md:pb-10 mb-2 relative z-0 overflow-x-auto overflow-y-hidden md:overflow-visible px-4 md:px-0">
+      <div className="flex items-center justify-between w-[90%] md:w-[75%] min-w-[600px] max-w-[765px] mx-auto relative">
         {/* Connector Line Background (Wavy for upcoming) */}
         <div 
           className="absolute right-0 top-1/2 -translate-y-1/2 h-[10px] z-0" 

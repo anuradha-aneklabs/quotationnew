@@ -243,7 +243,7 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
             </div>
 
             {/* Final Amount */}
-            <div className="flex flex-col justify-center items-center text-center gap-1 py-2 px-6 bg-[#F6FFFA] rounded-[8px] border border-[#CEECEB] w-max shadow-[0_2px_15px_rgba(26,159,154,0.15)]">
+            <div className="flex flex-col justify-center items-center text-center gap-1 py-3 px-6 bg-[#F6FFFA] rounded-[8px] border border-[#CEECEB] w-full lg:w-max shadow-[0_2px_15px_rgba(26,159,154,0.15)] mt-2 lg:mt-0">
               <p className="text-[12px] text-[#1A9F9A] font-medium">Final Outstanding Amount</p>
               <p className="text-[16px] font-bold text-[#1A9F9A]">
                 ₹ {finalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

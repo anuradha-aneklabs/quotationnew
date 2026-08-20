@@ -298,45 +298,45 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
         <p className="text-xs text-gray-500 mb-5">Define modules, functionalities and estimate effort. Add team members and allocate hours with rate.</p>
 
         <div className="flex flex-wrap items-end gap-6 justify-between">
-          <div className="flex gap-6">
-            <div>
+          <div className="flex flex-wrap gap-6 w-full lg:w-auto">
+            <div className="w-full sm:w-auto">
               <label className="block text-[12px] font-normal text-black mb-2">Project Start Date</label>
               <div className="relative">
                 <input
                   type="date"
                   value={formData.projectStartDate}
                   onChange={(e) => setFormData(prev => ({ ...prev, projectStartDate: e.target.value }))}
-                  className={`w-48 pl-3 pr-10 py-2 border bg-[#FAFAFA] rounded-lg text-sm focus:outline-none focus:ring-2 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-10 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:z-10 ${errors.projectStartDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:ring-purple-100 focus:border-purple-500'}`}
+                  className={`w-full sm:w-48 pl-3 pr-10 py-2 border bg-[#FAFAFA] rounded-lg text-sm focus:outline-none focus:ring-2 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-10 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:z-10 ${errors.projectStartDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:ring-purple-100 focus:border-purple-500'}`}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <img src={calendarIcon} alt="calendar" className="w-5 h-5 opacity-70" />
                 </div>
               </div>
             </div>
-            <div>
+            <div className="w-full sm:w-auto">
               <label className="block text-[12px] font-normal text-black mb-2">Project End Date</label>
               <div className="relative">
                 <input
                   type="date"
                   value={formData.projectEndDate}
                   onChange={(e) => setFormData(prev => ({ ...prev, projectEndDate: e.target.value }))}
-                  className={`w-48 pl-3 pr-10 py-2 border bg-[#FAFAFA] rounded-lg text-sm focus:outline-none focus:ring-2 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-10 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:z-10 ${errors.projectEndDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:ring-purple-100 focus:border-purple-500'}`}
+                  className={`w-full sm:w-48 pl-3 pr-10 py-2 border bg-[#FAFAFA] rounded-lg text-sm focus:outline-none focus:ring-2 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-10 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:z-10 ${errors.projectEndDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:ring-purple-100 focus:border-purple-500'}`}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <img src={calendarIcon} alt="calendar" className="w-5 h-5 opacity-70" />
                 </div>
               </div>
             </div>
-            <div>
+            <div className="w-full sm:w-auto">
               <label className="block text-[12px] font-normal text-black mb-2">Total Duration</label>
-              <div className="bg-[#FAFAFA] px-4 py-1.5 rounded-lg border border-gray-200 min-w-[100px]">
+              <div className="bg-[#FAFAFA] px-4 py-1.5 rounded-lg border border-gray-200 min-w-[100px] w-full sm:w-auto flex items-center h-[38px]">
                 <span className="text-sm font-medium text-gray-900">{projectDurationDays} Days</span>
               </div>
             </div>
           </div>
           <button
             onClick={handleAddModule}
-            className="flex items-center text-xs font-medium text-[#1A9F9A] border border-[#1A9F9A] rounded-lg px-4 py-2 hover:bg-[#1A9F9A]/10 transition-colors"
+            className="flex items-center justify-center text-xs font-medium text-[#1A9F9A] border border-[#1A9F9A] rounded-lg px-4 py-2 hover:bg-[#1A9F9A]/10 transition-colors w-full sm:w-auto mt-2 sm:mt-0"
           >
             <Plus className="h-4 w-4 mr-1" /> Add Module
           </button>
@@ -350,7 +350,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
       </div>
 
       {/* Summary Metric Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-white border border-gray-200 rounded-xl py-2 px-4 shadow-sm flex flex-col justify-center gap-1 h-[64px] relative">
           <div className="absolute left-3 top-1/2 -translate-y-1/2 w-[34px] h-[34px] bg-[#EEE2FF] rounded-lg flex items-center justify-center p-2">
             <img src={totalModuleIcon} alt="Modules" className="w-full h-full object-contain" />
@@ -428,7 +428,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                       value={module.description}
                       onChange={(e) => updateModule(module.id, 'description', e.target.value)}
                       placeholder="Module Description"
-                      className="w-full text-[11px] text-gray-500 bg-transparent focus:outline-none border-b border-transparent hover:border-gray-200 focus:border-[#1A9F9A]  transition-colors max-h-[60px] overflow-hidden"
+                      className="w-full text-[11px] leading-[16px] text-gray-500 bg-transparent focus:outline-none border-b border-transparent hover:border-gray-200 focus:border-[#1A9F9A] transition-colors max-md:line-clamp-5 max-md:max-h-[85px] md:max-h-[60px] overflow-hidden"
                     />
                   </div>
                 </div>
@@ -579,7 +579,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                           <tr className="border-b border-gray-100 text-[#040715] text-[14px] bg-[#ECF2F2]">
                             <th className="py-3 font-semibold w-[250px] pl-6 align-top pt-4">Team Member</th>
                             <th className="py-3 font-semibold min-w-[80px] align-top pt-4">Role</th>
-                            <th className="py-3 font-semibold text-center w-20 align-top pt-4">Efforts<br/>(Hrs)</th>
+                            <th className="py-3 font-semibold text-center w-20 align-top pt-4">Efforts<br />(Hrs)</th>
                             <th className="py-3 font-semibold text-center w-18 align-top pt-4">Rate/Hr</th>
                             <th className="py-3 font-semibold text-center w-20 align-top pt-4">Total Cost</th>
                             <th className="py-3 font-semibold text-center w-12 pr-6 align-top pt-4">Action</th>
@@ -667,13 +667,13 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
       {formData.modules.length > 0 && (
         <div className="mt-6 bg-[#F0FAF9] border border-[#E0F2F1] rounded-xl p-4 lg:p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-4 lg:gap-6 shadow-sm">
 
-          <div className="flex items-center gap-6 w-full xl:w-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center items-start gap-6 w-full xl:w-auto">
             <div className="flex-shrink-0 min-w-[100px]">
               <h3 className="text-sm font-bold text-gray-900 mb-1">Grand Total</h3>
               <p className="text-[12px] font-bold text-[#1A9F9A]">{totals.modules} Modules</p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-4">
               <div className=" p-2 flex items-center gap-3 min-w-[130px]">
                 <div className="w-9 h-9 shrink-0 flex items-center justify-center bg-white rounded-md shadow-sm border border-gray-100">
                   <img src={grandCalendarIcon} alt="calendar" className="w-4 h-4" />
