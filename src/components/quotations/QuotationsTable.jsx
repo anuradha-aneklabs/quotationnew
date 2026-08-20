@@ -7,22 +7,22 @@ export default function QuotationsTable({ quotations, onEdit, onDelete, onView, 
       <table className="w-full text-left border-collapse min-w-[1000px]">
         <thead>
           <tr className="border-b border-[#E9ECEF] bg-white">
-            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715]">Quotation ID</th>
-            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715]">Client Name</th>
-            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715]">Subject</th>
-            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715]">Total Days</th>
-            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715]">Total Amount</th>
-            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715] text-center">Actions</th>
+            <th className="px-6 py-4 text-[14px] font-bold text-[#040715]">Quotation ID</th>
+            <th className="px-6 py-4 text-[14px] font-bold text-[#040715]">Client Name</th>
+            <th className="px-6 py-4 text-[14px] font-bold text-[#040715]">Subject</th>
+            <th className="px-6 py-4 text-[14px] font-bold text-[#040715]">Total Days</th>
+            <th className="px-6 py-4 text-[14px] font-bold text-[#040715]">Total Amount</th>
+            <th className="px-6 py-4 text-[14px] font-bold text-[#040715] text-center">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-[#E9ECEF]">
           {quotations.map((quote) => (
             <tr key={quote.id} className="hover:bg-gray-50/50 transition-colors">
-              <td className="px-6 py-4 text-[13px] font-medium text-[#040715]">{quote.quotationNumber}</td>
-              <td className="px-6 py-4 text-[13px] font-medium text-[#040715]">{quote.clientName}</td>
-              <td className="px-6 py-4 text-[13px] font-medium text-[#040715]">{quote.subject}</td>
-              <td className="px-6 py-4 text-[13px] font-medium text-[#040715]">{quote.totalDays} Days</td>
-              <td className="px-6 py-4 text-[13px] font-medium text-[#040715]">
+              <td className="px-6 py-4 text-[14px] font-medium text-[#040715]">{quote.quotationNumber}</td>
+              <td className="px-6 py-4 text-[14px] font-medium text-[#040715]">{quote.clientName}</td>
+              <td className="px-6 py-4 text-[14px] font-medium text-[#040715]">{quote.subject}</td>
+              <td className="px-6 py-4 text-[14px] font-medium text-[#040715]">{quote.totalDays} Days</td>
+              <td className="px-6 py-4 text-[14px] font-medium text-[#040715]">
                 {quote.totalAmount}
               </td>
               <td className="px-6 py-4">

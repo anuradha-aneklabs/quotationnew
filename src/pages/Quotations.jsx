@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Filter, Loader2, Calendar, Search } from 'lucide-react';
 import QuotationsTable from '../components/quotations/QuotationsTable';
 import QuotationViewModal from '../components/quotations/QuotationViewModal';
+import ConfirmModal from '../components/common/ConfirmModal';
 
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
@@ -14,18 +15,38 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  
+  const getInitialDates = () => {
+    const today = new Date();
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+    const formatDate = (date) => {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    };
+
+    return { start: formatDate(firstDay), end: formatDate(lastDay) };
+  };
+
+  const initialDates = getInitialDates();
+  const [startDate, setStartDate] = useState(initialDates.start);
+  const [endDate, setEndDate] = useState(initialDates.end);
+
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const containerRef = useRef(null);
 
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [viewingQuote, setViewingQuote] = useState(null);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [quoteToDelete, setQuoteToDelete] = useState(null);
 
   useEffect(() => {
     fetchQuotations();
-  }, []);
+  }, [startDate, endDate]);
 
   useEffect(() => {
     const updateItemsPerPage = () => {
@@ -46,8 +67,8 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
   const fetchQuotations = async () => {
     setIsLoading(true);
     try {
-      const res = await quotationService.getQuotation(0); // Fetch all
-      
+      const res = await quotationService.getQuotation(0, { startDate: startDate, endDate: endDate }); // Fetch all with filters
+
       const quotationList = res?.data?.quotations || [];
       if (Array.isArray(quotationList)) {
         // Map backend payload to frontend format
@@ -61,7 +82,7 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
         }));
         setQuotations(mappedData);
       } else {
-         setQuotations([]); // fallback
+        setQuotations([]); // fallback
       }
     } catch (err) {
       console.error('Failed to fetch quotations:', err);
@@ -84,16 +105,23 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
     currentPage * itemsPerPage
   );
 
-  const handleDeleteClick = async (id) => {
-    if (window.confirm('Are you sure you want to delete this quotation?')) {
-      try {
-        await quotationService.deleteQuotation(id);
-        setQuotations(quotations.filter(q => q.id !== id));
-        showToast('Quotation deleted successfully', 'error');
-      } catch (err) {
-        console.error('Failed to delete quotation:', err);
-        showToast('Failed to delete quotation', 'error');
-      }
+  const handleDeleteClick = (id) => {
+    setQuoteToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!quoteToDelete) return;
+    try {
+      await quotationService.deleteQuotation(quoteToDelete);
+      setQuotations(quotations.filter(q => q.id !== quoteToDelete));
+      showToast('Quotation deleted successfully', 'error');
+    } catch (err) {
+      console.error('Failed to delete quotation:', err);
+      showToast('Failed to delete quotation', 'error');
+    } finally {
+      setIsDeleteModalOpen(false);
+      setQuoteToDelete(null);
     }
   };
 
@@ -141,13 +169,61 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
 
         {/* Right: Calendar + New Button */}
         <div className="flex items-center gap-4">
-          <button className="flex items-center bg-white border border-[#E9ECEF] rounded-[8px] px-3 h-[38px] hover:bg-gray-50 transition-colors cursor-pointer shadow-sm">
-            <span className="text-[13px] text-[#5F6A80] font-medium mr-3 tracking-wide">
-              01 Jun -18 Jun 2026
-            </span>
-            <Calendar className="w-[18px] h-[18px] text-[#5F6A80]" />
-          </button>
-          <button 
+          <div className="relative">
+            <button
+              onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+              className="flex items-center bg-white border border-[#E9ECEF] rounded-[8px] px-3 h-[38px] hover:bg-gray-50 transition-colors cursor-pointer shadow-sm"
+            >
+              <span className="text-[13px] text-[#5F6A80] font-medium mr-3 tracking-wide">
+                {startDate && endDate ? (() => {
+                  const s = new Date(startDate);
+                  const e = new Date(endDate);
+                  return `${s.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} - ${e.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+                })() : 'Filter by Date'}
+              </span>
+              <Calendar className="w-[18px] h-[18px] text-[#5F6A80]" />
+            </button>
+
+            {isDatePickerOpen && (
+              <div className="absolute top-full right-0 mt-2 p-4 bg-white border border-[#E9ECEF] rounded-[8px] shadow-lg z-10 w-72">
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Start Date</label>
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="w-full border border-[#E9ECEF] rounded px-3 py-1.5 text-[13px] text-[#040715] focus:outline-none focus:border-[#1A9F9A]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">End Date</label>
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="w-full border border-[#E9ECEF] rounded px-3 py-1.5 text-[13px] text-[#040715] focus:outline-none focus:border-[#1A9F9A]"
+                    />
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <button
+                      onClick={() => { setStartDate(''); setEndDate(''); setIsDatePickerOpen(false); }}
+                      className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                    >
+                      Clear
+                    </button>
+                    <button
+                      onClick={() => setIsDatePickerOpen(false)}
+                      className="px-3 py-1.5 text-xs font-medium text-white bg-[#1A9F9A] rounded hover:bg-[#13807C] transition-colors"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <button
             onClick={() => onCreateNew ? onCreateNew() : setCurrentView('CreateQuotation')}
             className="h-[38px] inline-flex items-center justify-center px-4 py-2 text-[13px] font-medium text-white bg-[#1A9F9A] rounded-[8px] hover:bg-[#13807C] transition-colors"
           >
@@ -159,32 +235,43 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
 
       {/* Unified Table Container */}
       <div ref={containerRef} className="bg-white rounded-xl shadow-sm border border-[#E9ECEF] flex flex-col flex-1 min-h-0 overflow-hidden">
-        
+
         {isLoading ? (
           <div className="p-10 flex justify-center"><Loader2 className="animate-spin text-indigo-600 h-8 w-8" /></div>
         ) : (
-          <QuotationsTable 
-            quotations={paginatedQuotations} 
+          <QuotationsTable
+            quotations={paginatedQuotations}
             onView={handleViewClick}
             onEdit={(quote) => onEditQuotation && onEditQuotation(quote.id)}
             onDelete={handleDeleteClick}
             onDownload={handleDownloadClick}
           />
         )}
-        
-        <Pagination 
+
+        <Pagination
           totalItems={filteredQuotations.length}
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
-      </div>
 
-      <QuotationViewModal 
-        isOpen={isViewModalOpen} 
-        onClose={() => setIsViewModalOpen(false)} 
-        quote={viewingQuote} 
-      />
+        {viewingQuote && (
+          <QuotationViewModal
+            isOpen={isViewModalOpen}
+            onClose={() => setIsViewModalOpen(false)}
+            quotation={viewingQuote}
+          />
+        )}
+
+        <ConfirmModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={confirmDelete}
+          title="Delete Quotation"
+          message="Are you sure you want to delete this quotation?"
+          confirmText="Delete"
+        />
+      </div>
     </div>
   );
 }
