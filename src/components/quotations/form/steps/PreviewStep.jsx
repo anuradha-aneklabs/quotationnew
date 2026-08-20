@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar } from 'lucide-react';
+import timelineIcon from '../../../../assets/Preview/timeline icon.svg';
 import logo from '../../../../assets/peoplexlogo.svg';
 import editIcon from '../../../../assets/Preview/EditIcon.svg';
 import downloadIcon from '../../../../assets/Preview/DownloadIcon.svg';
@@ -134,7 +134,7 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
           </div>
           <div className="flex">
             <span className="font-bold text-[#1A9F9A] w-20 shrink-0">Scope :</span>
-            <span className="text-[#040715] font-medium">{formData.projectSummary || 'Cloud set up master'}</span>
+            <span className="text-[#46505F] font-medium">{formData.projectSummary || 'Cloud set up master'}</span>
           </div>
         </div>
 
@@ -151,11 +151,11 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
             <table className="w-full text-left text-[11px] min-w-[800px]">
               <thead>
                 <tr className="bg-[#ECF2F2] border-y border-[#E9ECEF] text-[#040715]">
-                  <th className="py-3 pl-6 pr-3 font-semibold text-center w-12 text-[11px]">#</th>
-                  <th className="py-3 px-3 font-semibold w-1/4 text-[11px]">Module/Feature</th>
-                  <th className="py-3 px-3 font-semibold text-[11px]">Description</th>
-                  <th className="py-3 px-3 font-semibold text-center w-32 text-[11px]">Total Effort</th>
-                  <th className="py-3 pl-3 pr-6 font-semibold text-center w-48 text-[11px]">Timeline</th>
+                  <th className="py-3 pl-6 pr-3 font-semibold text-center w-[5%] text-[12px]">#</th>
+                  <th className="py-3 pl-3 pr-24 font-semibold w-[28%] text-[12px]">Module/Feature</th>
+                  <th className="py-3 pl-3 pr-24 font-semibold w-[42%] text-[12px]">Description</th>
+                  <th className="py-3 px-3 font-semibold text-center w-[10%] text-[12px]">Total Effort</th>
+                  <th className="py-3 pl-3 pr-6 font-semibold text-center w-[15%] text-[12px]">Timeline</th>
                 </tr>
               </thead>
               <tbody>
@@ -167,8 +167,8 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
                       <td className="py-4 pl-6 pr-3 text-center font-medium text-[#040715] text-[11px] align-top">
                         {String(idx + 1).padStart(2, '0')}
                       </td>
-                      <td className="py-4 px-3 font-semibold text-[#040715] text-[11px] align-top">{m.name}</td>
-                      <td className="py-4 px-3 text-[#46505F] text-[11px] align-top">{m.description}</td>
+                      <td className="py-4 pl-3 pr-24 font-semibold text-[#040715] text-[11px] align-top">{m.name}</td>
+                      <td className="py-4 pl-3 pr-24 text-[#46505F] text-[11px] align-top">{m.description}</td>
                       <td className="py-4 px-3 text-center font-semibold text-[#46505F] text-[11px] align-top">{effort} Hrs</td>
                       <td className="py-4 pl-3 pr-6 text-center text-[#1A9F9A] font-medium text-[11px] align-top">
                         {formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jun 2026'} • {formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '03 Jun 2026'}
@@ -205,44 +205,46 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
           </div>
 
           {/* Commercial Summary Row */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 px-6 bg-white">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 px-6 bg-white pb-2">
 
-            {/* Base Cost */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 flex items-center justify-center bg-[#EBFCF2] rounded-[8px] shrink-0">
-                <img src={outstandingIcon} alt="Total Outstanding" className="h-5 w-5" />
+            <div className="flex flex-wrap items-center gap-12 lg:gap-18">
+              {/* Base Cost */}
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 flex items-center justify-center bg-[#EBFCF2] rounded-[8px] shrink-0">
+                  <img src={outstandingIcon} alt="Total Outstanding" className="h-5 w-5" />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-[12px] text-[#5F6A80] font-medium leading-tight mb-0.5">Total Outstanding Amount (Excl. GST)</p>
+                  <p className="text-[14px] font-semibold text-[#040715]">₹ {baseCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <p className="text-[11px] text-[#46505F] font-medium leading-tight mb-0.5">Total Outstanding Amount (Excl. GST)</p>
-                <p className="text-[14px] font-semibold text-[#040715]">₹ {baseCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-              </div>
-            </div>
 
-            {/* GST */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 flex items-center justify-center bg-[#EBF9FF] rounded-[8px] shrink-0">
-                <img src={gstIcon} alt="GST" className="h-5 w-5" />
+              {/* GST */}
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 flex items-center justify-center bg-[#EBF9FF] rounded-[8px] shrink-0">
+                  <img src={gstIcon} alt="GST" className="h-5 w-5" />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-[12px] text-[#5F6A80] font-medium leading-tight mb-0.5">GST 18%</p>
+                  <p className="text-[14px] font-semibold text-[#040715]">₹ {gstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <p className="text-[11px] text-[#46505F] font-medium leading-tight mb-0.5">GST 18%</p>
-                <p className="text-[14px] font-semibold text-[#040715]">₹ {gstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-              </div>
-            </div>
 
-            {/* Discount */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 flex items-center justify-center bg-[#FFF1F1] rounded-[8px] shrink-0">
-                <img src={discountIcon} alt="Discount" className="h-5 w-5" />
-              </div>
-              <div className="flex flex-col">
-                <p className="text-[11px] text-[#46505F] font-medium leading-tight mb-0.5">Discount</p>
-                <p className="text-[14px] font-semibold text-[#E53935]">- ₹ {discountAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+              {/* Discount */}
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 flex items-center justify-center bg-[#FFF1F1] rounded-[8px] shrink-0">
+                  <img src={discountIcon} alt="Discount" className="h-5 w-5" />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-[12px] text-[#5F6A80] font-medium leading-tight mb-0.5">Discount</p>
+                  <p className="text-[14px] font-semibold text-[#E53935]">- ₹ {discountAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                </div>
               </div>
             </div>
 
             {/* Final Amount */}
-            <div className="justify-self-end flex flex-col justify-center items-center text-center gap-1 py-2 px-6 bg-[#F6FFFA] rounded-[8px] border border-[#CEECEB] w-max shadow-[0_2px_15px_rgba(26,159,154,0.15)]">
-              <p className="text-[11px] text-[#1A9F9A] font-medium">Final Outstanding Amount</p>
+            <div className="flex flex-col justify-center items-center text-center gap-1 py-2 px-6 bg-[#F6FFFA] rounded-[8px] border border-[#CEECEB] w-max shadow-[0_2px_15px_rgba(26,159,154,0.15)]">
+              <p className="text-[12px] text-[#1A9F9A] font-medium">Final Outstanding Amount</p>
               <p className="text-[16px] font-bold text-[#1A9F9A]">
                 ₹ {finalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
@@ -252,45 +254,47 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
         </div>
 
         {/* 2. Timeline Overview */}
-        <div className="bg-white rounded-xl border border-gray-100 p-6 mb-8">
-          <div className="flex items-center gap-2 mb-1">
-            <Calendar className="h-4 w-4 text-[#1A9F9A]" />
-            <h3 className="text-[14px] font-bold text-[#040715]">2. Timeline Overview</h3>
+        <div className="bg-white rounded-xl border border-gray-100 p-5 mb-8">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#E6EBEB]">
+            <div className="flex items-center gap-2 ">
+              <img src={timelineIcon} alt="Timeline" className="h-4 w-4" />
+              <h3 className="text-[14px] font-bold text-[#040715]">2. Timeline Overview</h3>
+            </div>
+            <p className="text-[12px] text-[#46505F] font-medium">
+              {formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jun 2026'} • {formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jul 2026'}
+            </p>
           </div>
-          <p className="text-[11px] text-[#46505F] mb-6 ml-6 font-medium">
-            {formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jun 2026'} - {formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jul 2026'}
-          </p>
 
           <div className="border border-gray-100 rounded-[8px] overflow-x-auto">
             <table className="w-full text-left min-w-[800px] border-collapse">
               <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="py-3 px-4 font-bold text-[11px] text-[#46505F] border-r border-gray-100 w-[200px] align-bottom">Milestone / Phase</th>
-                  <th className="py-2 px-1 text-center font-bold text-[11px] text-[#46505F] border-r border-gray-100 relative">
-                    Aug 2026
-                    <div className="flex justify-between w-full mt-2 font-normal text-[10px] text-gray-400">
-                      <span className="flex-1 text-center">01</span>
-                      <span className="flex-1 text-center">08</span>
-                      <span className="flex-1 text-center">15</span>
-                      <span className="flex-1 text-center">22</span>
+                <tr className="border-b border-gray-100 bg-[#F6F9F9]">
+                  <th className="py-4 px-4 font-bold text-[12px] text-[#040715] border-r border-gray-100 w-[100px] align-bottom">Milestone / Phase</th>
+                  <th className="p-0 border-r border-[#E6EBEB] align-top relative w-[233px]">
+                    <div className="py-3 text-center font-bold text-[11px] text-[#040715]">Aug 2026</div>
+                    <div className="flex w-full font-normal text-[11px] text-gray-400 border-t border-[#E6EBEB]">
+                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">01</span>
+                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">08</span>
+                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">15</span>
+                      <span className="flex-1 py-2 text-center">22</span>
                     </div>
                   </th>
-                  <th className="py-2 px-1 text-center font-bold text-[11px] text-[#46505F] border-r border-gray-100">
-                    Sep 2026
-                    <div className="flex justify-between w-full mt-2 font-normal text-[10px] text-gray-400">
-                      <span className="flex-1 text-center">01</span>
-                      <span className="flex-1 text-center">08</span>
-                      <span className="flex-1 text-center">15</span>
-                      <span className="flex-1 text-center">22</span>
+                  <th className="p-0 border-r border-[#E6EBEB] align-top relative w-[233px]">
+                    <div className="py-3 text-center font-bold text-[11px] text-[#040715]">Sep 2026</div>
+                    <div className="flex w-full font-normal text-[11px] text-gray-400 border-t border-[#E6EBEB]">
+                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">01</span>
+                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">08</span>
+                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">15</span>
+                      <span className="flex-1 py-2 text-center">22</span>
                     </div>
                   </th>
-                  <th className="py-2 px-1 text-center font-bold text-[11px] text-[#46505F]">
-                    Oct 2026
-                    <div className="flex justify-between w-full mt-2 font-normal text-[10px] text-gray-400">
-                      <span className="flex-1 text-center">01</span>
-                      <span className="flex-1 text-center">08</span>
-                      <span className="flex-1 text-center">15</span>
-                      <span className="flex-1 text-center">22</span>
+                  <th className="p-0 border-r border-[#E6EBEB] align-top relative w-[233px]">
+                    <div className="py-3 text-center font-bold text-[11px] text-[#040715]">Oct 2026</div>
+                    <div className="flex w-full font-normal text-[11px] text-gray-400 border-t border-[#E6EBEB]">
+                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">01</span>
+                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">08</span>
+                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">15</span>
+                      <span className="flex-1 py-2 text-center">22</span>
                     </div>
                   </th>
                 </tr>
@@ -312,9 +316,11 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
                     <tr key={idx} className="border-b border-gray-100 last:border-0 relative z-10">
                       <td className="py-3 px-4 border-r border-gray-100 w-[200px] bg-white">
                         <div className="flex items-start gap-2">
-                          <span className="text-[11px] font-bold text-[#040715] border border-gray-200 rounded-[4px] px-1.5 py-0.5 mt-0.5">{String(idx + 1).padStart(2, '0')}</span>
+                          <div className="w-5 h-5 flex items-center justify-center border border-gray-200 rounded-[4px] shrink-0">
+                            <span className="text-[10px] font-bold text-[#040715]">{String(idx + 1).padStart(2, '0')}</span>
+                          </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-[12px] font-bold text-[#040715] truncate">{m.name}</p>
+                            <p className="text-[11px] font-bold text-[#040715] truncate" title={m.name}>{m.name}</p>
                             <p className="text-[10px] text-gray-500">{days} Days</p>
                           </div>
                         </div>
@@ -322,17 +328,17 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
                       <td colSpan={3} className="p-0 relative h-[50px] align-middle">
                         {/* Grid lines */}
                         <div className="absolute inset-0 flex w-full pointer-events-none">
-                           <div className="flex-1 border-r border-gray-50"></div>
-                           <div className="flex-1 border-r border-gray-50"></div>
-                           <div className="flex-1 border-r border-gray-50"></div>
-                           <div className="flex-1 border-r border-gray-100"></div>
-                           <div className="flex-1 border-r border-gray-50"></div>
-                           <div className="flex-1 border-r border-gray-50"></div>
-                           <div className="flex-1 border-r border-gray-50"></div>
-                           <div className="flex-1 border-r border-gray-100"></div>
-                           <div className="flex-1 border-r border-gray-50"></div>
-                           <div className="flex-1 border-r border-gray-50"></div>
-                           <div className="flex-1 border-r border-gray-50"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
+                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
                            <div className="flex-1"></div>
                         </div>
 
@@ -353,10 +359,10 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
         </div>
 
         {/* Important Notes */}
-        <div className="bg-white border border-[#E9ECEF] rounded-[8px] p-5 text-[11px] text-[#46505F] shadow-sm mb-6">
-          <h3 className="text-[13px] font-bold text-[#1A9F9A] mb-3">Important Notes</h3>
+        <div className="bg-white border border-[#E9ECEF] rounded-[8px] p-5 text-[12px] text-[#040715] shadow-sm mb-6">
+          <h3 className="text-[14px] font-bold text-[#1A9F9A] mb-3">Important Notes</h3>
           <ul className="list-disc pl-4 space-y-2">
-            <li>This quotation is valid till {formData.validTill || '2026-08-31'}.</li>
+            <li className=''>This quotation is valid till {formData.validTill || '2026-08-31'}.</li>
             <li>All payments to be made as per agreed payment terms mentioned in the proposal.</li>
             <li>Taxes will be charged as applicable at the time of invoicing.</li>
             <li>Any additional scope of work will be charged extra.</li>
