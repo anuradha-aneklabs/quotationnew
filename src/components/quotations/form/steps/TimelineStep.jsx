@@ -140,7 +140,7 @@ export default function TimelineStep({ formData }) {
           <div className="flex flex-1 relative h-7">
             {monthGroups.map((mg, mIdx) => {
               const daysInMonth = mg.dates.length;
-              const weekAnchors = [1, 8, 15, 22];
+              const weekAnchors = mg.dates.filter(d => d.getDay() === 1).map(d => d.getDate());
               
               return (
                 <div
@@ -158,7 +158,7 @@ export default function TimelineStep({ formData }) {
                         className="absolute top-0 bottom-0 flex flex-col justify-center border-l border-[#E9ECEF]/50"
                         style={{ left: `${leftPct}%` }}
                       >
-                        <span className="text-[9px] text-gray-400 px-1">{anchor}</span>
+                        <span className="text-[9px] text-gray-400 px-1">{String(anchor).padStart(2, '0')}</span>
                       </div>
                     );
                   })}
@@ -206,7 +206,7 @@ export default function TimelineStep({ formData }) {
                         return (
                           <div key={mIdx} className="relative border-r border-[#E9ECEF] last:border-0 h-full"
                             style={{ width: `${(daysInMonth / allDates.length) * 100}%` }}>
-                            {[1, 8, 15, 22].map((anchor) => {
+                            {mg.dates.filter(d => d.getDay() === 1).map(d => d.getDate()).map((anchor) => {
                               const anchorDate = mg.dates.find(d => d.getDate() === anchor);
                               if (!anchorDate) return null;
                               const leftPct = ((anchor - 1) / daysInMonth) * 100;

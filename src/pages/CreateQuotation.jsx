@@ -83,6 +83,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
             let clientState = data.client_state || '';
             let clientCity = data.client_city || '';
             let clientCountry = data.client_country || '';
+            let clientDistrict = data.client_district || '';
 
             if (data.client_id) {
               try {
@@ -93,6 +94,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
                   clientState = clientState || matchedClient.state || '';
                   clientCity = clientCity || matchedClient.city || '';
                   clientCountry = clientCountry || matchedClient.country || '';
+                  clientDistrict = clientDistrict || matchedClient.district || '';
                 }
               } catch (e) { console.error('Could not load client details for edit map', e); }
             }
@@ -115,6 +117,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
               country: clientCountry || prev.country,
               state: clientState || prev.state,
               city: clientCity || prev.city,
+              district: clientDistrict || prev.district,
               proposalTitle: data.title || prev.proposalTitle,
               proposalDate: data.proposal_date || prev.proposalDate,
               validTill: data.valid_till || prev.validTill,
@@ -329,7 +332,8 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
             gst_number: formData.gstNumber,
             country: formData.country,
             state: formData.state,
-            city: formData.city
+            city: formData.city,
+            district: formData.district
           });
         } catch (e) {
           console.error('Failed to update client details on save:', e);
