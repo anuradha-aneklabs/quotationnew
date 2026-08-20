@@ -6,50 +6,50 @@ export default function QuotationsTable({ quotations, onEdit, onDelete, onView, 
     <div className="overflow-x-auto flex-1">
       <table className="w-full text-left border-collapse min-w-[1000px]">
         <thead>
-          <tr className="border-b border-gray-100">
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Quotation Number</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Client Name</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Subject</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Total Days</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Total Amount</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider text-right">Actions</th>
+          <tr className="border-b border-[#E9ECEF] bg-white">
+            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715]">Quotation ID</th>
+            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715]">Client Name</th>
+            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715]">Subject</th>
+            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715]">Total Days</th>
+            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715]">Total Amount</th>
+            <th className="px-6 py-4 text-[13px] font-semibold text-[#040715] text-center">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-[#E9ECEF]">
           {quotations.map((quote) => (
             <tr key={quote.id} className="hover:bg-gray-50/50 transition-colors">
-              <td className="px-6 py-4 text-sm font-medium text-indigo-600">{quote.quotationNumber}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{quote.clientName}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{quote.subject}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{quote.totalDays} Days</td>
-              <td className="px-6 py-4 text-sm font-medium text-emerald-500">
+              <td className="px-6 py-4 text-[13px] font-medium text-[#040715]">{quote.quotationNumber}</td>
+              <td className="px-6 py-4 text-[13px] font-medium text-[#040715]">{quote.clientName}</td>
+              <td className="px-6 py-4 text-[13px] font-medium text-[#040715]">{quote.subject}</td>
+              <td className="px-6 py-4 text-[13px] font-medium text-[#040715]">{quote.totalDays} Days</td>
+              <td className="px-6 py-4 text-[13px] font-medium text-[#040715]">
                 {quote.totalAmount}
               </td>
               <td className="px-6 py-4">
-                <div className="flex items-center justify-end space-x-3">
-                  <button 
-                    onClick={() => onView && onView(quote)}
-                    className="text-gray-400 hover:text-indigo-600 transition-colors"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </button>
+                <div className="flex items-center justify-center space-x-2">
                   <button 
                     onClick={() => onEdit && onEdit(quote)}
-                    className="text-gray-400 hover:text-indigo-600 transition-colors"
+                    className="p-1.5 border border-[#E6EBEB] bg-white text-[#1A9F9A] rounded-[6px] hover:bg-gray-50 shadow-sm transition-colors"
                   >
-                    <Pencil className="h-4 w-4" />
+                    <Pencil className="h-3.5 w-3.5" />
+                  </button>
+                  <button 
+                    onClick={() => onView && onView(quote)}
+                    className="p-1.5 border border-[#E6EBEB] bg-white text-[#1A9F9A] rounded-[6px] hover:bg-gray-50 shadow-sm transition-colors"
+                  >
+                    <Eye className="h-3.5 w-3.5" />
                   </button>
                   <button 
                     onClick={() => onDownload && onDownload(quote)}
-                    className="text-gray-400 hover:text-blue-500 transition-colors"
+                    className="p-1.5 border border-[#E6EBEB] bg-white text-[#1A9F9A] rounded-[6px] hover:bg-gray-50 shadow-sm transition-colors"
                   >
-                    <Download className="h-4 w-4" />
+                    <Download className="h-3.5 w-3.5" />
                   </button>
                   <button 
                     onClick={() => onDelete && onDelete(quote.id)}
-                    className="text-red-500 hover:text-red-600 transition-colors"
+                    className="p-1.5 border border-[#E6EBEB] bg-white text-[#E53935] rounded-[6px] hover:bg-red-50 shadow-sm transition-colors"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3.5 w-3.5" />
                   </button>
                 </div>
               </td>
@@ -57,7 +57,7 @@ export default function QuotationsTable({ quotations, onEdit, onDelete, onView, 
           ))}
           {quotations.length === 0 && (
             <tr>
-              <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
+              <td colSpan="6" className="px-6 py-8 text-center text-[#46505F] text-[13px]">
                 No quotations found.
               </td>
             </tr>

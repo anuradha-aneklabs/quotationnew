@@ -15,6 +15,11 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
   const [clientSearch, setClientSearch] = useState(formData.clientName || '');
   const wrapperRef = useRef(null);
 
+  const [countryOptions, setCountryOptions] = useState([]);
+  const [stateOptions, setStateOptions] = useState([]);
+  const [districtOptions, setDistrictOptions] = useState([]);
+  const [cityOptions, setCityOptions] = useState([]);
+
   useEffect(() => {
     const loadClients = async () => {
       try {
@@ -45,6 +50,40 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
     return (c.company_name?.toLowerCase().includes(term) || c.contact_person?.toLowerCase().includes(term));
   });
 
+  const handlePincodeChange = async (e) => {
+    handleChange(e);
+    const val = e.target.value;
+    if (val && val.length === 6 && /^\d+$/.test(val)) {
+      try {
+        const response = await fetch(`https://api.postalpincode.in/pincode/${val}`);
+        const data = await response.json();
+        if (data && data[0] && data[0].Status === "Success") {
+          const postOffices = data[0].PostOffice;
+          
+          const uniqueCountries = [...new Set(postOffices.map(po => po.Country).filter(Boolean))];
+          const uniqueStates = [...new Set(postOffices.map(po => po.State).filter(Boolean))];
+          const uniqueDistricts = [...new Set(postOffices.map(po => po.District || po.Region).filter(Boolean))];
+          const uniqueCities = [...new Set(postOffices.map(po => po.Name).filter(Boolean))];
+
+          setCountryOptions(uniqueCountries);
+          setStateOptions(uniqueStates);
+          setDistrictOptions(uniqueDistricts);
+          setCityOptions(uniqueCities);
+
+          setFormData(prev => ({
+            ...prev,
+            country: uniqueCountries.length > 0 ? uniqueCountries[0] : prev.country,
+            state: uniqueStates.length > 0 ? uniqueStates[0] : prev.state,
+            district: uniqueDistricts.length > 0 ? uniqueDistricts[0] : prev.district,
+            city: uniqueCities.length > 0 ? uniqueCities[0] : prev.city
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to fetch pincode details:", err);
+      }
+    }
+  };
+
   const handleClientSelect = (client) => {
     const name = client.company_name;
     setClientSearch(name);
@@ -66,6 +105,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
       shippingAddress: client.address || prev.shippingAddress,
       pincode: client.pincode || prev.pincode,
       country: client.country || prev.country,
+      district: client.district || prev.district,
       city: client.city || prev.city,
       companyId: client.company_id || client.companyId || prev.companyId,
       branchId: client.branch_id || client.branchId || prev.branchId
@@ -346,7 +386,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
 
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4">
 
           {/* Pincode */}
           <FormInput
@@ -354,7 +394,7 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
             required
             name="pincode"
             value={formData.pincode}
-            onChange={handleChange}
+            onChange={handlePincodeChange}
             placeholder="e.g. 201301"
             error={errors.pincode}
           />
@@ -369,7 +409,8 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
             error={errors.country}
             options={[
               { value: "", label: "Select Country" },
-              { value: "India", label: "India" }
+              ...countryOptions.map(c => ({ value: c, label: c })),
+              ...(formData.country && !countryOptions.includes(formData.country) ? [{ value: formData.country, label: formData.country }] : [])
             ]}
           />
 
@@ -381,8 +422,21 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
             onChange={handleChange}
             options={[
               { value: "", label: "Select State" },
-              { value: "Madhya Pradesh", label: "Madhya Pradesh" },
-              { value: "Uttar Pradesh", label: "Uttar Pradesh" }
+              ...stateOptions.map(s => ({ value: s, label: s })),
+              ...(formData.state && !stateOptions.includes(formData.state) ? [{ value: formData.state, label: formData.state }] : [])
+            ]}
+          />
+
+          {/* District */}
+          <FormSelect
+            label="District"
+            name="district"
+            value={formData.district}
+            onChange={handleChange}
+            options={[
+              { value: "", label: "Select District" },
+              ...districtOptions.map(d => ({ value: d, label: d })),
+              ...(formData.district && !districtOptions.includes(formData.district) ? [{ value: formData.district, label: formData.district }] : [])
             ]}
           />
 
@@ -394,8 +448,8 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
             onChange={handleChange}
             options={[
               { value: "", label: "Select City" },
-              { value: "Indore", label: "Indore" },
-              { value: "Noida", label: "Noida" }
+              ...cityOptions.map(c => ({ value: c, label: c })),
+              ...(formData.city && !cityOptions.includes(formData.city) ? [{ value: formData.city, label: formData.city }] : [])
             ]}
           />
 
