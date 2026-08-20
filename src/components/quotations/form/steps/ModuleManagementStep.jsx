@@ -485,9 +485,9 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                             <th className="py-3 font-semibold w-12 pl-3 align-top pt-4">#</th>
                             <th className="py-3 font-semibold min-w-[120px] align-top pt-4">Functionality</th>
                             <th className="py-3 font-semibold min-w-[150px] align-top pt-4">Description</th>
-                            <th className="py-3 font-semibold w-24 align-top pt-4">Effort<br />(Hrs)</th>
-                            <th className="py-3 font-semibold w-24 align-top pt-4">Duration<br />(Days)</th>
-                            <th className="py-3 font-semibold w-16 align-top pt-4">Action</th>
+                            <th className="py-3 font-semibold w-16 align-top pt-4">Efforts<br />(Hrs)</th>
+                            <th className="py-3 font-semibold w-16 align-top pt-4">Duration<br />(Days)</th>
+                            <th className="py-3 font-semibold w-14 align-top pt-4">Action</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -554,7 +554,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                   {/* Right: Team Effort Allocation */}
                   <div className="flex-[1.3] bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col min-w-0">
                     <div className="flex justify-between items-center p-4 border-b border-gray-100">
-                      <h3 className="text-sm font-bold text-gray-900">Team Effort Allocation</h3>
+                      <h3 className="text-[15px] font-bold text-gray-900">Team Effort Allocation</h3>
                       <button
                         onClick={() => {
                           if (module.functionalities.length === 0) {
@@ -567,7 +567,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                             }
                           }, 0);
                         }}
-                        className="text-[11px] text-[#1A9F9A] hover:text-[#13807c] font-bold flex items-center transition-colors"
+                        className="text-[12px] text-[#1A9F9A] hover:text-[#13807c] font-bold flex items-center transition-colors"
                       >
                         + Add Team Member
                       </button>
@@ -577,12 +577,12 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                       <table className="w-full text-left text-[11px] mb-2">
                         <thead>
                           <tr className="border-b border-gray-100 text-[#040715] text-[14px] bg-[#ECF2F2]">
-                            <th className="py-3 font-semibold w-[220px] pl-6">Team Member</th>
-                            <th className="py-3 font-semibold min-w-[100px]">Role</th>
-                            <th className="py-3 font-semibold text-center w-20">Effort (Hrs)</th>
-                            <th className="py-3 font-semibold text-center w-28">Rate / Hour</th>
-                            <th className="py-3 font-semibold text-center w-28">Total Cost</th>
-                            <th className="py-3 font-semibold text-center w-12 pr-6">Action</th>
+                            <th className="py-3 font-semibold w-[250px] pl-6 align-top pt-4">Team Member</th>
+                            <th className="py-3 font-semibold min-w-[80px] align-top pt-4">Role</th>
+                            <th className="py-3 font-semibold text-center w-20 align-top pt-4">Efforts<br/>(Hrs)</th>
+                            <th className="py-3 font-semibold text-center w-18 align-top pt-4">Rate/Hr</th>
+                            <th className="py-3 font-semibold text-center w-20 align-top pt-4">Total Cost</th>
+                            <th className="py-3 font-semibold text-center w-12 pr-6 align-top pt-4">Action</th>
                           </tr>
                         </thead>
                         <tbody>

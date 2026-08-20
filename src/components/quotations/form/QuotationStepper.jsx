@@ -19,11 +19,11 @@ const steps = [
 
 export default function QuotationStepper({ currentStep }) {
   return (
-    <div className="w-full pt-6 pb-12 mb-2 relative z-0 overflow-visible">
-      <div className="flex items-center justify-between w-[85%] max-w-[850px] mx-auto relative">
+    <div className="w-full pt-5 pb-10 mb-2 relative z-0 overflow-visible">
+      <div className="flex items-center justify-between w-[75%] max-w-[765px] mx-auto relative">
         {/* Connector Line Background (Wavy for upcoming) */}
         <div 
-          className="absolute right-0 top-1/2 -translate-y-1/2 h-[12px] z-0" 
+          className="absolute right-0 top-1/2 -translate-y-1/2 h-[10px] z-0" 
           style={{ 
             left: `${Math.min(((currentStep - 1) / (steps.length - 1)) * 100, 100)}%`,
             backgroundImage: `url("${zigzagLineIcon}")`,
@@ -45,22 +45,22 @@ export default function QuotationStepper({ currentStep }) {
           return (
             <div key={step.id} className="flex flex-col items-center relative z-10">
               <div 
-                className={`w-[42px] h-[42px] rounded-full flex items-center justify-center relative transition-all duration-300
+                className={`w-[38px] h-[38px] rounded-full flex items-center justify-center relative transition-all duration-300
                   ${isCompleted ? 'border-2 border-[#1A9F9A] bg-[#E6F5F4]' : isActive ? 'border-2 border-[#1A9F9A] bg-white shadow-[0_0_10px_rgba(26,159,154,0.2)]' : 'border border-gray-200 bg-white shadow-sm'}
                 `}
               >
                 {isActive && (
-                  <div className="absolute -top-[20px] left-1/2 -translate-x-1/2">
-                    <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <div className="absolute -top-[18px] left-1/2 -translate-x-1/2">
+                    <svg width="9" height="11" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 12L1.33975 6.75C-0.326922 4.36442 1.3806 1 4.2859 1H5.7141C8.6194 1 10.3269 4.36442 8.66025 6.75L5 12Z" fill="#1A9F9A"/>
                     </svg>
                   </div>
                 )}
                 {isCompleted ? (
-                  <img src={tickIcon} alt="completed" className="w-5 h-5 object-contain transition-all duration-300" />
+                  <img src={tickIcon} alt="completed" className="w-[18px] h-[18px] object-contain transition-all duration-300" />
                 ) : isActive ? (
                   <div 
-                    className="w-5 h-5 transition-all duration-300 bg-[#1A9F9A]"
+                    className="w-[18px] h-[18px] transition-all duration-300 bg-[#1A9F9A]"
                     style={{
                       WebkitMaskImage: `url("${step.icon}")`,
                       WebkitMaskSize: 'contain',
@@ -76,19 +76,19 @@ export default function QuotationStepper({ currentStep }) {
                   <img 
                     src={step.icon} 
                     alt={step.label}
-                    className="w-5 h-5 object-contain transition-all duration-300 opacity-40 grayscale"
+                    className="w-[18px] h-[18px] object-contain transition-all duration-300 opacity-40 grayscale"
                   />
                 )}
               </div>
               
-              <div className="absolute top-[50px] flex flex-col items-center">
+              <div className="absolute top-[46px] flex flex-col items-center">
                 <span
-                  className={`text-[12px] font-medium whitespace-nowrap text-center ${isActive ? 'text-[#040715] font-bold' : isCompleted ? 'text-gray-400' : 'text-[#040715]'}`}
+                  className={`text-[11px] font-medium whitespace-nowrap text-center ${isActive ? 'text-[#040715] font-bold' : isCompleted ? 'text-gray-400' : 'text-[#040715]'}`}
                 >
                   {step.label}
                 </span>
                 {isActive && (
-                  <div className="w-[25px] h-[2px] bg-[#1A9F9A] mt-[4px] rounded-full" />
+                  <div className="w-[22px] h-[2px] bg-[#1A9F9A] mt-[4px] rounded-full" />
                 )}
               </div>
             </div>

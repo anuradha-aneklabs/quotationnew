@@ -106,7 +106,7 @@ export default function ProposalDetailsStep({ formData, handleChange, errors }) 
   return (
     <div className="space-y-5 animate-in fade-in duration-300">
       <div>
-        <h2 className="text-lg font-bold text-gray-900 mb-4 border-b-1 border-[#DEDEDE]">2. Proposal Details</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4 border-b-1 border-[#DEDEDE] pb-2">2. Proposal Details</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
           
