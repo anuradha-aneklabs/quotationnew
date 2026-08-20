@@ -10,7 +10,7 @@ export default function DashboardLayout({ children, currentView, setCurrentView,
   const getHeaderProps = (view) => {
     switch (view) {
       case 'CreateQuotation': return { title: 'Create New Quotations', breadcrumbs: ['Dashboard', 'Quotations', 'Create New Quotation'] };
-      case 'Quotations': return { title: 'Quotations', breadcrumbs: ['Dashboard', 'Quotations'] };
+      case 'Quotations': return { title: 'Quotations', description: 'Manage and track all your quotations.' };
       case 'Dashboard': return { title: 'Dashboard', description: "Welcome back! Here's an overview of your quotation metrics." };
       case 'Employees': return { title: 'Employees', description: 'Manage your team and track project assignments.' };
       case 'Clients': return { title: 'Clients', description: 'Manage your clients and their information.' };

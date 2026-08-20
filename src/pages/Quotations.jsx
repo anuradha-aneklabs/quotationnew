@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Filter, Loader2 } from 'lucide-react';
+import { Plus, Filter, Loader2, Calendar, Search } from 'lucide-react';
 import QuotationsTable from '../components/quotations/QuotationsTable';
 import QuotationViewModal from '../components/quotations/QuotationViewModal';
 
@@ -120,46 +120,45 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
   };
 
   return (
-    <div className="space-y-6 flex flex-col h-full pb-6">
-      {/* Header Area */}
+    <div className="font-Inter space-y-4 flex flex-col h-full pb-6 pt-4">
+      {/* Top Controls: Search, Calendar, New Btn */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <p className="text-gray-500 text-sm">Manage and track all your quotations.</p>
+        {/* Left: Search Bar */}
+        <div className="flex-1 max-w-[320px]">
+          <div className="flex items-center w-full bg-[#FCFCFB] border border-[#E9ECEF] rounded-[8px] overflow-hidden focus-within:border-[#1A9F9A] transition-colors h-[38px]">
+            <div className="pl-3 pr-2 flex items-center justify-center shrink-0">
+              <Search className="h-4 w-4 text-[#46505F]" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search by client name, ID..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 pr-4 py-2 bg-transparent text-[13px] text-[#040715] focus:outline-none placeholder:text-[#46505F]"
+            />
+          </div>
         </div>
-        <button 
-          onClick={() => onCreateNew ? onCreateNew() : setCurrentView('CreateQuotation')}
-          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          New Quotation
-        </button>
+
+        {/* Right: Calendar + New Button */}
+        <div className="flex items-center gap-4">
+          <button className="flex items-center bg-white border border-[#E9ECEF] rounded-[8px] px-3 h-[38px] hover:bg-gray-50 transition-colors cursor-pointer shadow-sm">
+            <span className="text-[13px] text-[#5F6A80] font-medium mr-3 tracking-wide">
+              01 Jun -18 Jun 2026
+            </span>
+            <Calendar className="w-[18px] h-[18px] text-[#5F6A80]" />
+          </button>
+          <button 
+            onClick={() => onCreateNew ? onCreateNew() : setCurrentView('CreateQuotation')}
+            className="h-[38px] inline-flex items-center justify-center px-4 py-2 text-[13px] font-medium text-white bg-[#1A9F9A] rounded-[8px] hover:bg-[#13807C] transition-colors"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Quotation
+          </button>
+        </div>
       </div>
 
       {/* Unified Table Container */}
-      <div ref={containerRef} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col flex-1 min-h-0 overflow-hidden">
-        <SearchBar 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search by ID, client or subject..."
-        >
-          {/* Right side children: Filters */}
-          <div className="flex items-center gap-2 text-gray-500 w-full min-w-max">
-            <Filter className="h-4 w-4 shrink-0" />
-            <input 
-              type="date" 
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 flex-1 min-w-[130px]"
-            />
-            <span className="text-sm shrink-0">to</span>
-            <input 
-              type="date" 
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500 flex-1 min-w-[130px]"
-            />
-          </div>
-        </SearchBar>
+      <div ref={containerRef} className="bg-white rounded-xl shadow-sm border border-[#E9ECEF] flex flex-col flex-1 min-h-0 overflow-hidden">
         
         {isLoading ? (
           <div className="p-10 flex justify-center"><Loader2 className="animate-spin text-indigo-600 h-8 w-8" /></div>
