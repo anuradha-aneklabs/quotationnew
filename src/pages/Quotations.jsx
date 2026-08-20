@@ -259,7 +259,7 @@ export default function Quotations({ setCurrentView, onEditQuotation, onCreateNe
           <QuotationViewModal
             isOpen={isViewModalOpen}
             onClose={() => setIsViewModalOpen(false)}
-            quotation={viewingQuote}
+            quote={viewingQuote}
           />
         )}
 
