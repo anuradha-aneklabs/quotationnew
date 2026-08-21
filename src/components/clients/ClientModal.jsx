@@ -202,7 +202,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
 
               {/* Company Name */}
               <FormInput
-                label={<>Company Name <span className="text-[#F1511B]">*</span></>}
+                label={<div className='mb-5'>Company Name <span className="text-[#F1511B]">*</span></div>}
                 name="companyName"
                 value={formData.companyName}
                 onChange={handleChange}
@@ -213,7 +213,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
 
               {/* Contact Person Name */}
               <FormInput
-                label={<>Contact Person Name <span className="text-[#F1511B]">*</span></>}
+                label={<div className='mb-5'>Contact Person Name <span className="text-[#F1511B]">*</span></div>}
                 name="contactPerson"
                 value={formData.contactPerson}
                 onChange={handleChange}
@@ -225,7 +225,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
               {/* Email */}
               <FormInput
                 type="email"
-                label={<>Email <span className="text-[#F1511B]">*</span></>}
+                label={<div className='pb-3'>Email <span className="text-[#F1511B]">*</span></div>}
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
@@ -236,7 +236,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
 
               {/* Phone */}
               <FormInput
-                label={<>Phone <span className="text-[#F1511B]">*</span></>}
+                label={<div className='pb-3'>Phone <span className="text-[#F1511B]">*</span></div>}
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}

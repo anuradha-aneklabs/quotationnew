@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 export default function SearchBar({ value, onChange, placeholder = "Search...", children }) {
   return (
     <div className="px-0 py-2 flex items-center justify-between shrink-0 flex-wrap gap-4">
-      <div className="flex items-center w-[320px] bg-[#FCFCFB] border border-gray-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-indigo-100 transition-shadow">
+      <div className="flex items-center w-[320px] ml-1 bg-[#FCFCFB] border border-gray-200 rounded-lg overflow-hidden focus-within:border-[#1A9F9A] focus-within:ring-1 focus-within:ring-[#1A9F9A] transition-shadow">
         <div className="pl-3 pr-2 flex items-center justify-center shrink-0">
           <Search className="h-5 w-5 text-gray-400" />
         </div>
