@@ -131,7 +131,7 @@ export default function Employees() {
   );
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 overflow-hidden gap-3">
+    <div className="flex flex-col flex-1 min-h-0 overflow-hidden gap-3 pt-2">
 
       <SearchBar 
         value={searchTerm}
@@ -140,12 +140,12 @@ export default function Employees() {
       >
         <div className="flex items-center gap-3">
           {/* Role Filter Dropdown */}
-          <div className="relative border border-gray-200 rounded-md bg-white hover:border-gray-300 transition-colors">
+          <div className="relative  border border-gray-200 rounded-md bg-white hover:border-gray-300 transition-colors">
             <select
               value={selectedRole}
               onChange={(e) => { setSelectedRole(e.target.value); setCurrentPage(1); }}
               disabled={rolesLoading}
-              className="appearance-none bg-transparent pl-3 pr-8 py-2 text-sm font-medium text-[#46505F] focus:outline-none cursor-pointer disabled:opacity-60"
+              className="appearance-none  pl-3 bg-[#FAFAFA]  py-2 text-[14px] font-medium text-[#46505F] focus:outline-none cursor-pointer disabled:opacity-60"
             >
               <option value="">All Role</option>
               {roles.map((role, idx) => {

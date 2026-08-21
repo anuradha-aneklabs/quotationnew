@@ -9,32 +9,32 @@ export default function EmployeesTable({ employees, onView, onEdit, onDelete }) 
       <table className="w-full min-w-[800px] text-left border-collapse">
         <thead className="sticky top-0 bg-white z-10">
           <tr className="border-b border-gray-100">
-            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">ID</th>
-            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Name</th>
-            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Role</th>
-            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Email</th>
-            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Phone</th>
-            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Assign Project</th>
-            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Hourly Rate</th>
-            <th className="px-6 py-4 font-['Inter',sans-serif] font-semibold text-[18px] leading-[140%] text-[#040715] text-right whitespace-nowrap">Actions</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">ID</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Name</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Role</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Email</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Phone</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Assign Project</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Hourly Rate</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] text-right whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
           {employees.map((employee) => (
             <tr key={employee.id} className="hover:bg-gray-50/50 transition-colors">
-              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {employee.employee_code || `EMP${String(employee.id).padStart(3, '0')}`}
               </td>
-              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {employee.name}
               </td>
-              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {employee.role || employee.designation}
               </td>
-              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {employee.email}
               </td>
-              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {employee.phone || '-'}
               </td>
               <td className="px-6 py-3 whitespace-nowrap">
@@ -46,28 +46,28 @@ export default function EmployeesTable({ employees, onView, onEdit, onDelete }) 
                   <span className="text-sm text-gray-400">Unassigned</span>
                 )}
               </td>
-              <td className="px-6 py-3 font-Inter font-semibold text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {String(employee.hourly_rate).startsWith('₹') ? employee.hourly_rate : `₹ ${Number(employee.hourly_rate || 0).toFixed(2)}`}
               </td>
               <td className="px-6 py-3">
-                <div className="flex items-center justify-end space-x-2">
+                <div className="flex items-center justify-end space-x-2 min-w-max">
                   <button
                     onClick={() => onEdit(employee)}
-                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-shrink-0"
                   >
-                    <img src={iconEdit} alt="Edit" className="h-4 w-4" />
+                    <img src={iconEdit} alt="Edit" className="h-4 w-4 object-contain" />
                   </button>
                   <button
                     onClick={() => onView(employee)}
-                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-shrink-0"
                   >
-                    <img src={iconEye} alt="View" className="h-4 w-4" />
+                    <img src={iconEye} alt="View" className="h-4 w-4 object-contain" />
                   </button>
                   <button
                     onClick={() => onDelete(employee.id)}
-                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-shrink-0"
                   >
-                    <img src={iconTrash} alt="Delete" className="h-4 w-4" />
+                    <img src={iconTrash} alt="Delete" className="h-4 w-4 object-contain" />
                   </button>
                 </div>
               </td>
