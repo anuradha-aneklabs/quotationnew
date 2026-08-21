@@ -116,38 +116,23 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
   };
 
   const inputClass = (field) =>
-    `w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
+    `w-full px-4 py-2.5 text-[13px] text-[#040715] placeholder:text-[#8D98A9] bg-[#FAFAFA] border rounded-[8px] focus:outline-none focus:ring-1 focus:ring-[#1A9F9A] focus:border-[#1A9F9A] transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
       errors[field]
         ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
-        : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
+        : 'border-[#E9ECEF]'
     }`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 overflow-y-auto pt-10 pb-10">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4 my-auto relative flex flex-col">
-        {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-900">
-            {branchData ? 'Edit Branch' : 'Add New Branch'}
-          </h2>
-          <button
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        {/* Form Content */}
-        <div className="p-6 overflow-y-auto max-h-[70vh]">
-          <form id="branchForm" onSubmit={handleSubmit} className="space-y-6">
+    <div className="flex flex-col">
+      {/* Form Content */}
+      <div className="p-6">
+        <form id="branchForm" onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
               {/* Branch Name - Full Width */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Branch Name <span className="text-red-500">*</span>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
+                  Branch Name <span className="text-[#E73B3B]">*</span>
                 </label>
                 <input
                   type="text"
@@ -163,7 +148,7 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
 
               {/* Address Line 1 - Full Width */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-900 mb-2">Address Line 1</label>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Address Line 1</label>
                 <input
                   type="text"
                   name="addressLine1"
@@ -177,7 +162,7 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
 
               {/* Address Line 2 - Full Width */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-900 mb-2">Address Line 2</label>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Address Line 2</label>
                 <input
                   type="text"
                   name="addressLine2"
@@ -191,13 +176,15 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
 
               {/* City */}
               <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">City</label>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
+                  City <span className="text-[#E73B3B]">*</span>
+                </label>
                 <input
                   type="text"
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
-                  placeholder="e.g. Mumbai"
+                  placeholder="Enter City"
                   disabled={isSubmitting}
                   className={inputClass('city')}
                 />
@@ -205,13 +192,15 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
 
               {/* State */}
               <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">State</label>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
+                  State <span className="text-[#E73B3B]">*</span>
+                </label>
                 <input
                   type="text"
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
-                  placeholder="e.g. Maharashtra"
+                  placeholder="Enter State"
                   disabled={isSubmitting}
                   className={inputClass('state')}
                 />
@@ -219,13 +208,13 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
 
               {/* Country */}
               <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">Country</label>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Country</label>
                 <input
                   type="text"
                   name="country"
                   value={formData.country}
                   onChange={handleChange}
-                  placeholder="e.g. India"
+                  placeholder="Enter Country"
                   disabled={isSubmitting}
                   className={inputClass('country')}
                 />
@@ -233,13 +222,13 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
 
               {/* Pincode */}
               <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">Pincode</label>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Pincode</label>
                 <input
                   type="text"
                   name="pincode"
                   value={formData.pincode}
                   onChange={handleChange}
-                  placeholder="6-digit pincode"
+                  placeholder="Enter Pincode"
                   disabled={isSubmitting}
                   className={inputClass('pincode')}
                 />
@@ -248,13 +237,13 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">Email</label>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Email</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="branch@company.com"
+                  placeholder="Enter Email"
                   disabled={isSubmitting}
                   className={inputClass('email')}
                 />
@@ -263,100 +252,84 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
 
               {/* Phone */}
               <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">Phone</label>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Phone</label>
                 <input
                   type="text"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="10-digit number"
+                  placeholder="Enter Phone Number"
                   disabled={isSubmitting}
                   className={inputClass('phone')}
                 />
                 {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
               </div>
-
               {/* Toggles Row */}
-              <div className="md:col-span-2 flex flex-wrap gap-6">
-                {/* Is Default */}
-                <div className="flex items-center gap-3">
-                  <div className="relative inline-block">
-                    <input
-                      type="checkbox"
-                      id="isDefault"
-                      name="isDefault"
-                      checked={formData.isDefault}
-                      onChange={handleChange}
-                      disabled={isSubmitting}
-                      className="sr-only peer"
-                    />
-                    <label
-                      htmlFor="isDefault"
-                      className="flex cursor-pointer w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-indigo-600 transition-colors peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"
-                    >
-                      <span className="inline-block w-5 h-5 bg-white rounded-full shadow translate-x-0.5 translate-y-0.5 peer-checked:translate-x-[22px] transition-transform duration-200" />
-                    </label>
-                  </div>
-                  <label htmlFor="isDefault" className="text-sm font-medium text-gray-900 cursor-pointer select-none">
-                    Set as Default Branch
-                  </label>
-                </div>
+              <div className="flex items-center gap-3">
+                <label htmlFor="branchIsActive" className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="branchIsActive"
+                    name="isActive"
+                    checked={formData.isActive}
+                    onChange={handleChange}
+                    disabled={isSubmitting}
+                    className="sr-only peer"
+                  />
+                  <div className="w-[36px] h-[20px] bg-[#E9ECEF] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[16px] peer-checked:bg-[#1A9F9A] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-[16px] after:w-[16px] after:transition-all peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"></div>
+                </label>
+                <label htmlFor="branchIsActive" className="text-[13px] font-medium text-[#040715] cursor-pointer select-none">
+                  {formData.isActive ? 'Active Branch' : 'Inactive Branch'}
+                </label>
+              </div>
 
-                {/* Is Active */}
-                <div className="flex items-center gap-3">
-                  <div className="relative inline-block">
-                    <input
-                      type="checkbox"
-                      id="branchIsActive"
-                      name="isActive"
-                      checked={formData.isActive}
-                      onChange={handleChange}
-                      disabled={isSubmitting}
-                      className="sr-only peer"
-                    />
-                    <label
-                      htmlFor="branchIsActive"
-                      className="flex cursor-pointer w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-indigo-600 transition-colors peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"
-                    >
-                      <span className="inline-block w-5 h-5 bg-white rounded-full shadow translate-x-0.5 translate-y-0.5 peer-checked:translate-x-[22px] transition-transform duration-200" />
-                    </label>
-                  </div>
-                  <label htmlFor="branchIsActive" className="text-sm font-medium text-gray-900 cursor-pointer select-none">
-                    Active Branch
-                  </label>
-                </div>
+              <div className="flex items-center gap-3">
+                <label htmlFor="isDefault" className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="isDefault"
+                    name="isDefault"
+                    checked={formData.isDefault}
+                    onChange={handleChange}
+                    disabled={isSubmitting}
+                    className="sr-only peer"
+                  />
+                  <div className="w-[36px] h-[20px] bg-[#E9ECEF] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[16px] peer-checked:bg-[#1A9F9A] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-[16px] after:w-[16px] after:transition-all peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"></div>
+                </label>
+                <label htmlFor="isDefault" className="text-[13px] font-medium text-[#040715] cursor-pointer select-none">
+                  Set as Default Branch
+                </label>
               </div>
 
             </div>
           </form>
         </div>
 
-        {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t border-gray-100">
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            form="branchForm"
-            disabled={isSubmitting}
-            className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                Saving...
-              </>
-            ) : (
-              branchData ? 'Update Branch' : 'Save Branch'
-            )}
-          </button>
-        </div>
+      {/* Footer */}
+      <div className="flex justify-between items-center px-6 py-4 border-t border-[#E9ECEF]">
+        <button
+          type="button"
+          onClick={onClose}
+          disabled={isSubmitting}
+          className="px-5 py-2.5 text-[13px] font-medium text-[#46505F] bg-[#FCFCFB] border border-[#E9ECEF] rounded-[8px] hover:bg-gray-50 focus:outline-none transition-colors disabled:opacity-50"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          form="branchForm"
+          disabled={isSubmitting}
+          className="inline-flex items-center justify-center px-6 py-2.5 text-[13px] font-medium text-white bg-[#1A9F9A] rounded-[8px] hover:bg-[#14807b] focus:outline-none transition-colors disabled:opacity-50"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="animate-spin h-4 w-4 mr-2" />
+              Saving...
+            </>
+          ) : (
+            branchData ? 'Update Branch' : 'Save Branch'
+          )}
+        </button>
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ export default function Companies() {
   const [error, setError] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState(null);
 
@@ -55,11 +56,15 @@ export default function Companies() {
 
   const filteredCompanies = companies.filter(company => {
     const term = searchTerm.toLowerCase();
-    return (
-      (company.companyName || company.company_name || '').toLowerCase().includes(term) ||
+    const matchesSearch = (company.companyName || company.company_name || '').toLowerCase().includes(term) ||
       (company.email || '').toLowerCase().includes(term) ||
-      (company.gstin || '').toLowerCase().includes(term)
-    );
+      (company.gstin || '').toLowerCase().includes(term);
+
+    const isActive = company.isActive !== false;
+    
+    if (statusFilter === 'active') return matchesSearch && isActive;
+    if (statusFilter === 'inactive') return matchesSearch && !isActive;
+    return matchesSearch;
   });
 
   const handleAddClick = () => {
@@ -92,10 +97,10 @@ export default function Companies() {
     setIsDeleting(true);
     try {
       await deleteCompany(companyToDelete);
-      await loadCompanies();
+      setCompanies(prev => prev.filter(c => (c.companyId || c.id) !== companyToDelete));
       setIsDeleteModalOpen(false);
       setCompanyToDelete(null);
-      showToast('Company deleted successfully', 'error');
+      showToast('Company deleted successfully', 'success');
     } catch (err) {
       showToast(`Failed to delete company: ${err.message}`, 'error');
     } finally {
@@ -127,28 +132,49 @@ export default function Companies() {
   );
 
   return (
-    <div className="space-y-6 flex flex-col h-full pb-6">
+    <div className="font-Inter space-y-4 flex flex-col h-full pb-6 pt-4">
       {/* Header Area */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <p className="text-gray-500 text-sm">Manage your companies and their branches.</p>
+        {/* Left: Search Bar */}
+        <div className="flex-1 max-w-[320px]">
+          <SearchBar
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search Companies..."
+          />
         </div>
-        <button
-          onClick={handleAddClick}
-          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Company
-        </button>
+
+        {/* Right: Calendar + New Button (Mocked Status for UI match) */}
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="appearance-none bg-white border border-[#E9ECEF] text-[#46505F] text-[13px] rounded-[8px] pl-3 pr-8 h-[38px] focus:outline-none focus:border-[#1A9F9A] transition-colors cursor-pointer shadow-sm"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#46505F]">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <button
+            onClick={handleAddClick}
+            className="inline-flex items-center justify-center px-4 h-[38px] text-[13px] font-medium text-white bg-[#1A9F9A] rounded-[8px] hover:bg-[#14807b] transition-colors shadow-sm"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Company
+          </button>
+        </div>
       </div>
 
       {/* Unified Table Container */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col flex-1 min-h-0">
-        <SearchBar
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search companies..."
-        />
+      <div className="bg-white rounded-[12px] shadow-sm border border-[#E9ECEF] flex flex-col flex-1 min-h-0">
 
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center min-h-[200px]">
@@ -207,7 +233,7 @@ export default function Companies() {
         }}
         onConfirm={confirmDelete}
         title="Delete Company"
-        message="Are you sure you want to delete this company? All associated branches will also be removed. This action cannot be undone."
+        message="Are you sure you want to delete this company?"
         confirmText="Delete Company"
         isSubmitting={isDeleting}
       />

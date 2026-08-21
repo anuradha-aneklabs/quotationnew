@@ -14,9 +14,26 @@ import { ToastProvider } from './contexts/ToastContext';
 import './index.css';
 
 function App() {
-  const [currentView, setCurrentView] = useState('Dashboard');
+  const [currentView, setCurrentView] = useState(() => {
+    return localStorage.getItem('currentView') || 'Dashboard';
+  });
   const [token, setToken] = useState(localStorage.getItem('token') || null);
-  const [editQuotationId, setEditQuotationId] = useState(null);
+  const [editQuotationId, setEditQuotationId] = useState(() => {
+    const saved = localStorage.getItem('editQuotationId');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('currentView', currentView);
+  }, [currentView]);
+
+  useEffect(() => {
+    if (editQuotationId) {
+      localStorage.setItem('editQuotationId', JSON.stringify(editQuotationId));
+    } else {
+      localStorage.removeItem('editQuotationId');
+    }
+  }, [editQuotationId]);
 
   useEffect(() => {
     const handleStorageChange = () => {
