@@ -40,24 +40,24 @@ export default function ClientsTable({ clients, onView, onEdit, onDelete }) {
                 {client.location || client.city || '-'}
               </td>
               <td className="px-6 py-3">
-                <div className="flex items-center justify-end space-x-2">
+                <div className="flex items-center justify-end space-x-2 min-w-max">
                   <button
                     onClick={() => onEdit(client)}
-                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-shrink-0"
                   >
-                    <img src={iconEdit} alt="Edit" className="h-4 w-4" />
+                    <img src={iconEdit} alt="Edit" className="h-4 w-4 object-contain" />
                   </button>
                   <button
                     onClick={() => onView(client)}
-                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-shrink-0"
                   >
-                    <img src={iconEye} alt="View" className="h-4 w-4" />
+                    <img src={iconEye} alt="View" className="h-4 w-4 object-contain" />
                   </button>
                   <button
                     onClick={() => onDelete(client.id)}
-                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                    className="p-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors flex-shrink-0"
                   >
-                    <img src={iconTrash} alt="Delete" className="h-4 w-4" />
+                    <img src={iconTrash} alt="Delete" className="h-4 w-4 object-contain" />
                   </button>
                 </div>
               </td>

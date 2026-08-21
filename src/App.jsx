@@ -58,7 +58,7 @@ function App() {
         {currentView === 'Companies' && <Companies />}
         {currentView === 'Tax Masters' && <TaxMasters />}
         {currentView === 'Dropdown Masters' && <DropdownMasters />}
-        {currentView === 'Reports' && <Reports />}
+        {currentView === 'Reports' && <Reports setCurrentView={setCurrentView} />}
       </DashboardLayout>
     </ToastProvider>
   );

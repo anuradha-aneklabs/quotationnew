@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
+import FormInput from '../common/FormInput';
+import FormTextarea from '../common/FormTextarea';
+import Button from '../common/Button';
 
 export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
   const [formData, setFormData] = useState({
@@ -130,17 +133,19 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 overflow-y-auto pt-10 pb-10">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4 my-auto relative flex flex-col">
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-900">
-            {clientData ? 'Edit Client' : 'Add New Client'}
-          </h2>
-          <button 
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
-          >
-            <X className="h-5 w-5" />
-          </button>
+        <div className="px-6 pt-6">
+          <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+            <h2 className="text-xl font-semibold text-[#040715]">
+              {clientData ? 'Edit Client' : 'Add New Client'}
+            </h2>
+            <button 
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         {/* Form Content */}
@@ -149,157 +154,124 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
               {/* Company Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Company Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="companyName"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  placeholder="e.g. Acme Corp"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.companyName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.companyName && <p className="mt-1 text-xs text-red-500">{errors.companyName}</p>}
-              </div>
+              <FormInput
+                label="Company Name"
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleChange}
+                placeholder="e.g. Acme Corp"
+                disabled={isSubmitting}
+                error={errors.companyName}
+                required
+                labelClassName="block mb-2"
+                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
+              />
 
               {/* Contact Person Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Contact Person Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="contactPerson"
-                  value={formData.contactPerson}
-                  onChange={handleChange}
-                  placeholder="e.g. John Doe"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.contactPerson ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.contactPerson && <p className="mt-1 text-xs text-red-500">{errors.contactPerson}</p>}
-              </div>
+              <FormInput
+                label="Contact Person Name"
+                name="contactPerson"
+                value={formData.contactPerson}
+                onChange={handleChange}
+                placeholder="e.g. John Doe"
+                disabled={isSubmitting}
+                error={errors.contactPerson}
+                required
+                labelClassName="block mb-2"
+                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
+              />
 
               {/* Email */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Email <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="john@acme.com"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
-              </div>
+              <FormInput
+                type="email"
+                label="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="john@acme.com"
+                disabled={isSubmitting}
+                error={errors.email}
+                required
+                labelClassName="block mb-2"
+                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
+              />
 
               {/* Phone */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Phone <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="+1 234 567 8900"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
-              </div>
+              <FormInput
+                label="Phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+1 234 567 8900"
+                disabled={isSubmitting}
+                error={errors.phone}
+                required
+                labelClassName="block mb-2"
+                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
+              />
 
               {/* Address (Full Width) */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Address <span className="text-red-500">*</span>
-                </label>
-                <textarea
+                <FormTextarea
+                  label="Address"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="Full address"
                   rows={3}
                   disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.address ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
+                  error={errors.address}
+                  required
+                  labelClassName="block mb-2"
+                  className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
                 />
-                {errors.address && <p className="mt-1 text-xs text-red-500">{errors.address}</p>}
               </div>
 
               {/* PAN Number */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  PAN Number <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="panNumber"
-                  value={formData.panNumber}
-                  onChange={handleChange}
-                  placeholder="ABCDE1234F"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.panNumber ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.panNumber && <p className="mt-1 text-xs text-red-500">{errors.panNumber}</p>}
-              </div>
+              <FormInput
+                label="PAN Number"
+                name="panNumber"
+                value={formData.panNumber}
+                onChange={handleChange}
+                placeholder="ABCDE1234F"
+                disabled={isSubmitting}
+                error={errors.panNumber}
+                required
+                labelClassName="block mb-2"
+                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
+              />
 
               {/* GST Number */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  GST Number <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="gstNumber"
-                  value={formData.gstNumber}
-                  onChange={handleChange}
-                  placeholder="22AAAAA0000A1Z5"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.gstNumber ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.gstNumber && <p className="mt-1 text-xs text-red-500">{errors.gstNumber}</p>}
-              </div>
+              <FormInput
+                label="GST Number"
+                name="gstNumber"
+                value={formData.gstNumber}
+                onChange={handleChange}
+                placeholder="22AAAAA0000A1Z5"
+                disabled={isSubmitting}
+                error={errors.gstNumber}
+                required
+                labelClassName="block mb-2"
+                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
+              />
 
             </div>
           </form>
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t border-gray-100">
-          <button
-            type="button"
+        <div className="flex justify-between gap-3 py-4 px-6">
+          <Button
+            variant="secondary"
             onClick={onClose}
             disabled={isSubmitting}
-            className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             form="clientForm"
             disabled={isSubmitting}
-            className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-[#1A9F9A] rounded-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50"
           >
             {isSubmitting ? (
               <>
@@ -309,7 +281,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
             ) : (
               'Save Client'
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

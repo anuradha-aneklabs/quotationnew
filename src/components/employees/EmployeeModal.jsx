@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
+import FormInput from '../common/FormInput';
+import Button from '../common/Button';
 
 export default function EmployeeModal({ isOpen, onClose, onSave, employeeData }) {
   const [formData, setFormData] = useState({
@@ -125,17 +127,19 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employeeData })
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 overflow-y-auto pt-10 pb-10">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4 my-auto relative flex flex-col">
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-900">
-            {employeeData ? 'Edit Employee' : 'Add New Employee'}
-          </h2>
-          <button 
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
-          >
-            <X className="h-5 w-5" />
-          </button>
+        <div className="px-6 pt-6">
+          <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+            <h2 className="text-xl font-semibold text-[#040715]">
+              {employeeData ? 'Edit Employee' : 'Add New Employee'}
+            </h2>
+            <button 
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         {/* Form Content */}
@@ -144,170 +148,123 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employeeData })
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
               {/* Employee Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Employee Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="e.g. Jane Doe"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
-              </div>
+              <FormInput
+                label="Employee Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="e.g. Jane Doe"
+                disabled={isSubmitting}
+                error={errors.name}
+                required
+                className="py-2.5"
+              />
 
               {/* Employee ID */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Employee ID <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="id"
-                  value={formData.id}
-                  onChange={handleChange}
-                  placeholder="e.g. EMP-004"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.id ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.id && <p className="mt-1 text-xs text-red-500">{errors.id}</p>}
-              </div>
+              <FormInput
+                label="Employee ID"
+                name="id"
+                value={formData.id}
+                onChange={handleChange}
+                placeholder="e.g. EMP-004"
+                disabled={isSubmitting}
+                error={errors.id}
+                required
+                className="py-2.5"
+              />
 
               {/* Email */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Email <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="jane@quotemaster.com"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
-              </div>
+              <FormInput
+                type="email"
+                label="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="jane@quotemaster.com"
+                disabled={isSubmitting}
+                error={errors.email}
+                required
+                className="py-2.5"
+              />
 
               {/* Phone */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Phone <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="+1 234 567 8900"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
-              </div>
+              <FormInput
+                label="Phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+1 234 567 8900"
+                disabled={isSubmitting}
+                error={errors.phone}
+                required
+                className="py-2.5"
+              />
 
               {/* Role */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Role <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  placeholder="e.g. UI/UX Designer"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.role ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.role && <p className="mt-1 text-xs text-red-500">{errors.role}</p>}
-              </div>
+              <FormInput
+                label="Role"
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                placeholder="e.g. UI/UX Designer"
+                disabled={isSubmitting}
+                error={errors.role}
+                required
+                className="py-2.5"
+              />
 
               {/* Hourly Rate */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Hourly Rate <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="hourlyRate"
-                  value={formData.hourlyRate}
-                  onChange={handleChange}
-                  placeholder="e.g. 50"
-                  disabled={isSubmitting}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-                    errors.hourlyRate ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-100'
-                  }`}
-                />
-                {errors.hourlyRate && <p className="mt-1 text-xs text-red-500">{errors.hourlyRate}</p>}
-              </div>
+              <FormInput
+                label="Hourly Rate"
+                name="hourlyRate"
+                value={formData.hourlyRate}
+                onChange={handleChange}
+                placeholder="e.g. 50"
+                disabled={isSubmitting}
+                error={errors.hourlyRate}
+                required
+                className="py-2.5"
+              />
 
               {/* Assigned Project */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Assigned Project
-                </label>
-                <input
-                  type="text"
-                  name="assignedProject"
-                  value={formData.assignedProject}
-                  onChange={handleChange}
-                  placeholder="e.g. Project Apollo (Optional)"
-                  disabled={isSubmitting}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50"
-                />
-              </div>
+              <FormInput
+                label="Assigned Project"
+                name="assignedProject"
+                value={formData.assignedProject}
+                onChange={handleChange}
+                placeholder="e.g. Project Apollo (Optional)"
+                disabled={isSubmitting}
+                className="py-2.5"
+              />
 
               {/* Department */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Department
-                </label>
-                <input
-                  type="text"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                  placeholder="e.g. Sales (Optional)"
-                  disabled={isSubmitting}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50"
-                />
-              </div>
+              <FormInput
+                label="Department"
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+                placeholder="e.g. Sales (Optional)"
+                disabled={isSubmitting}
+                className="py-2.5"
+              />
 
             </div>
           </form>
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t border-gray-100">
-          <button
-            type="button"
+        <div className="flex justify-between gap-3 py-4 px-6">
+          <Button
+            variant="secondary"
             onClick={onClose}
             disabled={isSubmitting}
-            className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             form="employeeForm"
             disabled={isSubmitting}
-            className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-[#1A9F9A] rounded-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50"
           >
             {isSubmitting ? (
               <>
@@ -317,7 +274,7 @@ export default function EmployeeModal({ isOpen, onClose, onSave, employeeData })
             ) : (
               'Save Employee'
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

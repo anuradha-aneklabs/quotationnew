@@ -116,7 +116,7 @@ export default function Clients() {
   );
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 overflow-hidden gap-3">
+    <div className="flex flex-col flex-1 min-h-0 overflow-hidden gap-3 pt-2">
 
       <SearchBar
         value={searchTerm}
