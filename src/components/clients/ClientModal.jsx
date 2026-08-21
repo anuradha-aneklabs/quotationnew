@@ -25,7 +25,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
       if (clientData) {
         // Map from API snake_case to form camelCase if editing
         setFormData({
-          logo: null, // Depending on API, you might have clientData.logo_url
+          logo: clientData.logo || '', 
           companyName: clientData.company_name || '',
           contactPerson: clientData.contact_person || '',
           email: clientData.email || '',
@@ -71,18 +71,25 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
     }
   };
 
-  const handleLogoChange = (e) => {
+  const handleLogoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, logo: 'Image size must be less than 2MB' }));
-      } else if (!['image/jpeg', 'image/png'].includes(file.type)) {
-        setErrors(prev => ({ ...prev, logo: 'Only JPG and PNG are allowed' }));
-      } else {
-        setFormData(prev => ({ ...prev, logo: file }));
-        setErrors(prev => ({ ...prev, logo: '' }));
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit
+        setErrors(prev => ({ ...prev, logo: "Image size must be less than 2MB" }));
+        return;
       }
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, logo: reader.result }));
+        setErrors(prev => ({ ...prev, logo: '' }));
+      };
+      reader.readAsDataURL(file); // Converts to base64 string
     }
+  };
+
+  const removeLogo = () => {
+    setFormData(prev => ({ ...prev, logo: '' }));
   };
 
   const validate = () => {
@@ -174,30 +181,41 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
           <form id="clientForm" onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
-              {/* Logo Upload */}
-              <div className="md:row-span-2 flex flex-col">
-                <label className="block text-[14px] font-medium text-gray-700 mb-2">Logo</label>
-                <div className={`flex-1 border ${errors.logo ? 'border-red-500' : 'border-[#E9ECEF]'} rounded-[12px] flex flex-col items-center justify-center p-4 bg-[#FAFAFA] hover:bg-gray-50 transition-colors cursor-pointer relative min-h-[160px]`}>
-                  <input 
-                    type="file" 
-                    accept="image/jpeg, image/png" 
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    onChange={handleLogoChange}
-                    disabled={isSubmitting}
-                  />
+              {/* Logo Upload Box */}
+              <div className="md:col-span-1 md:row-span-2">
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Logo</label>
+                <div className="relative flex flex-col items-center justify-center w-full h-[120px] border-2 border-dashed border-[#E9ECEF] rounded-[8px] bg-[#FAFAFA] hover:bg-gray-50 transition-colors group cursor-pointer overflow-hidden">
                   {formData.logo ? (
-                     <img src={URL.createObjectURL(formData.logo)} alt="Logo Preview" className="w-16 h-16 object-contain mb-2" />
+                    <>
+                      <img src={formData.logo} alt="Company Logo" className="w-full h-full object-contain p-2" />
+                      <button
+                        type="button"
+                        onClick={(e) => { e.preventDefault(); removeLogo(); }}
+                        className="absolute top-1 right-1 bg-white rounded-full p-1 shadow hover:bg-red-50 text-red-500 z-10"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </>
                   ) : (
-                     <>
-                       <div className="w-12 h-12 rounded-full bg-[#E6F5F5] flex items-center justify-center mb-3">
-                         <img src={logoIcon} alt="Upload" className="w-6 h-6 object-contain" />
-                       </div>
-                       <span className="text-[#040715] font-medium text-[13px] mb-1 text-center">Upload Image</span>
-                       <span className="text-[#5F6A80] text-[11px] text-center leading-[14px]">JPG or PNG Max<br/>2mb • 512 px</span>
-                     </>
+                    <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <div className="p-2 bg-[#E2FFEC] text-[#1A9F9A] rounded-full mb-2">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        </div>
+                        <p className="text-[12px] font-medium text-[#040715]">Upload Image</p>
+                        <p className="text-[10px] text-[#8D98A9] mt-1">JPG or PNG Max 2MB</p>
+                      </div>
+                      <input 
+                        type="file" 
+                        accept="image/png, image/jpeg" 
+                        className="hidden" 
+                        onChange={handleLogoUpload} 
+                        disabled={isSubmitting}
+                      />
+                    </label>
                   )}
                 </div>
-                {errors.logo && <p className="text-red-500 text-xs mt-1">{errors.logo}</p>}
+                {errors.logo && <p className="mt-1 text-xs text-red-500">{errors.logo}</p>}
               </div>
 
               {/* Company Name */}

@@ -422,13 +422,13 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                       value={module.name}
                       onChange={(e) => updateModule(module.id, 'name', e.target.value)}
                       placeholder="Module Name (e.g. Login and registration)"
-                      className={`w-full text-[14px] font-semibold text-[#040715] bg-transparent focus:outline-none border-b py-0 max-h-[60px] overflow-hidden ${errors[`module_${mIdx}_name`] ? 'border-red-500' : 'border-transparent hover:border-gray-200 focus:border-[#1A9F9A] transition-colors'}`}
+                      className={`w-[85%] text-[14px] font-semibold text-[#040715] bg-transparent focus:outline-none border-b py-0 max-h-[60px] overflow-hidden ${errors[`module_${mIdx}_name`] ? 'border-red-500' : 'border-transparent hover:border-gray-200 focus:border-[#1A9F9A] transition-colors'}`}
                     />
                     <AutoResizeTextarea
                       value={module.description}
                       onChange={(e) => updateModule(module.id, 'description', e.target.value)}
                       placeholder="Module Description"
-                      className="w-full text-[11px] leading-[16px] text-gray-500 bg-transparent focus:outline-none border-b border-transparent hover:border-gray-200 focus:border-[#1A9F9A] transition-colors max-md:line-clamp-5 max-md:max-h-[85px] md:max-h-[60px] overflow-hidden"
+                      className="w-[85%] text-[11px] leading-[16px] text-gray-500 bg-transparent focus:outline-none border-b border-transparent hover:border-gray-200 focus:border-[#1A9F9A] transition-colors max-md:line-clamp-5 max-md:max-h-[85px] md:max-h-[60px] overflow-hidden"
                     />
                   </div>
                 </div>

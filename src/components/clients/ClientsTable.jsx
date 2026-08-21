@@ -81,7 +81,7 @@ export default function ClientsTable({ clients, onView, onEdit, onDelete }) {
                 {client.gst_number || '-'}
               </td>
               <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
-                {client.location || client.city || '-'}
+                {client.address || '-'}
               </td>
               <td className="px-6 py-3">
                 <div className="flex items-center justify-end space-x-2 min-w-max">
