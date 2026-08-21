@@ -40,6 +40,7 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
 
   useEffect(() => {
     if (isOpen && company) {
+      setViewMode('list');
       loadBranches();
     } else {
       setBranches([]);
@@ -107,9 +108,9 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
       <div className="fixed inset-0 z-40 flex items-center justify-center bg-[#040715]/40 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto">
         <div className={`bg-white rounded-[16px] overflow-hidden shadow-2xl w-full ${viewMode === 'form' ? 'max-w-[700px] h-auto max-h-[95vh]' : 'max-w-[1000px] h-[550px]'} relative flex flex-col animate-in zoom-in-95 duration-200 my-auto`}>
           {/* Header */}
-          <div className="flex justify-between items-center px-6 py-4 border-b border-[#E9ECEF] shrink-0">
+          <div className="flex justify-between items-center mx-6 py-4 shrink-0">
             <div>
-              <h2 className="text-[16px] font-bold text-[#040715]">
+              <h2 className="text-[18px] font-semibold text-[#040715]">
                 {viewMode === 'form' ? (editingBranch ? 'Edit Branch' : 'Add New Branch') : 'Branches'} - <span className="text-[#1A9F9A] font-medium">{company.companyName || company.company_name}</span>
               </h2>
             </div>

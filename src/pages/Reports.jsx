@@ -15,6 +15,8 @@ import clientIcon from '../assets/report/total client.svg';
 import employeeIcon from '../assets/report/total employee.svg';
 import quotationIcon from '../assets/report/total quotation.svg';
 import revenueIcon from '../assets/report/total revenue.svg';
+import exportExcelIcon from '../assets/report/export excel.svg';
+import exportPdfIcon from '../assets/report/export pdf.svg';
 const formatCurrency = (amountStr) => {
   if (!amountStr) return '₹ 0.00';
   const numStr = String(amountStr).replace(/[^0-9.]/g, '');
@@ -57,6 +59,20 @@ export default function Reports({ setCurrentView }) {
     setIsLoading(true);
     try {
       const data = await fetchDashboardReport({ startDate: dateFrom, endDate: dateTo });
+      
+      // Override colors for specific clients in the pie chart
+      if (data && data.topClientsPie) {
+        data.topClientsPie = data.topClientsPie.map(client => {
+          if (client.name === 'Global Solutions') {
+            return { ...client, color: '#1A9F9A' };
+          }
+          if (client.name === 'Innovatech LLC') {
+            return { ...client, color: '#DFC21B' };
+          }
+          return client;
+        });
+      }
+      
       setReportData(data);
     } catch (error) {
       console.error('Error fetching dashboard:', error);
@@ -101,7 +117,7 @@ export default function Reports({ setCurrentView }) {
             {isExportingExcel ? (
               <span className="w-4 h-4 mr-1.5 border-2 border-gray-300 border-t-gray-700 rounded-full animate-spin"></span>
             ) : (
-              <Download className="h-4 w-4 mr-1.5" />
+              <img src={exportExcelIcon} alt="Export Excel" className="h-4 w-4 mr-1.5" />
             )}
             Export Excel
           </button>
@@ -112,7 +128,7 @@ export default function Reports({ setCurrentView }) {
             {isExportingPdf ? (
               <span className="w-4 h-4 mr-1.5 border-2 border-teal-600 border-t-white rounded-full animate-spin"></span>
             ) : (
-              <FileDown className="h-4 w-4 mr-1.5" />
+              <img src={exportPdfIcon} alt="Export PDF" className="h-4 w-4 mr-1.5" />
             )}
             Export PDF
           </button>
@@ -206,7 +222,7 @@ export default function Reports({ setCurrentView }) {
                   <Tooltip 
                     contentStyle={{ borderRadius: '6px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px' }}
                   />
-                  <Area type="linear" dataKey="value" stroke="#2DD4BF" strokeWidth={2} fillOpacity={1} fill="url(#colorQts)" dot={{ r: 3, fill: '#2DD4BF', stroke: '#2DD4BF', strokeWidth: 1 }} activeDot={{ r: 5 }} />
+                  <Area type="linear" dataKey="value" stroke="#1A9F9A" strokeWidth={2} fillOpacity={1} fill="url(#colorQts)" dot={{ r: 3, fill: '#1A9F9A', stroke: '#1A9F9A', strokeWidth: 1 }} activeDot={{ r: 5 }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -252,8 +268,8 @@ export default function Reports({ setCurrentView }) {
                       data={reportData?.topClientsPie || []}
                       cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
+                      innerRadius={75}
+                      outerRadius={100}
                       paddingAngle={0}
                       dataKey="value"
                       stroke="none"
@@ -301,26 +317,35 @@ export default function Reports({ setCurrentView }) {
           
           {/* Recent Quotations */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col overflow-hidden">
-            <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-white">
+            <div className="p-4 border-b border-[#E6EBEB] flex justify-between items-center bg-white">
               <h3 className="font-bold text-gray-900 text-[15px]">Recent Quotations</h3>
               <button className="text-xs font-semibold text-teal-600 hover:text-teal-700 flex items-center gap-1">View All <span className="text-[10px]">&rarr;</span></button>
             </div>
             <div className="flex-1 overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-gray-100 text-[16px] font-bold text-[#040715] bg-[#ECF2F2]">
+                  <tr className="border-b border-[#E6EBEB] text-[16px] font-bold text-[#040715] bg-[#ECF2F2]">
                     <th className="px-4 py-3 font-semibold">Quotation No</th>
                     <th className="px-4 py-3 font-semibold">Client</th>
                     <th className="px-4 py-3 font-semibold text-right">Amount</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {(reportData?.recentQuotations || []).slice(0,4).map((q, i) => (
-                    <tr key={i} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-4 py-3 whitespace-nowrap text-[13px] font-bold text-gray-800">{q.id}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-[13px] text-gray-600 font-medium">{q.client}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-[13px] font-semibold text-gray-800 text-right">{formatCurrency(q.amount)}</td>
-                    </tr>
+                <tbody className="">
+                  {(reportData?.recentQuotations || []).slice(0,4).map((q, i, arr) => (
+                    <React.Fragment key={i}>
+                      <tr className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-bold text-gray-800">{q.id}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] text-gray-600 font-medium">{q.client}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-semibold text-gray-800 text-right">{formatCurrency(q.amount)}</td>
+                      </tr>
+                      {i < arr.length - 1 && (
+                        <tr>
+                          <td colSpan="3" className="p-0">
+                            <div className="mx-4 border-t border-gray-200"></div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>
@@ -342,13 +367,22 @@ export default function Reports({ setCurrentView }) {
                     <th className="px-4 py-3 font-semibold text-right">Revenue</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {(reportData?.topClientsTable || []).slice(0,4).map((c, i) => (
-                    <tr key={i} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-4 py-3 whitespace-nowrap text-[13px] font-bold text-gray-800">{c.client}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-[13px] text-gray-600 font-medium text-center">{c.quotations}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-[13px] font-semibold text-gray-800 text-right">{formatCurrency(c.revenue)}</td>
-                    </tr>
+                <tbody className="">
+                  {(reportData?.topClientsTable || []).slice(0,4).map((c, i, arr) => (
+                    <React.Fragment key={i}>
+                      <tr className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-bold text-gray-800">{c.client}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] text-gray-600 font-medium text-center">{c.quotations}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-semibold text-gray-800 text-right">{formatCurrency(c.revenue)}</td>
+                      </tr>
+                      {i < arr.length - 1 && (
+                        <tr>
+                          <td colSpan="3" className="p-0">
+                            <div className="mx-4 border-t border-gray-200"></div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>
@@ -370,21 +404,30 @@ export default function Reports({ setCurrentView }) {
                     <th className="px-4 py-3 font-semibold text-right">Revenue</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {(reportData?.employeesTable || []).slice(0,4).map((e, i) => (
-                    <tr key={i} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-4 py-2.5 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <img src={e.avatar} alt={e.name} className="w-7 h-7 rounded-full bg-gray-100 object-cover" />
-                          <div>
-                            <div className="text-[13px] font-bold text-gray-800 leading-tight">{e.name}</div>
-                            <div className="text-[11px] text-gray-500 font-medium mt-0.5">{e.role}</div>
+                <tbody className="">
+                  {(reportData?.employeesTable || []).slice(0,4).map((e, i, arr) => (
+                    <React.Fragment key={i}>
+                      <tr className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-4 py-2.5 whitespace-nowrap">
+                          <div className="flex items-center gap-3">
+                            <img src={e.avatar} alt={e.name} className="w-7 h-7 rounded-full bg-gray-100 object-cover" />
+                            <div>
+                              <div className="text-[13px] font-bold text-gray-800 leading-tight">{e.name}</div>
+                              <div className="text-[11px] text-gray-500 font-medium mt-0.5">{e.role}</div>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-2.5 whitespace-nowrap text-[13px] text-gray-600 font-medium text-center">{e.quotations}</td>
-                      <td className="px-4 py-2.5 whitespace-nowrap text-[13px] font-semibold text-gray-800 text-right">{formatCurrency(e.revenue)}</td>
-                    </tr>
+                        </td>
+                        <td className="px-4 py-2.5 whitespace-nowrap text-[13px] text-gray-600 font-medium text-center">{e.quotations}</td>
+                        <td className="px-4 py-2.5 whitespace-nowrap text-[13px] font-semibold text-gray-800 text-right">{formatCurrency(e.revenue)}</td>
+                      </tr>
+                      {i < arr.length - 1 && (
+                        <tr>
+                          <td colSpan="3" className="p-0">
+                            <div className="mx-4 border-t border-gray-200"></div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>

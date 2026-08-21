@@ -7,8 +7,8 @@ export default function BranchesTable({ branches, onView, onEdit, onDelete }) {
   return (
     <div className="flex-1 w-full overflow-auto scrollbar-hide">
       <table className="w-full text-left border-collapse min-w-[900px]">
-        <thead className="sticky top-0 bg-white z-10">
-          <tr className="border-b border-[#E9ECEF]">
+        <thead className="sticky top-0 bg-[#ECF2F2] z-10">
+          <tr>
             <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] whitespace-nowrap">Branch Name</th>
             <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] whitespace-nowrap">City</th>
             <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] whitespace-nowrap">State</th>
@@ -18,9 +18,10 @@ export default function BranchesTable({ branches, onView, onEdit, onDelete }) {
             <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] text-right whitespace-nowrap">Action</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#E9ECEF]">
-          {branches.map((branch) => (
-            <tr key={branch.branchId || branch.id} className="hover:bg-gray-50/50 transition-colors">
+        <tbody className="">
+          {branches.map((branch, index) => (
+            <React.Fragment key={branch.branchId || branch.id}>
+              <tr className="hover:bg-gray-50/50 transition-colors">
               <td className="px-6 py-3 font-Inter font-medium text-[13px] leading-[31px] text-[#46505F] whitespace-nowrap">{branch.branchName || branch.branch_name}</td>
               <td className="px-6 py-3 font-Inter font-medium text-[13px] leading-[31px] text-[#46505F] whitespace-nowrap">{branch.city || '-'}</td>
               <td className="px-6 py-3 font-Inter font-medium text-[13px] leading-[31px] text-[#46505F] whitespace-nowrap">{branch.state || '-'}</td>
@@ -28,7 +29,7 @@ export default function BranchesTable({ branches, onView, onEdit, onDelete }) {
               <td className="px-6 py-3 font-Inter font-medium text-[13px] leading-[31px] text-[#46505F] whitespace-nowrap">{branch.email || '-'}</td>
               <td className="px-6 py-3">
                 {branch.isDefault || branch.is_default ? (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-[4px] text-xs font-medium bg-[#E2FFEC] text-[#0DB22B]">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-[6px] text-[13px] font-medium bg-[#E2FFEC] text-[#0DB22B]">
                     Default
                   </span>
                 ) : (
@@ -60,7 +61,16 @@ export default function BranchesTable({ branches, onView, onEdit, onDelete }) {
                   </button>
                 </div>
               </td>
-            </tr>
+              </tr>
+              {/* Border between rows */}
+              {index < branches.length - 1 && (
+                <tr>
+                  <td colSpan="7" className="p-0">
+                    <div className="mx-6 border-t border-[#E9ECEF]"></div>
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
           ))}
           {branches.length === 0 && (
             <tr>

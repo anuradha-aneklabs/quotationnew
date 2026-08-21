@@ -11,7 +11,7 @@ export default function FormTextarea({
   const textareaBg = className.includes('bg-') ? '' : 'bg-[#FAFAFA]';
   const textareaPy = className.includes('py-') ? '' : 'py-3';
   const baseTextareaClass = `w-full px-3 ${textareaPy} ${textareaBg} rounded-lg border text-sm focus:outline-none focus:ring-2 transition-colors resize-none`;
-  const errorClass = error ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-purple-500 focus:ring-purple-100';
+  const errorClass = error ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-[#1A9F9A] focus:ring-[#1A9F9A]/20';
 
   return (
     <div>

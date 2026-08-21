@@ -3,9 +3,11 @@ import { X, Loader2 } from 'lucide-react';
 import FormInput from '../common/FormInput';
 import FormTextarea from '../common/FormTextarea';
 import Button from '../common/Button';
+import logoIcon from '../../assets/clientInformation/logo icon.svg';
 
 export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
   const [formData, setFormData] = useState({
+    logo: null,
     companyName: '',
     contactPerson: '',
     email: '',
@@ -23,6 +25,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
       if (clientData) {
         // Map from API snake_case to form camelCase if editing
         setFormData({
+          logo: null, // Depending on API, you might have clientData.logo_url
           companyName: clientData.company_name || '',
           contactPerson: clientData.contact_person || '',
           email: clientData.email || '',
@@ -33,6 +36,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
         });
       } else {
         setFormData({
+          logo: null,
           companyName: '',
           contactPerson: '',
           email: '',
@@ -64,6 +68,20 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
     setFormData(prev => ({ ...prev, [name]: newValue }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, logo: 'Image size must be less than 2MB' }));
+      } else if (!['image/jpeg', 'image/png'].includes(file.type)) {
+        setErrors(prev => ({ ...prev, logo: 'Only JPG and PNG are allowed' }));
+      } else {
+        setFormData(prev => ({ ...prev, logo: file }));
+        setErrors(prev => ({ ...prev, logo: '' }));
+      }
     }
   };
 
@@ -107,7 +125,10 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
       setIsSubmitting(true);
       try {
         // Map form camelCase to API snake_case payload
+        // Note: For file uploads, FormData might be needed if API expects multipart/form-data.
+        // Assuming onSave handles it or we send logo if required.
         const payload = {
+          logo: formData.logo,
           company_name: formData.companyName,
           contact_person: formData.contactPerson,
           email: formData.email,
@@ -151,110 +172,117 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
         {/* Form Content */}
         <div className="p-6 overflow-y-auto">
           <form id="clientForm" onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
+              {/* Logo Upload */}
+              <div className="md:row-span-2 flex flex-col">
+                <label className="block text-[14px] font-medium text-gray-700 mb-2">Logo</label>
+                <div className={`flex-1 border ${errors.logo ? 'border-red-500' : 'border-[#E9ECEF]'} rounded-[12px] flex flex-col items-center justify-center p-4 bg-[#FAFAFA] hover:bg-gray-50 transition-colors cursor-pointer relative min-h-[160px]`}>
+                  <input 
+                    type="file" 
+                    accept="image/jpeg, image/png" 
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    onChange={handleLogoChange}
+                    disabled={isSubmitting}
+                  />
+                  {formData.logo ? (
+                     <img src={URL.createObjectURL(formData.logo)} alt="Logo Preview" className="w-16 h-16 object-contain mb-2" />
+                  ) : (
+                     <>
+                       <div className="w-12 h-12 rounded-full bg-[#E6F5F5] flex items-center justify-center mb-3">
+                         <img src={logoIcon} alt="Upload" className="w-6 h-6 object-contain" />
+                       </div>
+                       <span className="text-[#040715] font-medium text-[13px] mb-1 text-center">Upload Image</span>
+                       <span className="text-[#5F6A80] text-[11px] text-center leading-[14px]">JPG or PNG Max<br/>2mb • 512 px</span>
+                     </>
+                  )}
+                </div>
+                {errors.logo && <p className="text-red-500 text-xs mt-1">{errors.logo}</p>}
+              </div>
+
               {/* Company Name */}
               <FormInput
-                label="Company Name"
+                label={<>Company Name <span className="text-[#F1511B]">*</span></>}
                 name="companyName"
                 value={formData.companyName}
                 onChange={handleChange}
-                placeholder="e.g. Acme Corp"
+                placeholder="Enter company Name"
                 disabled={isSubmitting}
                 error={errors.companyName}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
 
               {/* Contact Person Name */}
               <FormInput
-                label="Contact Person Name"
+                label={<>Contact Person Name <span className="text-[#F1511B]">*</span></>}
                 name="contactPerson"
                 value={formData.contactPerson}
                 onChange={handleChange}
-                placeholder="e.g. John Doe"
+                placeholder="Enter contact person name"
                 disabled={isSubmitting}
                 error={errors.contactPerson}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
 
               {/* Email */}
               <FormInput
                 type="email"
-                label="Email"
+                label={<>Email <span className="text-[#F1511B]">*</span></>}
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="john@acme.com"
+                placeholder="Enter email"
                 disabled={isSubmitting}
                 error={errors.email}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
 
               {/* Phone */}
               <FormInput
-                label="Phone"
+                label={<>Phone <span className="text-[#F1511B]">*</span></>}
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="+1 234 567 8900"
+                placeholder="Enter phone number"
                 disabled={isSubmitting}
                 error={errors.phone}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
+            </div>
 
-              {/* Address (Full Width) */}
-              <div className="md:col-span-2">
-                <FormTextarea
-                  label="Address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  placeholder="Full address"
-                  rows={3}
-                  disabled={isSubmitting}
-                  error={errors.address}
-                  required
-                  labelClassName="block mb-2"
-                  className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
-                />
-              </div>
+            {/* Address (Full Width) */}
+            <div>
+              <FormTextarea
+                label={<>Address <span className="text-[#F1511B]">*</span></>}
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                placeholder="Enter company address"
+                rows={3}
+                disabled={isSubmitting}
+                error={errors.address}
+              />
+            </div>
 
+            {/* PAN & GST */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* PAN Number */}
               <FormInput
-                label="PAN Number"
+                label={<>PAN Number <span className="text-[#F1511B]">*</span></>}
                 name="panNumber"
                 value={formData.panNumber}
                 onChange={handleChange}
-                placeholder="ABCDE1234F"
+                placeholder="Enter PAN number"
                 disabled={isSubmitting}
                 error={errors.panNumber}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
 
               {/* GST Number */}
               <FormInput
-                label="GST Number"
+                label={<>GST Number <span className="text-[#F1511B]">*</span></>}
                 name="gstNumber"
                 value={formData.gstNumber}
                 onChange={handleChange}
-                placeholder="22AAAAA0000A1Z5"
+                placeholder="Enter GST number"
                 disabled={isSubmitting}
                 error={errors.gstNumber}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
-
             </div>
           </form>
         </div>
