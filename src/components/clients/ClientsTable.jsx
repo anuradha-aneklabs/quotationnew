@@ -30,7 +30,7 @@ export default function ClientsTable({ clients, onView, onEdit, onDelete }) {
     <div className="overflow-auto flex-1 scrollbar-hide w-full">
       <table className="w-full min-w-[800px] text-left border-collapse">
         <thead className="sticky top-0 bg-white z-10">
-          <tr className="border-b border-gray-100">
+          <tr>
             <th className="pl-6 py-4 w-12">
               <Checkbox checked={allSelected} onChange={handleSelectAll} />
             </th>
@@ -43,11 +43,19 @@ export default function ClientsTable({ clients, onView, onEdit, onDelete }) {
             <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] text-right whitespace-nowrap">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
-          {clients.map((client) => {
+        <tbody className="">
+          {clients.length > 0 && (
+            <tr>
+              <td colSpan="8" className="p-0">
+                <div className="mx-3 border-t border-gray-100"></div>
+              </td>
+            </tr>
+          )}
+          {clients.map((client, index, arr) => {
             const isSelected = selectedClients.has(client.id);
             return (
-            <tr key={client.id} className="hover:bg-gray-50/50 transition-colors">
+            <React.Fragment key={client.id}>
+            <tr className="hover:bg-gray-50/50 transition-colors">
               <td className="pl-6 py-3">
                 <Checkbox 
                   checked={isSelected} 
@@ -109,6 +117,14 @@ export default function ClientsTable({ clients, onView, onEdit, onDelete }) {
                 </div>
               </td>
             </tr>
+            {index < arr.length - 1 && (
+              <tr>
+                <td colSpan="8" className="p-0">
+                  <div className="mx-3 border-t border-gray-100"></div>
+                </td>
+              </tr>
+            )}
+            </React.Fragment>
             );
           })}
           {clients.length === 0 && (
