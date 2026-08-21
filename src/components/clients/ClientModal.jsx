@@ -3,9 +3,11 @@ import { X, Loader2 } from 'lucide-react';
 import FormInput from '../common/FormInput';
 import FormTextarea from '../common/FormTextarea';
 import Button from '../common/Button';
+import logoIcon from '../../assets/clientInformation/logo icon.svg';
 
 export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
   const [formData, setFormData] = useState({
+    logo: null,
     companyName: '',
     contactPerson: '',
     email: '',
@@ -23,6 +25,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
       if (clientData) {
         // Map from API snake_case to form camelCase if editing
         setFormData({
+          logo: clientData.logo || '', 
           companyName: clientData.company_name || '',
           contactPerson: clientData.contact_person || '',
           email: clientData.email || '',
@@ -33,6 +36,7 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
         });
       } else {
         setFormData({
+          logo: null,
           companyName: '',
           contactPerson: '',
           email: '',
@@ -65,6 +69,27 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
+  };
+
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit
+        setErrors(prev => ({ ...prev, logo: "Image size must be less than 2MB" }));
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, logo: reader.result }));
+        setErrors(prev => ({ ...prev, logo: '' }));
+      };
+      reader.readAsDataURL(file); // Converts to base64 string
+    }
+  };
+
+  const removeLogo = () => {
+    setFormData(prev => ({ ...prev, logo: '' }));
   };
 
   const validate = () => {
@@ -107,7 +132,10 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
       setIsSubmitting(true);
       try {
         // Map form camelCase to API snake_case payload
+        // Note: For file uploads, FormData might be needed if API expects multipart/form-data.
+        // Assuming onSave handles it or we send logo if required.
         const payload = {
+          logo: formData.logo,
           company_name: formData.companyName,
           contact_person: formData.contactPerson,
           email: formData.email,
@@ -151,110 +179,128 @@ export default function ClientModal({ isOpen, onClose, onSave, clientData }) {
         {/* Form Content */}
         <div className="p-6 overflow-y-auto">
           <form id="clientForm" onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
+              {/* Logo Upload Box */}
+              <div className="md:col-span-1 md:row-span-2">
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Logo</label>
+                <div className="relative flex flex-col items-center justify-center w-full h-[120px] border-2 border-dashed border-[#E9ECEF] rounded-[8px] bg-[#FAFAFA] hover:bg-gray-50 transition-colors group cursor-pointer overflow-hidden">
+                  {formData.logo ? (
+                    <>
+                      <img src={formData.logo} alt="Company Logo" className="w-full h-full object-contain p-2" />
+                      <button
+                        type="button"
+                        onClick={(e) => { e.preventDefault(); removeLogo(); }}
+                        className="absolute top-1 right-1 bg-white rounded-full p-1 shadow hover:bg-red-50 text-red-500 z-10"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center w-full h-full cursor-pointer">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <div className="p-2 bg-[#E2FFEC] text-[#1A9F9A] rounded-full mb-2">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        </div>
+                        <p className="text-[12px] font-medium text-[#040715]">Upload Image</p>
+                        <p className="text-[10px] text-[#8D98A9] mt-1">JPG or PNG Max 2MB</p>
+                      </div>
+                      <input 
+                        type="file" 
+                        accept="image/png, image/jpeg" 
+                        className="hidden" 
+                        onChange={handleLogoUpload} 
+                        disabled={isSubmitting}
+                      />
+                    </label>
+                  )}
+                </div>
+                {errors.logo && <p className="mt-1 text-xs text-red-500">{errors.logo}</p>}
+              </div>
+
               {/* Company Name */}
               <FormInput
-                label="Company Name"
+                label={<>Company Name <span className="text-[#F1511B]">*</span></>}
                 name="companyName"
                 value={formData.companyName}
                 onChange={handleChange}
-                placeholder="e.g. Acme Corp"
+                placeholder="Enter company Name"
                 disabled={isSubmitting}
                 error={errors.companyName}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
 
               {/* Contact Person Name */}
               <FormInput
-                label="Contact Person Name"
+                label={<>Contact Person Name <span className="text-[#F1511B]">*</span></>}
                 name="contactPerson"
                 value={formData.contactPerson}
                 onChange={handleChange}
-                placeholder="e.g. John Doe"
+                placeholder="Enter contact person name"
                 disabled={isSubmitting}
                 error={errors.contactPerson}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
 
               {/* Email */}
               <FormInput
                 type="email"
-                label="Email"
+                label={<>Email <span className="text-[#F1511B]">*</span></>}
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="john@acme.com"
+                placeholder="Enter email"
                 disabled={isSubmitting}
                 error={errors.email}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
 
               {/* Phone */}
               <FormInput
-                label="Phone"
+                label={<>Phone <span className="text-[#F1511B]">*</span></>}
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="+1 234 567 8900"
+                placeholder="Enter phone number"
                 disabled={isSubmitting}
                 error={errors.phone}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
+            </div>
 
-              {/* Address (Full Width) */}
-              <div className="md:col-span-2">
-                <FormTextarea
-                  label="Address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  placeholder="Full address"
-                  rows={3}
-                  disabled={isSubmitting}
-                  error={errors.address}
-                  required
-                  labelClassName="block mb-2"
-                  className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
-                />
-              </div>
+            {/* Address (Full Width) */}
+            <div>
+              <FormTextarea
+                label={<>Address <span className="text-[#F1511B]">*</span></>}
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                placeholder="Enter company address"
+                rows={3}
+                disabled={isSubmitting}
+                error={errors.address}
+              />
+            </div>
 
+            {/* PAN & GST */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* PAN Number */}
               <FormInput
-                label="PAN Number"
+                label={<>PAN Number <span className="text-[#F1511B]">*</span></>}
                 name="panNumber"
                 value={formData.panNumber}
                 onChange={handleChange}
-                placeholder="ABCDE1234F"
+                placeholder="Enter PAN number"
                 disabled={isSubmitting}
                 error={errors.panNumber}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
 
               {/* GST Number */}
               <FormInput
-                label="GST Number"
+                label={<>GST Number <span className="text-[#F1511B]">*</span></>}
                 name="gstNumber"
                 value={formData.gstNumber}
                 onChange={handleChange}
-                placeholder="22AAAAA0000A1Z5"
+                placeholder="Enter GST number"
                 disabled={isSubmitting}
                 error={errors.gstNumber}
-                required
-                labelClassName="block mb-2"
-                className="py-2.5 focus:ring-indigo-100 focus:border-indigo-500"
               />
-
             </div>
           </form>
         </div>

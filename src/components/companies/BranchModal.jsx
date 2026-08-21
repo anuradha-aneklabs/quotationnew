@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import FormInput from '../common/FormInput';
+import Button from '../common/Button';
 
 export default function BranchModal({ isOpen, onClose, onSave, branchData, companyId }) {
   const [formData, setFormData] = useState({
@@ -115,13 +117,6 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
     }
   };
 
-  const inputClass = (field) =>
-    `w-full px-4 py-2.5 text-[13px] text-[#040715] placeholder:text-[#8D98A9] bg-[#FAFAFA] border rounded-[8px] focus:outline-none focus:ring-1 focus:ring-[#1A9F9A] focus:border-[#1A9F9A] transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-      errors[field]
-        ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
-        : 'border-[#E9ECEF]'
-    }`;
-
   return (
     <div className="flex flex-col">
       {/* Form Content */}
@@ -131,139 +126,120 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
 
               {/* Branch Name - Full Width */}
               <div className="md:col-span-2">
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
-                  Branch Name <span className="text-[#E73B3B]">*</span>
-                </label>
-                <input
-                  type="text"
+                <FormInput
+                  label="Branch Name"
+                  required
                   name="branchName"
                   value={formData.branchName}
                   onChange={handleChange}
                   placeholder="e.g. Mumbai Head Office"
                   disabled={isSubmitting}
-                  className={inputClass('branchName')}
+                  error={errors.branchName}
                 />
-                {errors.branchName && <p className="mt-1 text-xs text-red-500">{errors.branchName}</p>}
               </div>
 
               {/* Address Line 1 - Full Width */}
               <div className="md:col-span-2">
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Address Line 1</label>
-                <input
-                  type="text"
+                <FormInput
+                  label="Address Line 1"
                   name="addressLine1"
                   value={formData.addressLine1}
                   onChange={handleChange}
                   placeholder="Street address, Building name"
                   disabled={isSubmitting}
-                  className={inputClass('addressLine1')}
                 />
               </div>
 
               {/* Address Line 2 - Full Width */}
               <div className="md:col-span-2">
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Address Line 2</label>
-                <input
-                  type="text"
+                <FormInput
+                  label="Address Line 2"
                   name="addressLine2"
                   value={formData.addressLine2}
                   onChange={handleChange}
                   placeholder="Area, Landmark"
                   disabled={isSubmitting}
-                  className={inputClass('addressLine2')}
                 />
               </div>
 
               {/* City */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
-                  City <span className="text-[#E73B3B]">*</span>
-                </label>
-                <input
-                  type="text"
+                <FormInput
+                  label="City"
+                  required
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
                   placeholder="Enter City"
                   disabled={isSubmitting}
-                  className={inputClass('city')}
                 />
               </div>
 
               {/* State */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
-                  State <span className="text-[#E73B3B]">*</span>
-                </label>
-                <input
-                  type="text"
+                <FormInput
+                  label="State"
+                  required
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
                   placeholder="Enter State"
                   disabled={isSubmitting}
-                  className={inputClass('state')}
                 />
               </div>
 
               {/* Country */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Country</label>
-                <input
-                  type="text"
+                <FormInput
+                  label="Country"
                   name="country"
                   value={formData.country}
                   onChange={handleChange}
                   placeholder="Enter Country"
                   disabled={isSubmitting}
-                  className={inputClass('country')}
                 />
               </div>
 
               {/* Pincode */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Pincode</label>
-                <input
-                  type="text"
+                <FormInput
+                  label="Pincode"
                   name="pincode"
                   value={formData.pincode}
                   onChange={handleChange}
                   placeholder="Enter Pincode"
                   disabled={isSubmitting}
-                  className={inputClass('pincode')}
+                  error={errors.pincode}
                 />
-                {errors.pincode && <p className="mt-1 text-xs text-red-500">{errors.pincode}</p>}
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Email</label>
-                <input
+                <FormInput
+                  label="Email"
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Enter Email"
                   disabled={isSubmitting}
-                  className={inputClass('email')}
+                  error={errors.email}
                 />
-                {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
               </div>
 
               {/* Phone */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Phone</label>
-                <input
-                  type="text"
+                <FormInput
+                  label="Phone"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="Enter Phone Number"
                   disabled={isSubmitting}
-                  className={inputClass('phone')}
+                  error={errors.phone}
                 />
-                {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
               </div>
+
               {/* Toggles Row */}
               <div className="flex items-center gap-3">
                 <label htmlFor="branchIsActive" className="relative inline-flex items-center cursor-pointer">
@@ -278,7 +254,7 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
                   />
                   <div className="w-[36px] h-[20px] bg-[#E9ECEF] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[16px] peer-checked:bg-[#1A9F9A] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-[16px] after:w-[16px] after:transition-all peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"></div>
                 </label>
-                <label htmlFor="branchIsActive" className="text-[13px] font-medium text-[#040715] cursor-pointer select-none">
+                <label htmlFor="branchIsActive" className="text-[14px] text-[#040715] cursor-pointer select-none">
                   {formData.isActive ? 'Active Branch' : 'Inactive Branch'}
                 </label>
               </div>
@@ -296,7 +272,7 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
                   />
                   <div className="w-[36px] h-[20px] bg-[#E9ECEF] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[16px] peer-checked:bg-[#1A9F9A] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-[16px] after:w-[16px] after:transition-all peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"></div>
                 </label>
-                <label htmlFor="isDefault" className="text-[13px] font-medium text-[#040715] cursor-pointer select-none">
+                <label htmlFor="isDefault" className="text-[14px]  text-[#040715] cursor-pointer select-none">
                   Set as Default Branch
                 </label>
               </div>
@@ -306,20 +282,20 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
         </div>
 
       {/* Footer */}
-      <div className="flex justify-between items-center px-6 py-4 border-t border-[#E9ECEF]">
-        <button
+      <div className="flex justify-between items-center mx-6 py-4">
+        <Button
           type="button"
+          variant="secondary"
           onClick={onClose}
           disabled={isSubmitting}
-          className="px-5 py-2.5 text-[13px] font-medium text-[#46505F] bg-[#FCFCFB] border border-[#E9ECEF] rounded-[8px] hover:bg-gray-50 focus:outline-none transition-colors disabled:opacity-50"
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
           form="branchForm"
+          variant="primary"
           disabled={isSubmitting}
-          className="inline-flex items-center justify-center px-6 py-2.5 text-[13px] font-medium text-white bg-[#1A9F9A] rounded-[8px] hover:bg-[#14807b] focus:outline-none transition-colors disabled:opacity-50"
         >
           {isSubmitting ? (
             <>
@@ -329,7 +305,7 @@ export default function BranchModal({ isOpen, onClose, onSave, branchData, compa
           ) : (
             branchData ? 'Update Branch' : 'Save Branch'
           )}
-        </button>
+        </Button>
       </div>
     </div>
   );

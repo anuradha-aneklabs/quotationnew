@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { X, GripVertical, Plus, Loader2 } from 'lucide-react';
 import iconTrash from '../../assets/Employee/trash.svg';
+import FormInput from '../common/FormInput';
+import FormTextarea from '../common/FormTextarea';
+import Button from '../common/Button';
 
 export default function CreateDropdownModal({ isOpen, onClose, onSave, initialData, isSubmitting }) {
   const [formData, setFormData] = useState({
@@ -74,14 +77,12 @@ export default function CreateDropdownModal({ isOpen, onClose, onSave, initialDa
     });
   };
 
-  const inputClass = "w-full px-4 py-2.5 text-[13px] text-[#040715] placeholder:text-[#8D98A9] bg-[#FAFAFA] border border-[#E9ECEF] rounded-[8px] focus:outline-none focus:ring-1 focus:ring-[#1A9F9A] focus:border-[#1A9F9A] transition-colors disabled:opacity-50";
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#040715]/40 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto">
       <div className="bg-white rounded-[16px] shadow-2xl w-full max-w-[500px] relative flex flex-col h-auto max-h-[95vh] animate-in zoom-in-95 duration-200 my-auto">
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-4 border-b border-[#E9ECEF] shrink-0">
-          <h2 className="text-[16px] font-bold text-[#040715]">
+        <div className="flex justify-between items-center mx-6 py-4 border-b border-[#E9ECEF] shrink-0">
+          <h2 className="text-[18px] font-semibold text-[#040715]">
             {initialData ? 'Edit Dropdown' : 'Create New Dropdown'}
           </h2>
           <button 
@@ -100,31 +101,24 @@ export default function CreateDropdownModal({ isOpen, onClose, onSave, initialDa
               
               {/* Dropdown Name */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
-                  Dropdown Name <span className="text-[#E73B3B]">*</span>
-                </label>
-                <input
-                  type="text"
+                <FormInput
+                  label="Dropdown Name"
+                  required
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={inputClass}
                   placeholder="e.g. Priority"
-                  required
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
-                  Description <span className="text-[#8D98A9] font-normal">(optional)</span>
-                </label>
-                <textarea
+                <FormTextarea
+                  label={<>Description <span className="text-[#8D98A9] font-normal">(optional)</span></>}
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
                   rows={3}
-                  className={`${inputClass} resize-none`}
                   placeholder="Add a short note about this dropdown..."
                 />
               </div>
@@ -132,27 +126,27 @@ export default function CreateDropdownModal({ isOpen, onClose, onSave, initialDa
               {/* Options */}
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <label className="block text-[13px] font-medium text-[#040715]">
-                    Options <span className="text-[#E73B3B]">*</span>
+                  <label className="block text-[14px] font-normal text-black">
+                    Options <span className="text-red-500">*</span>
                   </label>
                   <span className="text-[11px] text-[#8D98A9]">Drag handles to reorder</span>
                 </div>
                 <p className="text-[11px] text-[#8D98A9] mb-3">Add the options that will appear in this dropdown.</p>
                 
-                <div className="space-y-3 max-h-[240px] overflow-y-auto pr-1">
+                <div className="space-y-3 max-h-[240px] overflow-y-auto pr-1 pt-1">
                   {formData.options.map((opt, idx) => (
                     <div key={idx} className="flex items-center gap-3">
                       <button type="button" className="text-[#8D98A9] hover:text-[#46505F] cursor-grab active:cursor-grabbing">
                         <GripVertical className="h-4 w-4" />
                       </button>
-                      <input
-                        type="text"
-                        value={opt}
-                        onChange={(e) => handleOptionChange(idx, e.target.value)}
-                        className={inputClass}
-                        placeholder={`Option ${idx + 1}`}
-                        required
-                      />
+                      <div className="flex-1">
+                        <FormInput
+                          value={opt}
+                          onChange={(e) => handleOptionChange(idx, e.target.value)}
+                          placeholder={`Option ${idx + 1}`}
+                          required
+                        />
+                      </div>
                       <button
                         type="button"
                         onClick={() => removeOption(idx)}
@@ -199,20 +193,20 @@ export default function CreateDropdownModal({ isOpen, onClose, onSave, initialDa
         </div>
 
         {/* Footer */}
-        <div className="flex justify-between items-center px-6 py-4 border-t border-[#E9ECEF] shrink-0">
-          <button
+        <div className="flex justify-between items-center mx-6 py-4 shrink-0">
+          <Button
             type="button"
+            variant="secondary"
             onClick={onClose}
             disabled={isSubmitting}
-            className="px-5 py-2.5 text-[13px] font-medium text-[#46505F] bg-[#FCFCFB] border border-[#E9ECEF] rounded-[8px] hover:bg-gray-50 focus:outline-none transition-colors disabled:opacity-50"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             form="dropdownForm"
+            variant="primary"
             disabled={isSubmitting}
-            className="inline-flex items-center justify-center px-6 py-2.5 text-[13px] font-medium text-white bg-[#1A9F9A] rounded-[8px] hover:bg-[#14807b] focus:outline-none transition-colors disabled:opacity-50"
           >
             {isSubmitting ? (
               <>
@@ -222,7 +216,7 @@ export default function CreateDropdownModal({ isOpen, onClose, onSave, initialDa
             ) : (
               initialData ? 'Update Dropdown' : 'Create Dropdown'
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

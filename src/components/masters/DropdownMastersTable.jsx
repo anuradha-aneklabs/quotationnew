@@ -40,7 +40,7 @@ export default function DropdownMastersTable({ items, onEdit, onDelete }) {
             <th className="px-6 py-4 w-12">
               <Checkbox checked={allSelected} onChange={handleSelectAll} />
             </th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] whitespace-nowrap">Dropdown Name</th>
+            <th className="pr-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] whitespace-nowrap">Dropdown Name</th>
             <th className="px-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] whitespace-nowrap">Description</th>
             <th className="px-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] whitespace-nowrap">Total Option</th>
             <th className="px-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] whitespace-nowrap">Created On</th>
@@ -61,7 +61,7 @@ export default function DropdownMastersTable({ items, onEdit, onDelete }) {
                     onChange={(checked) => handleSelectItem(item.id, checked)} 
                   />
                 </td>
-                <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
+                <td className="pr-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                   {item.dropdownName}
                 </td>
                 <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715]">
@@ -75,7 +75,7 @@ export default function DropdownMastersTable({ items, onEdit, onDelete }) {
                 </td>
                 <td className="px-6 py-3">
                   <span 
-                    className="inline-flex items-center px-2.5 py-0.5 rounded-[4px] text-xs font-medium"
+                    className="inline-flex items-center px-2.5 py-1 rounded-[6px] text-[14px] font-medium"
                     style={{
                       backgroundColor: isActive ? '#E2FFEC' : '#FFF3E2',
                       color: isActive ? '#0DB22B' : '#D57617'

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
+import FormInput from '../common/FormInput';
+import Button from '../common/Button';
 
 export default function CompanyModal({ isOpen, onClose, onSave, companyData }) {
   const [formData, setFormData] = useState({
@@ -108,19 +110,12 @@ export default function CompanyModal({ isOpen, onClose, onSave, companyData }) {
     }
   };
 
-  const inputClass = (field) =>
-    `w-full px-3 py-2.5 text-[13px] text-[#040715] placeholder-[#808997] bg-[#FCFCFB] rounded-[8px] border focus:ring-1 focus:outline-none transition-colors disabled:opacity-50 disabled:bg-gray-50 ${
-      errors[field]
-        ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
-        : 'border-[#E9ECEF] focus:border-[#1A9F9A] focus:ring-[#1A9F9A]'
-    }`;
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#040715]/40 backdrop-blur-sm overflow-y-auto p-4 sm:p-6">
       <div className="bg-white rounded-[16px] shadow-2xl w-full max-w-[600px] relative flex flex-col animate-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-4 border-b border-[#E9ECEF]">
-          <h2 className="text-[16px] font-bold text-[#040715]">
+        <div className="flex justify-between items-center mx-6 py-4 border-b border-[#E9ECEF]">
+          <h2 className="text-[18px] font-semibold text-[#040715]">
             {companyData ? 'Edit Company' : 'Add New Company'}
           </h2>
           <button
@@ -139,98 +134,88 @@ export default function CompanyModal({ isOpen, onClose, onSave, companyData }) {
 
               {/* Company Name - Full Width */}
               <div className="md:col-span-2">
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
-                  Company Name <span className="text-[#E53935]">*</span>
-                </label>
-                <input
-                  type="text"
+                <FormInput
+                  label="Company Name"
+                  required
                   name="companyName"
                   value={formData.companyName}
                   onChange={handleChange}
                   placeholder="e.g. Acme Technologies Pvt. Ltd."
                   disabled={isSubmitting}
-                  className={inputClass('companyName')}
+                  error={errors.companyName}
                 />
-                {errors.companyName && <p className="mt-1 text-xs text-red-500">{errors.companyName}</p>}
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
-                  Email <span className="text-[#E53935]">*</span>
-                </label>
-                <input
+                <FormInput
+                  label="Email"
+                  required
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Enter company email"
                   disabled={isSubmitting}
-                  className={inputClass('email')}
+                  error={errors.email}
                 />
-                {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
               </div>
 
               {/* Phone */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
-                  Phone <span className="text-[#E53935]">*</span>
-                </label>
-                <input
+                <FormInput
+                  label="Phone"
+                  required
                   type="text"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="Enter 10 digit mobile number"
                   disabled={isSubmitting}
-                  className={inputClass('phone')}
+                  error={errors.phone}
                 />
-                {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
               </div>
 
               {/* PAN */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">PAN</label>
-                <input
+                <FormInput
+                  label="PAN"
                   type="text"
                   name="pan"
                   value={formData.pan}
                   onChange={handleChange}
                   placeholder="Enter PAN Number"
                   disabled={isSubmitting}
-                  className={inputClass('pan')}
+                  error={errors.pan}
                 />
-                {errors.pan && <p className="mt-1 text-xs text-red-500">{errors.pan}</p>}
               </div>
 
               {/* GSTIN */}
               <div>
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">GSTIN</label>
-                <input
+                <FormInput
+                  label="GSTIN"
                   type="text"
                   name="gstin"
                   value={formData.gstin}
                   onChange={handleChange}
                   placeholder="Enter GST number"
                   disabled={isSubmitting}
-                  className={inputClass('gstin')}
+                  error={errors.gstin}
                 />
-                {errors.gstin && <p className="mt-1 text-xs text-red-500">{errors.gstin}</p>}
               </div>
 
               {/* Website - Full Width */}
               <div className="md:col-span-2">
-                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">Website</label>
-                <input
+                <FormInput
+                  label="Website"
                   type="text"
                   name="website"
                   value={formData.website}
                   onChange={handleChange}
                   placeholder="Enter company website"
                   disabled={isSubmitting}
-                  className={inputClass('website')}
+                  error={errors.website}
                 />
-                {errors.website && <p className="mt-1 text-xs text-red-500">{errors.website}</p>}
               </div>
 
               {/* Is Active Toggle */}
@@ -257,20 +242,20 @@ export default function CompanyModal({ isOpen, onClose, onSave, companyData }) {
         </div>
 
         {/* Footer */}
-        <div className="flex justify-between items-center px-6 py-4 border-t border-[#E9ECEF]">
-          <button
+        <div className="flex justify-between items-center mx-6 py-4">
+          <Button
             type="button"
+            variant="secondary"
             onClick={onClose}
             disabled={isSubmitting}
-            className="px-5 py-2.5 text-[13px] font-medium text-[#46505F] bg-[#FCFCFB] border border-[#E9ECEF] rounded-[8px] hover:bg-gray-50 focus:outline-none transition-colors disabled:opacity-50"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             form="companyForm"
+            variant="primary"
             disabled={isSubmitting}
-            className="inline-flex items-center justify-center px-6 py-2.5 text-[13px] font-medium text-white bg-[#1A9F9A] rounded-[8px] hover:bg-[#14807b] focus:outline-none transition-colors disabled:opacity-50"
           >
             {isSubmitting ? (
               <>
@@ -280,7 +265,7 @@ export default function CompanyModal({ isOpen, onClose, onSave, companyData }) {
             ) : (
               companyData ? 'Update Company' : 'Save Company'
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
