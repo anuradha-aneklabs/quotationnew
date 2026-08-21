@@ -1,74 +1,116 @@
-import React from 'react';
-import { Pencil, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
+import Checkbox from '../common/Checkbox';
+import iconEdit from '../../assets/Employee/edit-2.svg';
+import iconTrash from '../../assets/Employee/trash.svg';
 
 export default function DropdownMastersTable({ items, onEdit, onDelete }) {
+  const [selectedItems, setSelectedItems] = useState(new Set());
+
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const options = { day: '2-digit', month: 'short', year: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-GB', options);
   };
 
+  const handleSelectAll = (checked) => {
+    if (checked) {
+      setSelectedItems(new Set(items.map(t => t.id)));
+    } else {
+      setSelectedItems(new Set());
+    }
+  };
+
+  const handleSelectItem = (id, checked) => {
+    const newSelected = new Set(selectedItems);
+    if (checked) {
+      newSelected.add(id);
+    } else {
+      newSelected.delete(id);
+    }
+    setSelectedItems(newSelected);
+  };
+
+  const allSelected = items.length > 0 && selectedItems.size === items.length;
+
   return (
-    <div className="flex-1 overflow-auto">
-      <table className="w-full text-left border-collapse">
-        <thead>
-          <tr className=" border-y border-gray-100 text-xs text-black-500 uppercase tracking-wider">
-            <th className="px-6 py-4">DROPDOWN NAME</th>
-            <th className="px-6 py-4">DESCRIPTION</th>
-            <th className="px-6 py-4">TOTAL OPTIONS</th>
-            <th className="px-6 py-4">STATUS</th>
-            <th className="px-6 py-4">CREATED ON</th>
-            <th className="px-6 py-4 text-right">ACTIONS</th>
+    <div className="overflow-auto flex-1 scrollbar-hide w-full">
+      <table className="w-full min-w-[1000px] text-left border-collapse">
+        <thead className="sticky top-0 bg-white z-10">
+          <tr className="border-b border-gray-100">
+            <th className="px-6 py-4 w-12">
+              <Checkbox checked={allSelected} onChange={handleSelectAll} />
+            </th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] whitespace-nowrap">Dropdown Name</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] whitespace-nowrap">Description</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] whitespace-nowrap">Total Option</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] whitespace-nowrap">Created On</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] whitespace-nowrap">Status</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[15px] leading-[140%] text-[#040715] text-right whitespace-nowrap">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 bg-white">
-          {items.map((item) => (
-            <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span className="text-sm font-medium text-indigo-600">{item.dropdownName}</span>
-              </td>
-              <td className="px-6 py-4">
-                <span className="text-sm text-gray-700">{item.description || '-'}</span>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700">
+        <tbody className="divide-y divide-gray-100">
+          {items.map((item) => {
+            const isSelected = selectedItems.has(item.id);
+            const isActive = item.status !== false;
+
+            return (
+              <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
+                <td className="px-6 py-3 w-12">
+                  <Checkbox 
+                    checked={isSelected} 
+                    onChange={(checked) => handleSelectItem(item.id, checked)} 
+                  />
+                </td>
+                <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
+                  {item.dropdownName}
+                </td>
+                <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715]">
+                  {item.description || '-'}
+                </td>
+                <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                   {item.totalOptions !== undefined ? item.totalOptions : 0}
-                </span>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                  item.status 
-                    ? 'bg-green-100 text-green-700' 
-                    : 'bg-red-100 text-red-700'
-                }`}>
-                  {item.status ? 'Active' : 'Inactive'}
-                </span>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span className="text-sm text-gray-700">{formatDate(item.createdAt)}</span>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div className="flex items-center justify-end space-x-3">
-                  <button
-                    onClick={() => onEdit(item)}
-                    className="text-gray-400 hover:text-indigo-600 transition-colors"
+                </td>
+                <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
+                  {formatDate(item.createdAt)}
+                </td>
+                <td className="px-6 py-3">
+                  <span 
+                    className="inline-flex items-center px-2.5 py-0.5 rounded-[4px] text-xs font-medium"
+                    style={{
+                      backgroundColor: isActive ? '#E2FFEC' : '#FFF3E2',
+                      color: isActive ? '#0DB22B' : '#D57617'
+                    }}
                   >
-                    <Pencil className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => onDelete(item.id)}
-                    className="text-red-500 hover:text-red-700 transition-colors"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
+                    {isActive ? 'Active' : 'Inactive'}
+                  </span>
+                </td>
+                <td className="px-6 py-3">
+                  <div className="flex items-center justify-end space-x-2">
+                    <button
+                      onClick={() => isSelected && onEdit(item)}
+                      title="Edit"
+                      disabled={!isSelected}
+                      className={`p-1.5 bg-white shadow-[0px_1px_4px_rgba(0,0,0,0.1)] rounded-[6px] transition-colors ${isSelected ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                    >
+                      <img src={iconEdit} alt="Edit" className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => isSelected && onDelete(item.id)}
+                      title="Delete"
+                      disabled={!isSelected}
+                      className={`p-1.5 bg-white shadow-[0px_1px_4px_rgba(0,0,0,0.1)] rounded-[6px] transition-colors ${isSelected ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                    >
+                      <img src={iconTrash} alt="Delete" className="h-4 w-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
           {items.length === 0 && (
             <tr>
-              <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
-                No items found. Add a new dropdown value to get started.
+              <td colSpan="7" className="px-6 py-8 text-center text-gray-500 font-Inter">
+                No dropdowns found. Add a new dropdown to get started.
               </td>
             </tr>
           )}

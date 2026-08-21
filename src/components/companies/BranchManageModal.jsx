@@ -15,6 +15,7 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
 
   const [isBranchModalOpen, setIsBranchModalOpen] = useState(false);
   const [editingBranch, setEditingBranch] = useState(null);
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'form'
 
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [viewingBranch, setViewingBranch] = useState(null);
@@ -49,12 +50,12 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
 
   const handleAddBranch = () => {
     setEditingBranch(null);
-    setIsBranchModalOpen(true);
+    setViewMode('form');
   };
 
   const handleEditBranch = (branch) => {
     setEditingBranch(branch);
-    setIsBranchModalOpen(true);
+    setViewMode('form');
   };
 
   const handleViewBranch = (branch) => {
@@ -72,10 +73,11 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
     setIsDeleting(true);
     try {
       await deleteBranch(branchToDelete);
-      await loadBranches();
+      // Immediately remove from local state
+      setBranches(prev => prev.filter(b => (b.branchId || b.id) !== branchToDelete));
       setIsDeleteModalOpen(false);
       setBranchToDelete(null);
-      showToast('Branch deleted successfully', 'error');
+      showToast('Branch deleted successfully', 'success');
     } catch (err) {
       showToast(`Failed to delete branch: ${err.message}`, 'error');
     } finally {
@@ -93,7 +95,7 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
         showToast('Branch added successfully', 'success');
       }
       await loadBranches();
-      setIsBranchModalOpen(false);
+      setViewMode('list');
     } catch (err) {
       showToast(`Failed to save branch: ${err.message}`, 'error');
     }
@@ -101,28 +103,29 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
 
   return (
     <>
-      {/* Branch Manage Modal (z-40 so it sits below branch sub-modals at z-50) */}
-      <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 overflow-y-auto p-4 sm:p-6">
-        <div className="bg-white rounded-xl shadow-xl w-full max-w-6xl relative flex flex-col max-h-[85vh]">
+      {/* Branch Manage Modal */}
+      <div className="fixed inset-0 z-40 flex items-center justify-center bg-[#040715]/40 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto">
+        <div className={`bg-white rounded-[16px] overflow-hidden shadow-2xl w-full ${viewMode === 'form' ? 'max-w-[700px] h-auto max-h-[95vh]' : 'max-w-[1000px] h-[550px]'} relative flex flex-col animate-in zoom-in-95 duration-200 my-auto`}>
           {/* Header */}
-          <div className="flex justify-between items-center p-6 border-b border-gray-100 shrink-0">
+          <div className="flex justify-between items-center px-6 py-4 border-b border-[#E9ECEF] shrink-0">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
-                Branches — <span className="text-indigo-600">{company.companyName || company.company_name}</span>
+              <h2 className="text-[16px] font-bold text-[#040715]">
+                {viewMode === 'form' ? (editingBranch ? 'Edit Branch' : 'Add New Branch') : 'Branches'} - <span className="text-[#1A9F9A] font-medium">{company.companyName || company.company_name}</span>
               </h2>
-              <p className="text-sm text-gray-500 mt-0.5">Manage all branches for this company</p>
             </div>
             <div className="flex items-center gap-3">
-              <button
-                onClick={handleAddBranch}
-                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Branch
-              </button>
+              {viewMode === 'list' && (
+                <button
+                  onClick={handleAddBranch}
+                  className="inline-flex items-center justify-center px-4 py-2 text-[13px] font-medium text-white bg-[#1A9F9A] rounded-[4px] hover:bg-[#14807b] transition-colors"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Branch
+                </button>
+              )}
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-[#5F6A80] hover:text-[#040715] transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -130,14 +133,22 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0">
-            {isLoading ? (
+          <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 bg-white">
+            {viewMode === 'form' ? (
+              <BranchModal
+                isOpen={true}
+                onClose={() => setViewMode('list')}
+                onSave={handleSaveBranch}
+                branchData={editingBranch}
+                companyId={company?.companyId || company?.id}
+              />
+            ) : isLoading ? (
               <div className="flex items-center justify-center py-16">
-                <span className="text-gray-500">Loading branches...</span>
+                <span className="text-gray-500 text-[13px]">Loading branches...</span>
               </div>
             ) : error ? (
               <div className="flex items-center justify-center py-16">
-                <span className="text-red-500 bg-red-50 px-4 py-3 rounded-lg">Error: {error}</span>
+                <span className="text-red-500 bg-red-50 px-4 py-3 rounded-[8px] text-[13px]">Error: {error}</span>
               </div>
             ) : (
               <BranchesTable
@@ -150,15 +161,6 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
           </div>
         </div>
       </div>
-
-      {/* Branch Add/Edit Sub-Modal */}
-      <BranchModal
-        isOpen={isBranchModalOpen}
-        onClose={() => setIsBranchModalOpen(false)}
-        onSave={handleSaveBranch}
-        branchData={editingBranch}
-        companyId={company?.companyId || company?.id}
-      />
 
       {/* Branch View Sub-Modal */}
       <BranchViewModal
@@ -176,7 +178,7 @@ export default function BranchManageModal({ isOpen, onClose, company }) {
         }}
         onConfirm={confirmDeleteBranch}
         title="Delete Branch"
-        message="Are you sure you want to delete this branch? This action cannot be undone."
+        message="Are you sure you want to delete this branch?"
         confirmText="Delete Branch"
         isSubmitting={isDeleting}
       />

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { X, GripVertical, Trash2, Plus, ChevronDown, Loader2 } from 'lucide-react';
+import { X, GripVertical, Plus, Loader2 } from 'lucide-react';
+import iconTrash from '../../assets/Employee/trash.svg';
 
 export default function CreateDropdownModal({ isOpen, onClose, onSave, initialData, isSubmitting }) {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    status: 'Active',
+    isActive: true,
     options: ['', '', '']
   });
 
@@ -15,16 +16,16 @@ export default function CreateDropdownModal({ isOpen, onClose, onSave, initialDa
         setFormData({
           name: initialData.dropdownName || '',
           description: initialData.description || '',
-          status: initialData.status !== false ? 'Active' : 'Inactive',
-            options: initialData.options && initialData.options.length > 0
-              ? initialData.options.map(opt => opt.optionLabel) 
-              : ['', '', '']
-          });
+          isActive: initialData.status !== false,
+          options: initialData.options && initialData.options.length > 0
+            ? initialData.options.map(opt => opt.optionLabel) 
+            : ['', '', '']
+        });
       } else {
         setFormData({
           name: '',
           description: '',
-          status: 'Active',
+          isActive: true,
           options: ['', '', '']
         });
       }
@@ -34,8 +35,9 @@ export default function CreateDropdownModal({ isOpen, onClose, onSave, initialDa
   if (!isOpen) return null;
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
   };
 
   const handleOptionChange = (index, value) => {
@@ -67,152 +69,160 @@ export default function CreateDropdownModal({ isOpen, onClose, onSave, initialDa
     onSave({
       dropdownName: formData.name,
       description: formData.description,
-      status: formData.status === 'Active',
+      status: formData.isActive,
       options: formattedOptions
     });
   };
 
+  const inputClass = "w-full px-4 py-2.5 text-[13px] text-[#040715] placeholder:text-[#8D98A9] bg-[#FAFAFA] border border-[#E9ECEF] rounded-[8px] focus:outline-none focus:ring-1 focus:ring-[#1A9F9A] focus:border-[#1A9F9A] transition-colors disabled:opacity-50";
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 relative flex flex-col my-8">
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-900">{initialData ? 'Edit Dropdown' : 'Create New Dropdown'}</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#040715]/40 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto">
+      <div className="bg-white rounded-[16px] shadow-2xl w-full max-w-[500px] relative flex flex-col h-auto max-h-[95vh] animate-in zoom-in-95 duration-200 my-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center px-6 py-4 border-b border-[#E9ECEF] shrink-0">
+          <h2 className="text-[16px] font-bold text-[#040715]">
+            {initialData ? 'Edit Dropdown' : 'Create New Dropdown'}
+          </h2>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-[#5F6A80] hover:text-[#040715] transition-colors"
             disabled={isSubmitting}
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Dropdown Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                placeholder="e.g. Payment Terms"
-                required
-              />
-              <p className="mt-1 text-xs text-gray-500">Example: Payment Terms</p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
-              </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows="3"
-                maxLength="200"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all resize-none"
-                placeholder="Enter description (optional)"
-              />
-              <div className="text-right mt-1 text-xs text-gray-500">
-                {formData.description.length}/200
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <label className="block text-sm font-medium text-gray-700">
-                  Options <span className="text-red-500">*</span>
-                </label>
-                <span className="text-xs text-gray-500">Drag handles to reorder</span>
-              </div>
-              <p className="text-xs text-gray-500 mb-3">Add the options that will appear in this dropdown.</p>
+        {/* Content */}
+        <div className="px-6 py-5 overflow-y-auto">
+          <form id="dropdownForm" onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid grid-cols-1 gap-x-5 gap-y-5">
               
-              <div className="space-y-3 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar">
-                {formData.options.map((opt, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <button type="button" className="text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing">
-                      <GripVertical className="h-5 w-5" />
-                    </button>
-                    <input
-                      type="text"
-                      value={opt}
-                      onChange={(e) => handleOptionChange(idx, e.target.value)}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
-                      placeholder={`Option ${idx + 1}`}
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeOption(idx)}
-                      className="text-red-400 hover:text-red-600 transition-colors p-2"
-                      disabled={formData.options.length === 1}
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                type="button"
-                onClick={addOption}
-                className="mt-4 w-full flex items-center justify-center py-2.5 border-2 border-dashed border-indigo-200 text-indigo-600 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 transition-colors text-sm font-medium"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add More Option
-              </button>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Status <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <select
-                  name="status"
-                  value={formData.status}
+              {/* Dropdown Name */}
+              <div>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
+                  Dropdown Name <span className="text-[#E73B3B]">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all appearance-none bg-white pr-10"
+                  className={inputClass}
+                  placeholder="e.g. Priority"
                   required
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">
-                  <ChevronDown className="h-4 w-4" />
-                </div>
+                />
               </div>
-            </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={isSubmitting}
-                className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                    Saving...
-                  </>
-                ) : (
-                  initialData ? 'Update Dropdown' : 'Create Dropdown'
-                )}
-              </button>
+              {/* Description */}
+              <div>
+                <label className="block text-[13px] font-medium text-[#040715] mb-1.5">
+                  Description <span className="text-[#8D98A9] font-normal">(optional)</span>
+                </label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows={3}
+                  className={`${inputClass} resize-none`}
+                  placeholder="Add a short note about this dropdown..."
+                />
+              </div>
+
+              {/* Options */}
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-[13px] font-medium text-[#040715]">
+                    Options <span className="text-[#E73B3B]">*</span>
+                  </label>
+                  <span className="text-[11px] text-[#8D98A9]">Drag handles to reorder</span>
+                </div>
+                <p className="text-[11px] text-[#8D98A9] mb-3">Add the options that will appear in this dropdown.</p>
+                
+                <div className="space-y-3 max-h-[240px] overflow-y-auto pr-1">
+                  {formData.options.map((opt, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <button type="button" className="text-[#8D98A9] hover:text-[#46505F] cursor-grab active:cursor-grabbing">
+                        <GripVertical className="h-4 w-4" />
+                      </button>
+                      <input
+                        type="text"
+                        value={opt}
+                        onChange={(e) => handleOptionChange(idx, e.target.value)}
+                        className={inputClass}
+                        placeholder={`Option ${idx + 1}`}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeOption(idx)}
+                        disabled={formData.options.length <= 1}
+                        className="p-1.5 bg-white shadow-[0px_1px_4px_rgba(0,0,0,0.1)] rounded-[6px] hover:bg-gray-50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                      >
+                        <img src={iconTrash} alt="Delete Option" className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={addOption}
+                  className="mt-4 w-full flex items-center justify-center px-4 py-2 border border-[#1A9F9A] text-[#1A9F9A] rounded-[8px] hover:bg-[#1A9F9A]/5 text-[13px] font-medium transition-colors"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add More Option
+                </button>
+              </div>
+
+              {/* Is Active Toggle */}
+              <div className="flex items-center gap-3 mt-2">
+                <label htmlFor="dropdownIsActive" className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="dropdownIsActive"
+                    name="isActive"
+                    checked={formData.isActive}
+                    onChange={handleChange}
+                    disabled={isSubmitting}
+                    className="sr-only peer"
+                  />
+                  <div className="w-[36px] h-[20px] bg-[#E9ECEF] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[16px] peer-checked:bg-[#1A9F9A] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-[16px] after:w-[16px] after:transition-all peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"></div>
+                </label>
+                <label htmlFor="dropdownIsActive" className="text-[13px] font-medium text-[#040715] cursor-pointer select-none">
+                  {formData.isActive ? 'Active Dropdown' : 'Inactive Dropdown'}
+                </label>
+              </div>
+
             </div>
           </form>
+        </div>
+
+        {/* Footer */}
+        <div className="flex justify-between items-center px-6 py-4 border-t border-[#E9ECEF] shrink-0">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="px-5 py-2.5 text-[13px] font-medium text-[#46505F] bg-[#FCFCFB] border border-[#E9ECEF] rounded-[8px] hover:bg-gray-50 focus:outline-none transition-colors disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="dropdownForm"
+            disabled={isSubmitting}
+            className="inline-flex items-center justify-center px-6 py-2.5 text-[13px] font-medium text-white bg-[#1A9F9A] rounded-[8px] hover:bg-[#14807b] focus:outline-none transition-colors disabled:opacity-50"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                Saving...
+              </>
+            ) : (
+              initialData ? 'Update Dropdown' : 'Create Dropdown'
+            )}
+          </button>
         </div>
       </div>
     </div>

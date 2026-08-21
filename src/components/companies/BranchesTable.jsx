@@ -1,57 +1,62 @@
 import React from 'react';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
+import iconEdit from '../../assets/Employee/edit-2.svg';
+import iconEye from '../../assets/Employee/eye.svg';
+import iconTrash from '../../assets/Employee/trash.svg';
 
 export default function BranchesTable({ branches, onView, onEdit, onDelete }) {
   return (
-    <div className="flex-1 w-full overflow-x-auto">
+    <div className="flex-1 w-full overflow-auto scrollbar-hide">
       <table className="w-full text-left border-collapse min-w-[900px]">
-        <thead>
-          <tr className="border-b border-gray-100">
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Branch Name</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">City</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">State</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Phone</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Email</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider">Default</th>
-            <th className="px-6 py-4 text-xs font-semibold text-black-500 uppercase tracking-wider text-right">Actions</th>
+        <thead className="sticky top-0 bg-white z-10">
+          <tr className="border-b border-[#E9ECEF]">
+            <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] whitespace-nowrap">Branch Name</th>
+            <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] whitespace-nowrap">City</th>
+            <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] whitespace-nowrap">State</th>
+            <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] whitespace-nowrap">Phone</th>
+            <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] whitespace-nowrap">Email</th>
+            <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] whitespace-nowrap">Default</th>
+            <th className="px-6 py-4 font-Inter font-bold text-[13px] leading-[140%] text-[#040715] text-right whitespace-nowrap">Action</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-[#E9ECEF]">
           {branches.map((branch) => (
             <tr key={branch.branchId || branch.id} className="hover:bg-gray-50/50 transition-colors">
-              <td className="px-6 py-4 text-sm font-medium text-indigo-600">{branch.branchName || branch.branch_name}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{branch.city || '-'}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{branch.state || '-'}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{branch.phone || '-'}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{branch.email || '-'}</td>
-              <td className="px-6 py-4">
-                {branch.isDefault ? (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
+              <td className="px-6 py-3 font-Inter font-medium text-[13px] leading-[31px] text-[#46505F] whitespace-nowrap">{branch.branchName || branch.branch_name}</td>
+              <td className="px-6 py-3 font-Inter font-medium text-[13px] leading-[31px] text-[#46505F] whitespace-nowrap">{branch.city || '-'}</td>
+              <td className="px-6 py-3 font-Inter font-medium text-[13px] leading-[31px] text-[#46505F] whitespace-nowrap">{branch.state || '-'}</td>
+              <td className="px-6 py-3 font-Inter font-medium text-[13px] leading-[31px] text-[#46505F] whitespace-nowrap">{branch.phone || '-'}</td>
+              <td className="px-6 py-3 font-Inter font-medium text-[13px] leading-[31px] text-[#46505F] whitespace-nowrap">{branch.email || '-'}</td>
+              <td className="px-6 py-3">
+                {branch.isDefault || branch.is_default ? (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-[4px] text-xs font-medium bg-[#E2FFEC] text-[#0DB22B]">
                     Default
                   </span>
                 ) : (
-                  <span className="text-gray-400 text-xs">—</span>
+                  <span className="text-[#46505F] text-[13px]">-</span>
                 )}
               </td>
-              <td className="px-6 py-4">
-                <div className="flex items-center justify-end space-x-3">
-                  <button
-                    onClick={() => onView(branch)}
-                    className="text-gray-400 hover:text-indigo-600 transition-colors"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </button>
+              <td className="px-6 py-3">
+                <div className="flex items-center justify-end space-x-2">
                   <button
                     onClick={() => onEdit(branch)}
-                    className="text-gray-400 hover:text-indigo-600 transition-colors"
+                    title="Edit"
+                    className="p-1.5 bg-white shadow-[0px_1px_4px_rgba(0,0,0,0.1)] rounded-[6px] hover:bg-gray-50 transition-colors cursor-pointer"
                   >
-                    <Pencil className="h-4 w-4" />
+                    <img src={iconEdit} alt="Edit" className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => onView(branch)}
+                    title="View"
+                    className="p-1.5 bg-white shadow-[0px_1px_4px_rgba(0,0,0,0.1)] rounded-[6px] hover:bg-gray-50 transition-colors cursor-pointer"
+                  >
+                    <img src={iconEye} alt="View" className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => onDelete(branch.branchId || branch.id)}
-                    className="text-red-500 hover:text-red-600 transition-colors"
+                    title="Delete"
+                    className="p-1.5 bg-white shadow-[0px_1px_4px_rgba(0,0,0,0.1)] rounded-[6px] hover:bg-gray-50 transition-colors cursor-pointer"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <img src={iconTrash} alt="Delete" className="h-4 w-4" />
                   </button>
                 </div>
               </td>
@@ -59,7 +64,7 @@ export default function BranchesTable({ branches, onView, onEdit, onDelete }) {
           ))}
           {branches.length === 0 && (
             <tr>
-              <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
+              <td colSpan="7" className="px-6 py-8 text-center text-gray-500 text-[13px]">
                 No branches found for this company.
               </td>
             </tr>

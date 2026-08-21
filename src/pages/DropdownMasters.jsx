@@ -16,6 +16,7 @@ export default function DropdownMasters() {
   const [error, setError] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDropdown, setEditingDropdown] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,7 +47,11 @@ export default function DropdownMasters() {
   }, []);
 
   const filteredItems = items
-    .filter(item => item.status === true)
+    .filter(item => {
+      if (statusFilter === 'active') return item.status === true;
+      if (statusFilter === 'inactive') return item.status === false;
+      return true; // 'all'
+    })
     .filter(item => 
       (item.dropdownName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (item.description || '').toLowerCase().includes(searchTerm.toLowerCase())
@@ -111,27 +116,49 @@ export default function DropdownMasters() {
   };
 
   return (
-    <div className="space-y-6 flex flex-col h-full pb-6">
+    <div className="font-Inter space-y-4 flex flex-col h-full pb-6 pt-4">
+      {/* Header Area */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <p className="text-gray-500 text-sm">Manage dropdown options used in the application.</p>
+        {/* Left: Search Bar */}
+        <div className="flex-1 max-w-[320px]">
+          <SearchBar
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search Dropdown..."
+          />
         </div>
-        <button 
-          onClick={handleAddClick}
-          className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add New Dropdown
-        </button>
+
+        {/* Right: Dropdown + New Button */}
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="appearance-none bg-white border border-[#E9ECEF] text-[#46505F] text-[13px] rounded-[8px] pl-3 pr-8 h-[38px] focus:outline-none focus:border-[#1A9F9A] transition-colors cursor-pointer shadow-sm"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#46505F]">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <button
+            onClick={handleAddClick}
+            className="inline-flex items-center justify-center px-4 h-[38px] text-[13px] font-medium text-white bg-[#1A9F9A] rounded-[8px] hover:bg-[#14807b] transition-colors shadow-sm"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Dropdown
+          </button>
+        </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col flex-1 min-h-0">
-        <SearchBar 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search dropdowns..."
-        />
-        
+      {/* Unified Table Container */}
+      <div className="bg-white rounded-[12px] shadow-sm border border-[#E9ECEF] flex flex-col flex-1 min-h-0">
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center min-h-[200px]">
             <span className="text-gray-500">Loading dropdowns...</span>
@@ -172,7 +199,7 @@ export default function DropdownMasters() {
         }}
         onConfirm={confirmDelete}
         title="Delete Dropdown"
-        message="Are you sure you want to delete this dropdown? This action cannot be undone."
+        message="Are you sure you want to delete this dropdown?"
         confirmText="Delete Dropdown"
         isSubmitting={isDeleting}
       />
