@@ -90,7 +90,7 @@ export default function TaxMastersTable({ taxes, onEdit, onDelete }) {
                       onClick={() => isSelected && onEdit(tax)}
                       title="Edit"
                       disabled={!isSelected}
-                      className={`p-1.5 bg-white shadow-[0px_1px_4px_rgba(0,0,0,0.1)] rounded-[6px] transition-colors ${isSelected ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                      className={`p-1.5 bg-white border-[#E6EBEB] border-[1px] shadow-[0px_1px_4px_rgba(0,0,0,0.1)] rounded-[6px] transition-colors ${isSelected ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
                     >
                       <img src={iconEdit} alt="Edit" className="h-4 w-4" />
                     </button>
@@ -98,7 +98,7 @@ export default function TaxMastersTable({ taxes, onEdit, onDelete }) {
                       onClick={() => isSelected && onDelete(tax.id)}
                       title="Delete"
                       disabled={!isSelected}
-                      className={`p-1.5 bg-white shadow-[0px_1px_4px_rgba(0,0,0,0.1)] rounded-[6px] transition-colors ${isSelected ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                      className={`p-1.5 bg-white border-[#E6EBEB] border-[1px] shadow-[0px_1px_4px_rgba(0,0,0,0.1)] rounded-[6px] transition-colors ${isSelected ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
                     >
                       <img src={iconTrash} alt="Delete" className="h-4 w-4" />
                     </button>

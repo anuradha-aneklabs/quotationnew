@@ -69,12 +69,12 @@ export default function Sidebar({ currentView, setCurrentView, setToken, isOpen,
 
       {/* Sidebar Container */}
       <aside className={`
-        fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 flex flex-col h-screen shrink-0 transition-transform duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-30 w-60 bg-white border-r border-gray-200 flex flex-col h-screen shrink-0 transition-transform duration-300 ease-in-out
         md:relative md:translate-x-0
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="h-16 flex items-center px-6 mt-2 mb-4">
-        <img src={logo} alt="ANEKA QuotePro" className="w-[140px] h-auto ml-2" />
+        <img src={logo} alt="ANEKA QuotePro" className="w-[130px] h-auto ml-2" />
       </div>
       
       <nav className="flex-1 overflow-y-auto px-4 space-y-1 scrollbar-hide pb-4">
