@@ -7,6 +7,8 @@ import scopeIcon from '../../../../assets/Preview/Scope.svg';
 import outstandingIcon from '../../../../assets/Preview/TotalOutstanding.svg';
 import gstIcon from '../../../../assets/Preview/GST.svg';
 import discountIcon from '../../../../assets/Preview/Discount.svg';
+import * as quotationService from '../../../../services/quotationService';
+import { Loader2 } from 'lucide-react';
 
 function numToWords(num) {
   // simplified for mockup
@@ -43,7 +45,8 @@ function groupByMonth(dates) {
   return months;
 }
 
-export default function PreviewStep({ formData, onSave, onEdit }) {
+export default function PreviewStep({ formData, onSave, onEdit, createdQuoteId }) {
+  const [isDownloading, setIsDownloading] = React.useState(false);
   // Calculations
   const baseCost = formData.modules.reduce((sum, m) => {
     return sum + m.functionalities.reduce((fs, f) => {
@@ -82,7 +85,7 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
 
   // Build DISPLAY range: always show EXACTLY 3 full months from project start month
   const displayStart = projectStart ? new Date(projectStart.getFullYear(), projectStart.getMonth(), 1) : null;
-  
+
   let cursor = projectStart ? new Date(projectStart) : null;
   const moduleTimelines = formData.modules.map((mod, idx) => {
     const durDays = Number(mod.duration) || 0;
@@ -107,15 +110,15 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
     if (!start || !end || !displayStart || allDates.length === 0) return null;
     const startIdx = Math.max(0, Math.round((start - displayStart) / (1000 * 60 * 60 * 24)));
     const endIdx = Math.min(allDates.length - 1, Math.round((end - displayStart) / (1000 * 60 * 60 * 24)));
-    
+
     if (startIdx >= allDates.length) return null;
-    
+
     const leftPct = (startIdx / allDates.length) * 100;
     const displayEndIdx = Math.min(endIdx, allDates.length - 1);
     const widthPct = Math.max(0, ((displayEndIdx - startIdx + 1) / allDates.length) * 100);
-    
+
     if (widthPct <= 0) return null;
-    
+
     return { left: `${leftPct}%`, width: `${widthPct}%` };
   };
 
@@ -140,9 +143,30 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
               <img src={editIcon} alt="Edit" className="h-3.5 w-3.5 mr-2" />
               Edit Quotation
             </button>
-            <button className="flex items-center px-4 py-1.5 border border-[#1A9F9A] text-[11px] font-bold rounded-[8px] text-[#1A9F9A] hover:bg-teal-50 transition-colors bg-white shadow-sm h-8">
-              <img src={downloadIcon} alt="Download" className="h-3.5 w-3.5 mr-2" />
-              Download PDF
+            <button onClick={async () => {
+              if (!createdQuoteId) {
+                alert("Cannot download: quotation ID is missing.");
+                return;
+              }
+              setIsDownloading(true);
+              try {
+                const blob = await quotationService.downloadPdf(createdQuoteId);
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `${formData.quotationNumber || 'Quotation'}.pdf`);
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+              } catch (e) {
+                console.error("Error downloading PDF:", e);
+                alert("Failed to download PDF. Please try again.");
+              } finally {
+                setIsDownloading(false);
+              }
+            }} disabled={isDownloading} className="flex items-center px-4 py-1.5 border border-[#1A9F9A] text-[11px] font-bold rounded-[8px] text-[#1A9F9A] hover:bg-teal-50 transition-colors bg-white shadow-sm h-8 disabled:opacity-70 disabled:cursor-not-allowed">
+              {isDownloading ? <Loader2 className="animate-spin h-3.5 w-3.5 mr-2" /> : <img src={downloadIcon} alt="Download" className="h-3.5 w-3.5 mr-2" />}
+              {isDownloading ? 'Downloading...' : 'Download PDF'}
             </button>
           </div>
         </div>
@@ -240,26 +264,26 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
                 {formData.modules.map((m, idx) => {
                   const effort = m.functionalities.reduce((s, f) => s + (Number(f.effort) || 0), 0);
                   return (
-                  <React.Fragment key={idx}>
-                    <tr className="hover:bg-gray-50/50">
-                      <td className="py-4 pl-6 pr-3 text-center font-medium text-[#040715] text-[11px] align-top">
-                        {String(idx + 1).padStart(2, '0')}
-                      </td>
-                      <td className="py-4 pl-3 pr-24 font-semibold text-[#040715] text-[11px] align-top">{m.name}</td>
-                      <td className="py-4 pl-3 pr-24 text-[#46505F] text-[11px] align-top">{m.description}</td>
-                      <td className="py-4 px-3 text-center font-semibold text-[#46505F] text-[11px] align-top">{effort} Hrs</td>
-                      <td className="py-4 pl-3 pr-6 text-center text-[#1A9F9A] font-medium text-[11px] align-top">
-                        {formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jun 2026'} • {formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '03 Jun 2026'}
-                      </td>
-                    </tr>
-                    {idx < formData.modules.length - 1 && (
-                      <tr>
-                        <td colSpan={5} className="p-0">
-                          <div className="mx-6 border-b border-[#E9ECEF]"></div>
+                    <React.Fragment key={idx}>
+                      <tr className="hover:bg-gray-50/50">
+                        <td className="py-4 pl-6 pr-3 text-center font-medium text-[#040715] text-[11px] align-top">
+                          {String(idx + 1).padStart(2, '0')}
+                        </td>
+                        <td className="py-4 pl-3 pr-24 font-semibold text-[#040715] text-[11px] align-top">{m.name}</td>
+                        <td className="py-4 pl-3 pr-24 text-[#46505F] text-[11px] align-top">{m.description}</td>
+                        <td className="py-4 px-3 text-center font-semibold text-[#46505F] text-[11px] align-top">{effort} Hrs</td>
+                        <td className="py-4 pl-3 pr-6 text-center text-[#1A9F9A] font-medium text-[11px] align-top">
+                          {formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '01 Jun 2026'} • {formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '03 Jun 2026'}
                         </td>
                       </tr>
-                    )}
-                  </React.Fragment>
+                      {idx < formData.modules.length - 1 && (
+                        <tr>
+                          <td colSpan={5} className="p-0">
+                            <div className="mx-6 border-b border-[#E9ECEF]"></div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
                   );
                 })}
               </tbody>
@@ -272,9 +296,9 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
                 <tr className="text-[#1A9F9A]">
                   <td colSpan={5} className="p-0 pb-4">
                     <div className="mx-6 bg-[#F6F9F9]  flex items-center py-3">
-                       <div className="flex-1 text-right font-semibold text-[11px] pr-3">Total Effort</div>
-                       <div className="w-32 text-center font-bold text-[11px]">{totalEffort} Hrs</div>
-                       <div className="w-[168px]"></div>
+                      <div className="flex-1 text-right font-semibold text-[11px] pr-3">Total Effort</div>
+                      <div className="w-32 text-center font-bold text-[11px]">{totalEffort} Hrs</div>
+                      <div className="w-[168px]"></div>
                     </div>
                   </td>
                 </tr>
@@ -339,7 +363,7 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
               <h3 className="text-[14px] font-bold text-[#040715]">2. Timeline Overview</h3>
             </div>
             <p className="text-[12px] text-[#46505F] font-medium">
-              {formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jun 2026'} • {formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'short', year: 'numeric'}) : '01 Jul 2026'}
+              {formData.projectStartDate ? new Date(formData.projectStartDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '01 Jun 2026'} • {formData.projectEndDate ? new Date(formData.projectEndDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '01 Jul 2026'}
             </p>
           </div>
 
@@ -370,7 +394,7 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
                   {monthGroups.map((mg, mIdx) => {
                     const daysInMonth = mg.dates.length;
                     const weekAnchors = mg.dates.filter(d => d.getDay() === 1).map(d => d.getDate());
-                    
+
                     return (
                       <div
                         key={mIdx}

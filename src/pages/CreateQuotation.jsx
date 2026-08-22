@@ -451,7 +451,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
       case 3: return <ModuleManagementStep formData={formData} setFormData={setFormData} errors={errors} />;
       case 4: return <CommercialStep formData={formData} handleChange={handleChange} />;
       case 5: return <TimelineStep formData={formData} />;
-      case 6: return <PreviewStep formData={formData} onSave={handleSaveQuotation} isSaving={isSaving} onEdit={() => setCurrentStep(1)} />;
+      case 6: return <PreviewStep formData={formData} onSave={handleSaveQuotation} isSaving={isSaving} onEdit={() => setCurrentStep(1)} createdQuoteId={createdQuoteId} />;
       default: return null;
     }
   };

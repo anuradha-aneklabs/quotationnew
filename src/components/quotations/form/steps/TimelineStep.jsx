@@ -69,9 +69,9 @@ export default function TimelineStep({ formData }) {
 
   const displayEnd = (() => {
     if (!displayStart) return null;
-    // End at project end or at least 4 months, whichever is greater
+    // End at project end or at least 3 months, whichever is greater
     let maxEnd = new Date(displayStart);
-    maxEnd.setMonth(maxEnd.getMonth() + 4);
+    maxEnd.setMonth(maxEnd.getMonth() + 3);
     maxEnd.setDate(0); // last day of that month
     
     if (projectEnd && projectEnd > maxEnd) {
@@ -116,64 +116,67 @@ export default function TimelineStep({ formData }) {
       <div className="border border-gray-200 rounded-xl shadow-sm bg-white overflow-x-auto">
         <div style={{ minWidth: `${minWidth}px` }}>
 
-        {/* Month Row */}
+        {/* Header Container */}
         <div className="flex border-b border-[#E9ECEF] bg-[#F8F9FA]">
-          <div className="w-[320px] shrink-0 px-4 py-2 border-r border-[#E9ECEF] text-[11px] font-bold text-[#040715] flex items-center">
+          {/* Left Cell: Milestone / Phase */}
+          <div className="w-[320px] shrink-0 px-4 py-2 border-r border-[#E9ECEF] text-[11px] font-bold text-[#040715] flex items-center justify-center">
             Milestone / Phase
           </div>
-          <div className="flex flex-1">
-            {monthGroups.map((mg, mIdx) => (
-              <div
-                key={mIdx}
-                className="border-r border-[#E9ECEF] last:border-0 text-center text-[10px] font-bold text-[#040715] py-2"
-                style={{ width: `${(mg.dates.length / allDates.length) * 100}%` }}
-              >
-                {MONTH_NAMES[mg.month]} {mg.year}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Week/Day markers Row */}
-        <div className="flex border-b border-[#E9ECEF] bg-[#F8F9FA]">
-          <div className="w-[320px] shrink-0 border-r border-[#E9ECEF]" />
-          <div className="flex flex-1 relative h-7">
-            {monthGroups.map((mg, mIdx) => {
-              const daysInMonth = mg.dates.length;
-              const weekAnchors = mg.dates.filter(d => d.getDay() === 1).map(d => d.getDate());
-              
-              return (
+          
+          {/* Right Section: Months & Days */}
+          <div className="flex flex-1 flex-col">
+            {/* Month Row */}
+            <div className="flex border-b border-[#E9ECEF]">
+              {monthGroups.map((mg, mIdx) => (
                 <div
                   key={mIdx}
-                  className="relative border-r border-[#E9ECEF] last:border-0 h-full"
-                  style={{ width: `${(daysInMonth / allDates.length) * 100}%` }}
+                  className="border-r border-[#E9ECEF] last:border-0 text-center text-[10px] font-bold text-[#040715] py-2"
+                  style={{ width: `${(mg.dates.length / allDates.length) * 100}%` }}
                 >
-                  {weekAnchors.map((anchor, aIdx) => {
-                    const anchorDate = mg.dates.find(d => d.getDate() === anchor);
-                    if (!anchorDate) return null;
-                    const leftPct = ((anchor - 1) / daysInMonth) * 100;
-                    return (
-                      <div
-                        key={aIdx}
-                        className="absolute top-0 bottom-0 flex flex-col justify-center border-l border-[#E9ECEF]/50"
-                        style={{ left: `${leftPct}%` }}
-                      >
-                        <span className="text-[9px] text-gray-400 px-1">{String(anchor).padStart(2, '0')}</span>
-                      </div>
-                    );
-                  })}
+                  {MONTH_NAMES[mg.month]} {mg.year}
                 </div>
-              );
-            })}
-            {/* Today label */}
-            {todayPct >= 0 && todayPct <= 100 && (
-              <div
-                className="absolute top-0 z-10 flex flex-col items-center"
-                style={{ left: `${todayPct}%`, transform: 'translateX(-50%)' }}
-              >
-                <div className="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded font-bold leading-none">Today</div>
-              </div>
-            )}
+              ))}
+            </div>
+
+            {/* Week/Day markers Row */}
+            <div className="flex relative h-7">
+              {monthGroups.map((mg, mIdx) => {
+                const daysInMonth = mg.dates.length;
+                const weekAnchors = mg.dates.filter(d => d.getDay() === 1).map(d => d.getDate());
+                
+                return (
+                  <div
+                    key={mIdx}
+                    className="relative border-r border-[#E9ECEF] last:border-0 h-full"
+                    style={{ width: `${(daysInMonth / allDates.length) * 100}%` }}
+                  >
+                    {weekAnchors.map((anchor, aIdx) => {
+                      const anchorDate = mg.dates.find(d => d.getDate() === anchor);
+                      if (!anchorDate) return null;
+                      const leftPct = ((anchor - 1) / daysInMonth) * 100;
+                      return (
+                        <div
+                          key={aIdx}
+                          className="absolute top-0 bottom-0 flex flex-col justify-center border-l border-[#E9ECEF]/50"
+                          style={{ left: `${leftPct}%` }}
+                        >
+                          <span className="text-[9px] text-gray-400 px-1">{String(anchor).padStart(2, '0')}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+              {/* Today label */}
+              {todayPct >= 0 && todayPct <= 100 && (
+                <div
+                  className="absolute top-0 z-10 flex flex-col items-center"
+                  style={{ left: `${todayPct}%`, transform: 'translateX(-50%)' }}
+                >
+                  <div className="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded font-bold leading-none">Today</div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
