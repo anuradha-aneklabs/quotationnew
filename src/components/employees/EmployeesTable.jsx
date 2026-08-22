@@ -34,14 +34,14 @@ export default function EmployeesTable({ employees, onView, onEdit, onDelete }) 
             <th className="pl-6 py-4 w-12">
               <Checkbox checked={allSelected} onChange={handleSelectAll} />
             </th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">ID</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Name</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Role</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Email</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Phone</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Assign Project</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Hourly Rate</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] text-center whitespace-nowrap">Actions</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">ID</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Name</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Role</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Email</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Phone</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Assign Project</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Hourly Rate</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] text-center whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody className="">
@@ -63,19 +63,19 @@ export default function EmployeesTable({ employees, onView, onEdit, onDelete }) 
                     onChange={(checked) => handleSelectEmployee(employee.id, checked)} 
                   />
                 </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {employee.employee_code || `EMP${String(employee.id).padStart(3, '0')}`}
               </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {employee.name}
               </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {employee.role || employee.designation}
               </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {employee.email}
               </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {employee.phone || '-'}
               </td>
               <td className="px-6 py-3 whitespace-nowrap">

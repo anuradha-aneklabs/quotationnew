@@ -7,6 +7,7 @@ import arrowDownIcon from '../../../../assets/clientInformation/arrow-down.svg';
 import FormInput from '../../../common/FormInput';
 import FormSelect from '../../../common/FormSelect';
 import FormTextarea from '../../../common/FormTextarea';
+import Checkbox from '../../../common/Checkbox';
 
 export default function ClientInfoStep({ formData, handleChange, errors, setFormData }) {
   const [logoError, setLogoError] = useState('');
@@ -50,36 +51,52 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
     return (c.company_name?.toLowerCase().includes(term) || c.contact_person?.toLowerCase().includes(term));
   });
 
-  const handlePincodeChange = async (e) => {
-    handleChange(e);
-    const val = e.target.value;
+  const fetchPincodeDetails = async (val, isAutoFill = false) => {
+    try {
+      const response = await fetch(`https://api.postalpincode.in/pincode/${val}`);
+      const data = await response.json();
+      if (data && data[0] && data[0].Status === "Success") {
+        const postOffices = data[0].PostOffice;
+        
+        const uniqueCountries = [...new Set(postOffices.map(po => po.Country).filter(Boolean))];
+        const uniqueStates = [...new Set(postOffices.map(po => po.State).filter(Boolean))];
+        const uniqueDistricts = [...new Set(postOffices.map(po => po.District || po.Region).filter(Boolean))];
+        const uniqueCities = [...new Set(postOffices.map(po => po.Name).filter(Boolean))];
+
+        setCountryOptions(uniqueCountries);
+        setStateOptions(uniqueStates);
+        setDistrictOptions(uniqueDistricts);
+        setCityOptions(uniqueCities);
+
+        setFormData(prev => ({
+          ...prev,
+          country: (isAutoFill && prev.country) ? prev.country : (uniqueCountries.length > 0 ? uniqueCountries[0] : prev.country),
+          state: (isAutoFill && prev.state) ? prev.state : (uniqueStates.length > 0 ? uniqueStates[0] : prev.state),
+          district: (isAutoFill && prev.district) ? prev.district : (uniqueDistricts.length > 0 ? uniqueDistricts[0] : prev.district),
+          city: (isAutoFill && prev.city) ? prev.city : (uniqueCities.length > 0 ? uniqueCities[0] : prev.city)
+        }));
+      }
+    } catch (err) {
+      console.error("Failed to fetch pincode details:", err);
+    }
+  };
+
+  useEffect(() => {
+    const val = formData.pincode;
     if (val && val.length === 6 && /^\d+$/.test(val)) {
-      try {
-        const response = await fetch(`https://api.postalpincode.in/pincode/${val}`);
-        const data = await response.json();
-        if (data && data[0] && data[0].Status === "Success") {
-          const postOffices = data[0].PostOffice;
-          
-          const uniqueCountries = [...new Set(postOffices.map(po => po.Country).filter(Boolean))];
-          const uniqueStates = [...new Set(postOffices.map(po => po.State).filter(Boolean))];
-          const uniqueDistricts = [...new Set(postOffices.map(po => po.District || po.Region).filter(Boolean))];
-          const uniqueCities = [...new Set(postOffices.map(po => po.Name).filter(Boolean))];
+      if (stateOptions.length === 0) {
+        fetchPincodeDetails(val, true);
+      }
+    }
+  }, [formData.pincode, stateOptions.length]);
 
-          setCountryOptions(uniqueCountries);
-          setStateOptions(uniqueStates);
-          setDistrictOptions(uniqueDistricts);
-          setCityOptions(uniqueCities);
-
-          setFormData(prev => ({
-            ...prev,
-            country: uniqueCountries.length > 0 ? uniqueCountries[0] : prev.country,
-            state: uniqueStates.length > 0 ? uniqueStates[0] : prev.state,
-            district: uniqueDistricts.length > 0 ? uniqueDistricts[0] : prev.district,
-            city: uniqueCities.length > 0 ? uniqueCities[0] : prev.city
-          }));
-        }
-      } catch (err) {
-        console.error("Failed to fetch pincode details:", err);
+  const handlePincodeChange = (e) => {
+    handleChange(e);
+    let val = e.target.value;
+    if (val) {
+      val = val.replace(/\D/g, '').slice(0, 6);
+      if (val.length === 6) {
+        fetchPincodeDetails(val, false);
       }
     }
   };
@@ -362,13 +379,18 @@ export default function ClientInfoStep({ formData, handleChange, errors, setForm
             label={
               <div className="flex items-center justify-between mb-2.5">
                 <span className="block text-[12px] font-normal text-black">Shipping Address <span className="text-red-500">*</span></span>
-                <label className="flex items-center text-[11px] text-gray-600 font-medium cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="isShippingSameAsBilling"
+                <label className="flex items-center text-[11px] text-gray-600 font-medium cursor-pointer gap-2">
+                  <Checkbox
                     checked={formData.isShippingSameAsBilling}
-                    onChange={handleChange}
-                    className="rounded border-gray-300 text-purple-600 focus:ring-purple-500 mr-2 h-3.5 w-3.5"
+                    onChange={(checked) => {
+                      handleChange({
+                        target: {
+                          name: 'isShippingSameAsBilling',
+                          type: 'checkbox',
+                          checked: checked
+                        }
+                      });
+                    }}
                   />
                   Same as billing address
                 </label>

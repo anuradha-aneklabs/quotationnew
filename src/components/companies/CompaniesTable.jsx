@@ -36,13 +36,13 @@ export default function CompaniesTable({ companies, onView, onEdit, onDelete, on
             <th className="pl-6 py-4">
               <Checkbox checked={allSelected} onChange={handleSelectAll} />
             </th>
-            <th className="pr-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Company Name</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Email</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Phone</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">GSTIN</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Website</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Status</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] text-center whitespace-nowrap">Actions</th>
+            <th className="pr-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Company Name</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Email</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Phone</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">GSTIN</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Website</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Status</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] text-center whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
@@ -59,19 +59,19 @@ export default function CompaniesTable({ companies, onView, onEdit, onDelete, on
                     onChange={(checked) => handleSelectCompany(id, checked)} 
                   />
                 </td>
-                <td className="pr-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                <td className="pr-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                   {company.companyName || company.company_name}
                 </td>
-                <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                   {company.email || '-'}
                 </td>
-                <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                   {company.phone || '-'}
                 </td>
-                <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                   {company.gstin || '-'}
                 </td>
-                <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+                <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                   {company.website || '-'}
                 </td>
                 <td className="px-6 py-3">
