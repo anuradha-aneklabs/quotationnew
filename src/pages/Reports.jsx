@@ -334,9 +334,9 @@ export default function Reports({ setCurrentView }) {
                   {(reportData?.recentQuotations || []).slice(0,4).map((q, i, arr) => (
                     <React.Fragment key={i}>
                       <tr className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-bold text-gray-800">{q.id}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-[13px] text-gray-600 font-medium">{q.client}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-semibold text-gray-800 text-right">{formatCurrency(q.amount)}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-medium text-[#040715]">{q.id}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] text-[#46505F] font-medium">{q.client}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-medium text-[#46505F] text-right">{formatCurrency(q.amount)}</td>
                       </tr>
                       {i < arr.length - 1 && (
                         <tr>
@@ -371,9 +371,9 @@ export default function Reports({ setCurrentView }) {
                   {(reportData?.topClientsTable || []).slice(0,4).map((c, i, arr) => (
                     <React.Fragment key={i}>
                       <tr className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-bold text-gray-800">{c.client}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-[13px] text-gray-600 font-medium text-center">{c.quotations}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-semibold text-gray-800 text-right">{formatCurrency(c.revenue)}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-medium text-[#040715]">{c.client}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] text-[#46505F] font-medium text-center">{c.quotations}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-[13px] font-medium text-[#46505F] text-right">{formatCurrency(c.revenue)}</td>
                       </tr>
                       {i < arr.length - 1 && (
                         <tr>
@@ -412,13 +412,13 @@ export default function Reports({ setCurrentView }) {
                           <div className="flex items-center gap-3">
                             <img src={e.avatar} alt={e.name} className="w-7 h-7 rounded-full bg-gray-100 object-cover" />
                             <div>
-                              <div className="text-[13px] font-bold text-gray-800 leading-tight">{e.name}</div>
-                              <div className="text-[11px] text-gray-500 font-medium mt-0.5">{e.role}</div>
+                              <div className="text-[13px] font-semibold text-[#040715] leading-tight">{e.name}</div>
+                              <div className="text-[11px] text-[#46505F] font-medium mt-0.5">{e.role}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-2.5 whitespace-nowrap text-[13px] text-gray-600 font-medium text-center">{e.quotations}</td>
-                        <td className="px-4 py-2.5 whitespace-nowrap text-[13px] font-semibold text-gray-800 text-right">{formatCurrency(e.revenue)}</td>
+                        <td className="px-4 py-2.5 whitespace-nowrap text-[13px] text-[#46505F] font-medium text-center">{e.quotations}</td>
+                        <td className="px-4 py-2.5 whitespace-nowrap text-[13px] font-medium text-[#46505F] text-right">{formatCurrency(e.revenue)}</td>
                       </tr>
                       {i < arr.length - 1 && (
                         <tr>

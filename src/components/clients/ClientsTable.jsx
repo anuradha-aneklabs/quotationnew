@@ -34,13 +34,13 @@ export default function ClientsTable({ clients, onView, onEdit, onDelete }) {
             <th className="pl-6 py-4 w-12">
               <Checkbox checked={allSelected} onChange={handleSelectAll} />
             </th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Company Name</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Contact Person</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Email</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Phone</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">GST No</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] whitespace-nowrap">Location</th>
-            <th className="px-6 py-4 font-Inter font-semibold text-[18px] leading-[140%] text-[#040715] text-right whitespace-nowrap">Actions</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Company Name</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Contact Person</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Email</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Phone</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">GST No</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] whitespace-nowrap">Location</th>
+            <th className="px-6 py-4 font-Inter font-semibold text-[16px] leading-[140%] text-[#040715] text-right whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody className="">
@@ -62,7 +62,7 @@ export default function ClientsTable({ clients, onView, onEdit, onDelete }) {
                   onChange={(checked) => handleSelectClient(client.id, checked)} 
                 />
               </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 <div className="flex items-center gap-3">
                   <div className="w-15 h-10 border border-gray-200 rounded-[10px] shadow-sm flex items-center justify-center bg-white p-1 overflow-hidden shrink-0">
                     {client.logo ? (
@@ -76,19 +76,19 @@ export default function ClientsTable({ clients, onView, onEdit, onDelete }) {
                   <span>{client.company_name}</span>
                 </div>
               </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {client.contact_person || '-'}
               </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {client.email || '-'}
               </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {client.phone || '-'}
               </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {client.gst_number || '-'}
               </td>
-              <td className="px-6 py-3 font-Inter font-medium text-[16px] leading-[31px] text-[#040715] whitespace-nowrap">
+              <td className="px-6 py-3 font-Inter font-medium text-[14px] leading-[31px] text-[#040715] whitespace-nowrap">
                 {client.address || '-'}
               </td>
               <td className="px-6 py-3">
