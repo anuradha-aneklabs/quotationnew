@@ -36,7 +36,7 @@ export default function CreateQuotation({ setCurrentView, editId = null }) {
     shippingAddress: '',
     isShippingSameAsBilling: false,
     pincode: '',
-    country: '',
+    country: 'India',
     state: '',
     city: '',
 

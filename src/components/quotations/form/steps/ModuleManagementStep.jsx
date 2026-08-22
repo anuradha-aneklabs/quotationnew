@@ -14,37 +14,112 @@ import grandTimeIcon from '../../../../assets/module management/grand-time.svg';
 import arrowDownIcon from '../../../../assets/clientInformation/arrow-down.svg';
 
 const AutoResizeTextarea = ({ value, onChange, placeholder, className, showTooltip }) => {
-  const textareaRef = useRef(null);
+  const [isFocused, setIsFocused] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const divRef = useRef(null);
+  const textareaRef = useRef(null);
 
   const checkOverflow = () => {
-    if (textareaRef.current) {
-      setIsOverflowing(textareaRef.current.scrollHeight > textareaRef.current.clientHeight + 4);
+    if (divRef.current) {
+      setIsOverflowing(divRef.current.scrollHeight > divRef.current.clientHeight + 2);
     }
   };
 
   useEffect(() => {
-    if (textareaRef.current) {
+    if (isFocused && textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = (textareaRef.current.scrollHeight + 2) + 'px';
-      checkOverflow();
     }
-  }, [value]);
+  }, [value, isFocused]);
+
+  const textareaClass = (className || '').replace(/line-clamp-\d+/g, '').replace(/max-h-\[[^\]]+\]/g, '').replace(/max-md:line-clamp-\d+/g, '').replace(/max-md:max-h-\[[^\]]+\]/g, '').replace('overflow-hidden', '');
 
   return (
     <div className="relative group/tooltip w-full h-full">
-      <textarea
-        ref={textareaRef}
-        rows={1}
-        value={value}
-        onChange={onChange}
-        onMouseEnter={checkOverflow}
-        placeholder={placeholder}
-        className={`${className} resize-none overflow-hidden`}
-      />
-      {showTooltip && isOverflowing && value && (
+      {!isFocused ? (
+        <div 
+          ref={divRef}
+          onClick={() => setIsFocused(true)}
+          onMouseEnter={checkOverflow}
+          className={`${className} cursor-text whitespace-pre-wrap break-words`}
+          style={{ minHeight: '28px' }}
+        >
+          {value ? value : <span className="text-gray-400">{placeholder}</span>}
+        </div>
+      ) : (
+        <textarea
+          ref={textareaRef}
+          rows={1}
+          value={value}
+          onChange={onChange}
+          onBlur={() => setIsFocused(false)}
+          autoFocus
+          onFocus={(e) => {
+            const val = e.target.value;
+            e.target.value = '';
+            e.target.value = val;
+          }}
+          placeholder={placeholder}
+          className={`${textareaClass} resize-none overflow-hidden block w-full`}
+        />
+      )}
+      
+      {showTooltip && isOverflowing && value && !isFocused && (
         <div className="absolute z-[100] hidden group-hover/tooltip:block bg-gray-900 text-white text-[12px] p-3 rounded-lg shadow-xl w-[320px] left-0 top-full mt-1 whitespace-pre-wrap leading-relaxed pointer-events-none">
           {value}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const CustomDropdown = ({ value, onChange, options, placeholder }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const selectedOption = options.find(opt => opt.value === value);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <div
+        className="flex items-center justify-between w-auto min-w-[150px] bg-transparent cursor-pointer p-0 pr-6 relative z-10"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="text-[14px] font-medium text-[#46505F] truncate">
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <div className="absolute right-2 pointer-events-none z-0">
+           <img src={arrowDownIcon} alt="down" className={`w-3 h-3 opacity-60 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        </div>
+      </div>
+      
+      {isOpen && (
+        <div className="absolute left-0 top-full mt-2 w-full min-w-[180px] bg-white border border-gray-100 rounded-xl shadow-lg z-[100] max-h-[220px] overflow-y-auto scrollbar-hide py-1.5 animate-in fade-in zoom-in-95 duration-100">
+          <div
+            className={`px-4 py-2 text-[13px] hover:bg-gray-50 cursor-pointer transition-colors ${!value ? 'bg-[#F0FAF9] text-[#1A9F9A] font-semibold' : 'text-gray-600'}`}
+            onClick={() => { onChange(""); setIsOpen(false); }}
+          >
+            {placeholder}
+          </div>
+          {options.map((opt) => (
+            <div
+              key={opt.value}
+              className={`px-4 py-2 text-[13px] hover:bg-gray-50 cursor-pointer transition-colors ${value === opt.value ? 'bg-[#F0FAF9] text-[#1A9F9A] font-semibold' : 'text-gray-700'}`}
+              onClick={() => { onChange(opt.value); setIsOpen(false); }}
+            >
+              {opt.label}
+            </div>
+          ))}
         </div>
       )}
     </div>
@@ -54,6 +129,7 @@ const AutoResizeTextarea = ({ value, onChange, placeholder, className, showToolt
 export default function ModuleManagementStep({ formData, setFormData, errors }) {
   const [employees, setEmployees] = useState([]);
   const [collapsedModules, setCollapsedModules] = useState({});
+  const todayDateStr = new Date().toISOString().split('T')[0];
 
   const toggleCollapse = (moduleId) => {
     setCollapsedModules(prev => ({
@@ -300,10 +376,11 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
         <div className="flex flex-wrap items-end gap-6 justify-between">
           <div className="flex flex-wrap gap-6 w-full lg:w-auto">
             <div className="w-full sm:w-auto">
-              <label className="block text-[14px] font-normal text-black mb-2">Project Start Date</label>
+              <label className="block text-[14px] font-normal text-black mb-2">Project Start Date <span className="text-red-500">*</span></label>
               <div className="relative">
                 <input
                   type="date"
+                  min={todayDateStr}
                   value={formData.projectStartDate}
                   onChange={(e) => setFormData(prev => ({ ...prev, projectStartDate: e.target.value }))}
                   className={`w-full sm:w-48 pl-3 pr-10 py-2 border bg-[#FAFAFA] rounded-lg text-sm focus:outline-none focus:ring-2 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-10 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:z-10 ${errors.projectStartDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:ring-purple-100 focus:border-purple-500'}`}
@@ -314,10 +391,11 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
               </div>
             </div>
             <div className="w-full sm:w-auto">
-              <label className="block text-[14px] font-normal text-black mb-2">Project End Date</label>
+              <label className="block text-[14px] font-normal text-black mb-2">Project End Date <span className="text-red-500">*</span></label>
               <div className="relative">
                 <input
                   type="date"
+                  min={formData.projectStartDate || todayDateStr}
                   value={formData.projectEndDate}
                   onChange={(e) => setFormData(prev => ({ ...prev, projectEndDate: e.target.value }))}
                   className={`w-full sm:w-48 pl-3 pr-10 py-2 border bg-[#FAFAFA] rounded-lg text-sm focus:outline-none focus:ring-2 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-10 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:z-10 ${errors.projectEndDate ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:ring-purple-100 focus:border-purple-500'}`}
@@ -408,7 +486,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
           const moduleCost = module.functionalities.reduce((sum, f) => sum + f.teamAllocations.reduce((s, tm) => s + (Number(tm.cost) || 0), 0), 0);
 
           return (
-            <div key={module.id} className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+            <div key={module.id} className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-visible flex flex-col">
 
               {/* Module Header */}
               <div className="p-4 relative after:absolute after:bottom-0 after:left-4 after:right-4 after:h-[1px] after:bg-[#D0D0D0] flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-white">
@@ -467,7 +545,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                 <div className="flex flex-col xl:flex-row gap-6 p-4">
 
                   {/* Left: Functionalities */}
-                  <div className="flex-[1.2] bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col min-w-0">
+                  <div className="flex-[1.2] bg-white border border-gray-200 rounded-xl overflow-visible flex flex-col min-w-0">
                     <div className="flex justify-between items-center p-4 border-b border-gray-100">
                       <h3 className="text-[15px] font-bold text-[#040715]">Functionalities</h3>
                       <button
@@ -478,13 +556,13 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                       </button>
                     </div>
 
-                    <div className="overflow-x-auto pb-4">
+                    <div className="overflow-visible pb-4">
                       <table className="w-full text-left text-[11px] mb-2">
                         <thead className='bg-[#ECF2F2]'>
                           <tr className="border-b border-gray-100 text-[#040715] text-[14px] bg-[#ECF2F2]">
                             <th className="py-3 font-semibold w-12 pl-3 align-top pt-4">#</th>
                             <th className="py-3 font-semibold min-w-[120px] align-top pt-4">Functionality</th>
-                            <th className="py-3 font-semibold min-w-[150px] align-top pt-4">Description</th>
+                            <th className="py-3 font-semibold min-w-[150px] pr-10 align-top pt-4">Description</th>
                             <th className="py-3 font-semibold w-16 align-top pt-4">Efforts<br />(Hrs)</th>
                             <th className="py-3 font-semibold w-16 align-top pt-4">Duration<br />(Days)</th>
                             <th className="py-3 font-semibold w-14 align-top pt-4">Action</th>
@@ -503,7 +581,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                   className={`w-full text-[#040715] font-semibold text-[14px] leading-[22px] bg-transparent focus:outline-none pb-1 line-clamp-3 max-h-[70px] overflow-hidden ${errors[`module_${mIdx}_func_${fIdx}_name`] ? 'border-b border-red-500' : 'border-b border-transparent group-hover:border-gray-200 focus:border-[#1A9F9A]'}`}
                                 />
                               </td>
-                              <td className="pt-[16px] pb-3 pr-2 align-top">
+                              <td className="pt-[16px] pb-3 pr-10 align-top">
                                 <AutoResizeTextarea
                                   value={func.description}
                                   onChange={(e) => updateFunctionality(module.id, func.id, 'description', e.target.value)}
@@ -552,7 +630,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                   </div>
 
                   {/* Right: Team Effort Allocation */}
-                  <div className="flex-[1.3] bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col min-w-0">
+                  <div className="flex-[1.3] bg-white border border-gray-200 rounded-xl overflow-visible flex flex-col min-w-0">
                     <div className="flex justify-between items-center p-4 border-b border-gray-100">
                       <h3 className="text-[15px] font-bold text-gray-900">Team Effort Allocation</h3>
                       <button
@@ -573,7 +651,7 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                       </button>
                     </div>
 
-                    <div className="overflow-x-auto pb-4">
+                    <div className="overflow-visible pb-4">
                       <table className="w-full text-left text-[11px] mb-2">
                         <thead>
                           <tr className="border-b border-gray-100 text-[#040715] text-[14px] bg-[#ECF2F2]">
@@ -595,21 +673,12 @@ export default function ModuleManagementStep({ formData, setFormData, errors }) 
                                       <div className="w-7 h-7 rounded-full overflow-hidden shrink-0">
                                         <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(employees.find(e => String(e.id) === String(tm.memberId))?.name || 'UN')}&background=random&color=fff`} alt="avatar" className="w-full h-full object-cover" />
                                       </div>
-                                      <div className="relative flex items-center">
-                                        <select
-                                          value={String(tm.memberId || '')}
-                                          onChange={(e) => updateTeamMember(module.id, func.id, tm.id, 'memberId', e.target.value)}
-                                          className="w-auto min-w-[150px] text-[14px] text-[#46505F] bg-transparent border-0 focus:ring-0 text-[11px] text-gray-900 font-medium p-0 pr-6 cursor-pointer focus:outline-none appearance-none relative z-10"
-                                        >
-                                          <option value="">Select...</option>
-                                          {employees.map(emp => (
-                                            <option key={emp.id} value={String(emp.id)}>{emp.name}</option>
-                                          ))}
-                                        </select>
-                                        <div className="absolute right-2 pointer-events-none z-0">
-                                          <img src={arrowDownIcon} alt="down" className="w-3 h-3 opacity-60" />
-                                        </div>
-                                      </div>
+                                      <CustomDropdown
+                                        value={String(tm.memberId || '')}
+                                        onChange={(val) => updateTeamMember(module.id, func.id, tm.id, 'memberId', val)}
+                                        placeholder="Select..."
+                                        options={employees.map(emp => ({ value: String(emp.id), label: emp.name }))}
+                                      />
                                     </div>
                                   </td>
                                   <td className="py-3 pr-2 text-[14px] text-[#46505F] truncate">{tm.role || '-'}</td>
