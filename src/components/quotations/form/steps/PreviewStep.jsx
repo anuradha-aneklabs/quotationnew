@@ -13,6 +13,36 @@ function numToWords(num) {
   return "Indian Rupees " + num.toLocaleString() + " Only";
 }
 
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const COLORS = ['bg-[#1A9F9A]', 'bg-[#1E6BDE]'];
+
+function getDatesInRange(start, end) {
+  const dates = [];
+  const cur = new Date(start);
+  cur.setHours(0, 0, 0, 0);
+  const endD = new Date(end);
+  endD.setHours(0, 0, 0, 0);
+  while (cur <= endD) {
+    dates.push(new Date(cur));
+    cur.setDate(cur.getDate() + 1);
+  }
+  return dates;
+}
+
+function groupByMonth(dates) {
+  const months = [];
+  let cur = null;
+  dates.forEach(d => {
+    const key = `${d.getFullYear()}-${d.getMonth()}`;
+    if (!cur || cur.key !== key) {
+      cur = { key, year: d.getFullYear(), month: d.getMonth(), dates: [] };
+      months.push(cur);
+    }
+    cur.dates.push(d);
+  });
+  return months;
+}
+
 export default function PreviewStep({ formData, onSave, onEdit }) {
   // Calculations
   const baseCost = formData.modules.reduce((sum, m) => {
@@ -46,6 +76,54 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
   const totalDuration = formData.projectStartDate && formData.projectEndDate
     ? Math.ceil(Math.abs(new Date(formData.projectEndDate) - new Date(formData.projectStartDate)) / (1000 * 60 * 60 * 24)) + 1
     : 0;
+
+  const projectStart = formData.projectStartDate ? new Date(formData.projectStartDate) : null;
+  const projectEnd = formData.projectEndDate ? new Date(formData.projectEndDate) : null;
+
+  // Build DISPLAY range: always show EXACTLY 3 full months from project start month
+  const displayStart = projectStart ? new Date(projectStart.getFullYear(), projectStart.getMonth(), 1) : null;
+  
+  let cursor = projectStart ? new Date(projectStart) : null;
+  const moduleTimelines = formData.modules.map((mod, idx) => {
+    const durDays = Number(mod.duration) || 0;
+    const start = cursor ? new Date(cursor) : null;
+    let end = null;
+    if (start && durDays > 0) {
+      end = new Date(start);
+      const calendarDays = Math.max(1, Math.ceil(durDays));
+      end.setDate(end.getDate() + calendarDays - 1);
+      cursor = new Date(end);
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    return { mod, idx, start, end, durDays };
+  });
+
+  const displayEnd = displayStart ? new Date(displayStart.getFullYear(), displayStart.getMonth() + 3, 0) : null;
+
+  const allDates = (displayStart && displayEnd) ? getDatesInRange(displayStart, displayEnd) : [];
+  const monthGroups = groupByMonth(allDates);
+
+  const getBarStyle = (start, end) => {
+    if (!start || !end || !displayStart || allDates.length === 0) return null;
+    const startIdx = Math.max(0, Math.round((start - displayStart) / (1000 * 60 * 60 * 24)));
+    const endIdx = Math.min(allDates.length - 1, Math.round((end - displayStart) / (1000 * 60 * 60 * 24)));
+    
+    if (startIdx >= allDates.length) return null;
+    
+    const leftPct = (startIdx / allDates.length) * 100;
+    const displayEndIdx = Math.min(endIdx, allDates.length - 1);
+    const widthPct = Math.max(0, ((displayEndIdx - startIdx + 1) / allDates.length) * 100);
+    
+    if (widthPct <= 0) return null;
+    
+    return { left: `${leftPct}%`, width: `${widthPct}%` };
+  };
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayIdx = displayStart ? Math.round((today - displayStart) / (1000 * 60 * 60 * 24)) : -1;
+  const todayPct = allDates.length > 0 && todayIdx >= 0 && todayIdx < allDates.length
+    ? (todayIdx / allDates.length) * 100 : -1;
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300 pb-10 font-Inter">
@@ -266,95 +344,132 @@ export default function PreviewStep({ formData, onSave, onEdit }) {
           </div>
 
           <div className="border border-gray-100 rounded-[8px] overflow-x-auto">
-            <table className="w-full text-left min-w-[800px] border-collapse">
-              <thead>
-                <tr className="border-b border-gray-100 bg-[#F6F9F9]">
-                  <th className="py-4 px-4 font-bold text-[12px] text-[#040715] border-r border-gray-100 w-[100px] align-bottom">Milestone / Phase</th>
-                  <th className="p-0 border-r border-[#E6EBEB] align-top relative w-[233px]">
-                    <div className="py-3 text-center font-bold text-[11px] text-[#040715]">Aug 2026</div>
-                    <div className="flex w-full font-normal text-[11px] text-gray-400 border-t border-[#E6EBEB]">
-                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">01</span>
-                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">08</span>
-                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">15</span>
-                      <span className="flex-1 py-2 text-center">22</span>
+            <div style={{ minWidth: '800px' }}>
+              {/* Month Row */}
+              <div className="flex border-b border-[#E9ECEF] bg-[#F6F9F9]">
+                <div className="w-[200px] shrink-0 px-4 py-3 border-r border-[#E9ECEF] text-[12px] font-bold text-[#040715] flex items-center">
+                  Milestone / Phase
+                </div>
+                <div className="flex flex-1">
+                  {monthGroups.map((mg, mIdx) => (
+                    <div
+                      key={mIdx}
+                      className="border-r border-[#E9ECEF] last:border-0 text-center text-[11px] font-bold text-[#040715] py-3"
+                      style={{ width: `${(mg.dates.length / allDates.length) * 100}%` }}
+                    >
+                      {MONTH_NAMES[mg.month]} {mg.year}
                     </div>
-                  </th>
-                  <th className="p-0 border-r border-[#E6EBEB] align-top relative w-[233px]">
-                    <div className="py-3 text-center font-bold text-[11px] text-[#040715]">Sep 2026</div>
-                    <div className="flex w-full font-normal text-[11px] text-gray-400 border-t border-[#E6EBEB]">
-                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">01</span>
-                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">08</span>
-                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">15</span>
-                      <span className="flex-1 py-2 text-center">22</span>
-                    </div>
-                  </th>
-                  <th className="p-0 border-r border-[#E6EBEB] align-top relative w-[233px]">
-                    <div className="py-3 text-center font-bold text-[11px] text-[#040715]">Oct 2026</div>
-                    <div className="flex w-full font-normal text-[11px] text-gray-400 border-t border-[#E6EBEB]">
-                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">01</span>
-                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">08</span>
-                      <span className="flex-1 py-2 text-center border-r border-[#E6EBEB]">15</span>
-                      <span className="flex-1 py-2 text-center">22</span>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="relative">
-                {/* Vertical line for today */}
-                <div className="absolute top-0 bottom-0 left-[35%] w-px bg-red-200 z-0"></div>
-                <div className="absolute top-[-10px] left-[35%] bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-[4px] -translate-x-1/2 z-10">Today</div>
+                  ))}
+                </div>
+              </div>
 
-                {formData.modules.map((m, idx) => {
-                  // Mock positions for the gantt bars based on index
-                  const barColors = ['bg-[#1A9F9A]', 'bg-[#2970FF]'];
-                  const barColor = barColors[idx % barColors.length];
-                  const left = 35 + (idx * 5);
-                  const width = 10;
-                  const days = Math.ceil((Math.random() * 5) + 3);
+              {/* Week/Day markers Row */}
+              <div className="flex border-b border-[#E9ECEF] bg-[#F6F9F9]">
+                <div className="w-[200px] shrink-0 border-r border-[#E9ECEF]" />
+                <div className="flex flex-1 relative h-7">
+                  {monthGroups.map((mg, mIdx) => {
+                    const daysInMonth = mg.dates.length;
+                    const weekAnchors = mg.dates.filter(d => d.getDay() === 1).map(d => d.getDate());
+                    
+                    return (
+                      <div
+                        key={mIdx}
+                        className="relative border-r border-[#E9ECEF] last:border-0 h-full"
+                        style={{ width: `${(daysInMonth / allDates.length) * 100}%` }}
+                      >
+                        {weekAnchors.map((anchor, aIdx) => {
+                          const anchorDate = mg.dates.find(d => d.getDate() === anchor);
+                          if (!anchorDate) return null;
+                          const leftPct = ((anchor - 1) / daysInMonth) * 100;
+                          return (
+                            <div
+                              key={aIdx}
+                              className="absolute top-0 bottom-0 flex flex-col justify-center border-l border-[#E9ECEF]/50"
+                              style={{ left: `${leftPct}%` }}
+                            >
+                              <span className="text-[9px] text-gray-400 px-1">{String(anchor).padStart(2, '0')}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                  {/* Today label */}
+                  {todayPct >= 0 && todayPct <= 100 && (
+                    <div
+                      className="absolute top-0 z-10 flex flex-col items-center"
+                      style={{ left: `${todayPct}%`, transform: 'translateX(-50%)' }}
+                    >
+                      <div className="bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded font-bold leading-none">Today</div>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-                  return (
-                    <tr key={idx} className="border-b border-gray-100 last:border-0 relative z-10">
-                      <td className="py-3 px-4 border-r border-gray-100 w-[200px] bg-white">
-                        <div className="flex items-start gap-2">
+              {/* Module Rows */}
+              <div className="bg-white">
+                {formData.modules.length === 0 ? (
+                  <div className="p-8 text-center text-gray-500 text-sm">
+                    No modules defined.
+                  </div>
+                ) : (
+                  moduleTimelines.map(({ mod, idx, start, end, durDays }) => {
+                    const barStyle = getBarStyle(start, end);
+                    const color = COLORS[idx % COLORS.length];
+                    return (
+                      <div key={idx} className="flex group border-b border-[#E9ECEF] last:border-0" style={{ minHeight: 48 }}>
+                        <div className="w-[200px] shrink-0 px-4 py-3 border-r border-[#E9ECEF] flex items-start gap-2 bg-white">
                           <div className="w-5 h-5 flex items-center justify-center border border-gray-200 rounded-[4px] shrink-0">
                             <span className="text-[10px] font-bold text-[#040715]">{String(idx + 1).padStart(2, '0')}</span>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-[11px] font-bold text-[#040715] truncate" title={m.name}>{m.name}</p>
-                            <p className="text-[10px] text-gray-500">{days} Days</p>
+                            <p className="text-[11px] font-bold text-[#040715] truncate" title={mod.name}>{mod.name || `Module ${idx + 1}`}</p>
+                            <p className="text-[10px] text-gray-500">{durDays} Days</p>
                           </div>
                         </div>
-                      </td>
-                      <td colSpan={3} className="p-0 relative h-[50px] align-middle">
-                        {/* Grid lines */}
-                        <div className="absolute inset-0 flex w-full pointer-events-none">
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1 border-r border-[#E6EBEB]"></div>
-                           <div className="flex-1"></div>
+                        <div className="flex-1 relative flex items-center bg-white">
+                          {/* Grid vertical lines */}
+                          <div className="absolute inset-0 flex pointer-events-none">
+                            {monthGroups.map((mg, mIdx) => {
+                              const daysInMonth = mg.dates.length;
+                              return (
+                                <div key={mIdx} className="relative border-r border-[#E9ECEF] last:border-0 h-full"
+                                  style={{ width: `${(daysInMonth / allDates.length) * 100}%` }}>
+                                  {mg.dates.filter(d => d.getDay() === 1).map(d => d.getDate()).map((anchor) => {
+                                    const anchorDate = mg.dates.find(d => d.getDate() === anchor);
+                                    if (!anchorDate) return null;
+                                    const leftPct = ((anchor - 1) / daysInMonth) * 100;
+                                    return (
+                                      <div key={anchor} className="absolute top-0 bottom-0 border-l border-[#E9ECEF]/30" style={{ left: `${leftPct}%` }} />
+                                    );
+                                  })}
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {/* Today vertical line */}
+                          {todayPct >= 0 && todayPct <= 100 && (
+                            <div className="absolute top-0 bottom-0 w-px bg-red-400 border-l border-dashed border-red-400 z-10"
+                              style={{ left: `${todayPct}%` }} />
+                          )}
+                          {/* Gantt Bar */}
+                          {barStyle && (
+                            <div
+                              className={`group absolute h-4 ${color} rounded-full z-10 flex items-center px-1.5 shadow-sm ml-1`}
+                              style={{ ...barStyle, minWidth: '20px' }}
+                            >
+                              <span className="text-white text-[8px] font-medium whitespace-nowrap overflow-hidden">
+                                {durDays}D
+                              </span>
+                            </div>
+                          )}
                         </div>
-
-                        {/* Bar */}
-                        <div 
-                          className={`absolute top-1/2 -translate-y-1/2 h-[16px] rounded-full text-white text-[8px] font-bold flex items-center px-2 ${barColor} shadow-sm z-20`}
-                          style={{ left: `${left}%`, width: `${width}%` }}
-                        >
-                          {days}D
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
