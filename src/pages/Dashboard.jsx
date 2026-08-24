@@ -48,9 +48,8 @@ export default function Dashboard() {
   const metrics = dashboardData?.metrics || {};
 
   return (
-    <div className="space-y-4">
-      <p className="text-gray-600 text-medium">Welcome back! Here's an overview of your quotation metrics.</p>
-      
+    <div className="space-y-4 mt-4">
+   
       {/* Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 shrink-0">
         
@@ -60,8 +59,8 @@ export default function Dashboard() {
             <Users className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Clients</p>
-            <h3 className="text-xl font-black text-gray-900 mt-0.5">{metrics.total_clients || 0}</h3>
+            <p className="text-[16px] font-semibold text-[#5F6A80] tracking-wider">Total Clients</p>
+            <h3 className="text-[22px] font-medium text-[#0D1330] mt-0.5">{metrics.total_clients || 0}</h3>
           </div>
         </div>
 
@@ -71,8 +70,8 @@ export default function Dashboard() {
             <Briefcase className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Employees</p>
-            <h3 className="text-xl font-black text-gray-900 mt-0.5">{metrics.total_employees || 0}</h3>
+            <p className="text-[16px] font-semibold text-[#5F6A80] tracking-wider">Total Employees</p>
+            <h3 className="text-[22px] font-medium text-[#0D1330] mt-0.5">{metrics.total_employees || 0}</h3>
           </div>
         </div>
 
@@ -82,8 +81,8 @@ export default function Dashboard() {
             <FileText className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Quotations</p>
-            <h3 className="text-xl font-black text-gray-900 mt-0.5">{metrics.total_quotations || 0}</h3>
+            <p className="text-[16px] font-semibold text-[#5F6A80] tracking-wider">Total Quotations</p>
+            <h3 className="text-[22px] font-medium text-[#0D1330] mt-0.5">{metrics.total_quotations || 0}</h3>
           </div>
         </div>
 
@@ -93,8 +92,8 @@ export default function Dashboard() {
             <IndianRupee className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Revenue</p>
-            <h3 className="text-lg font-black text-gray-900 mt-0.5 leading-tight">{metrics.total_revenue_formatted || '₹0.00'}</h3>
+            <p className="text-[16px] font-semibold text-[#5F6A80] tracking-wider">Total Revenue</p>
+            <h3 className="text-[22px] font-medium text-[#0D1330] mt-0.5">{metrics.total_revenue_formatted || '₹0.00'}</h3>
           </div>
         </div>
 
