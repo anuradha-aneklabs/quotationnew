@@ -257,7 +257,7 @@ export default function Reports({ setCurrentView }) {
           {/* Top 5 Clients Donut Chart */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col min-h-[250px] lg:min-h-0">
             <div className="mb-4">
-              <h3 className="font-bold text-gray-900 text-[15px]">Top 5 Clients by Revenue</h3>
+              <h3 className="font-bold text-gray-900 text-[15px]">Top Clients by Revenue</h3>
             </div>
             
             <div className="flex-1 flex items-center justify-between min-h-0 relative">

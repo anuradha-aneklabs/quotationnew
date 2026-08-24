@@ -15,7 +15,7 @@ export default function QuotationsTable({ quotations = [] }) {
       {/* Header */}
       <div className="px-6 py-3 border-b border-gray-100 flex justify-between items-center">
         <h2 className="text-lg font-bold text-gray-900">Recent Quotations</h2>
-        <a href="#" className="text-sm font-medium text-gray-500 hover:text-indigo-600">View All</a>
+        <a href="#" className="text-sm font-medium text-[#1A9F9A] hover:text-[#1A9F9A]">View All</a>
       </div>
       
       {/* Table */}
@@ -23,19 +23,19 @@ export default function QuotationsTable({ quotations = [] }) {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-100">
-              <th className="px-6 py-3 text-xs font-semibold text-black-500 uppercase tracking-wider">Quotation ID</th>
-              <th className="px-6 py-3 text-xs font-semibold text-black-500 uppercase tracking-wider">Client</th>
-              <th className="px-6 py-3 text-xs font-semibold text-black-500 uppercase tracking-wider">Date</th>
-              <th className="px-6 py-3 text-xs font-semibold text-black-500 uppercase tracking-wider">Amount</th>
+              <th className="px-6 py-3 text-[16px] font-bold text-[#040715]  tracking-wider">Quotation ID</th>
+              <th className="px-6 py-3 text-[16px] font-bold text-[#040715]  tracking-wider">Client</th>
+              <th className="px-6 py-3 text-[16px] font-bold text-[#040715]  tracking-wider">Date</th>
+              <th className="px-6 py-3 text-[16px] font-bold text-[#040715]  tracking-wider">Amount</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {quotations.map((row) => (
               <tr key={row.id} className="hover:bg-gray-50/50 transition-colors">
-                <td className="px-6 py-4 text-sm font-medium text-gray-600">{row.quotation_number}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{row.client}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{formatDate(row.date)}</td>
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">{row.amount_formatted}</td>
+                <td className="px-6 py-4 text-[16px] font-medium text-[#040715]">{row.quotation_number}</td>
+                <td className="px-6 py-4 text-[16px] font-medium text-[#040715]">{row.client}</td>
+                <td className="px-6 py-4 text-[16px] font-medium text-[#040715]">{formatDate(row.date)}</td>
+                <td className="px-6 py-4 text-[16px] font-medium text-[#040715]">{row.amount_formatted}</td>
               </tr>
             ))}
             {quotations.length === 0 && (

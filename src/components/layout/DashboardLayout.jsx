@@ -50,8 +50,8 @@ export default function DashboardLayout({ children, currentView, setCurrentView,
           <Header title={headerProps.title} breadcrumbs={headerProps.breadcrumbs} description={headerProps.description} />
         </div>
 
-        <main className={`flex-1 flex flex-col overflow-hidden bg-white min-h-0 ${currentView === 'CreateQuotation' ? 'px-2 md:px-2' : 'px-4 md:px-6'}`}>
-          <div className="mx-auto w-full flex-1 flex flex-col min-h-0 overflow-hidden">
+        <main className={`flex-1 flex flex-col overflow-y-auto bg-white min-h-0 ${currentView === 'CreateQuotation' ? 'px-2 md:px-2' : 'px-4 md:px-6'}`}>
+          <div className="mx-auto w-full flex-1 flex flex-col min-h-0 pb-6">
             {children}
           </div>
         </main>
